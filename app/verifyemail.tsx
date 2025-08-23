@@ -8,10 +8,14 @@ import {
   ScrollView,
   Modal,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
+
+const { width } = Dimensions.get("window");
+const scale = width / 375; // base on iPhone 11 width
 
 export default function VerifyEmail() {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
@@ -62,13 +66,11 @@ export default function VerifyEmail() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, otp }), // ✅ confirmation requires both
+          body: JSON.stringify({ email, otp }),
         }
       );
 
       const data = await response.json();
-      console.log("Verify OTP Response:", data);
-
       if (data.status === "ok") {
         setModalVisible(true);
         setTimeout(() => {
@@ -108,10 +110,7 @@ export default function VerifyEmail() {
       );
 
       const data = await response.json();
-      console.log("Resend OTP Response:", data);
-
       if (data?.otp) {
-        // ✅ success means we got an OTP
         setResendCount((prev) => prev + 1);
         alert("📧 A new OTP has been sent to your email.");
       } else {
@@ -131,7 +130,7 @@ export default function VerifyEmail() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="arrow-back" size={24 * scale} color="black" />
           </TouchableOpacity>
           <Text style={styles.headerText}>Verify Email</Text>
         </View>
@@ -204,7 +203,7 @@ export default function VerifyEmail() {
           <View style={styles.modalBox}>
             <Text style={styles.modalText}>
               ✅ Congratulations! You have been successfully added to our Market
-              News Alert subscription service. Stay tuned for regular updates!
+              News Alert subscription service. Stay tuned for regular updates!
             </Text>
           </View>
         </View>
@@ -218,55 +217,55 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingHorizontal: 20 * scale,
+    paddingVertical: 20 * scale,
     backgroundColor: "#fff",
   },
-  headerText: { fontSize: 16, fontWeight: "600", marginLeft: 10 },
+  headerText: { fontSize: 16 * scale, fontWeight: "600", marginLeft: 10 * scale },
   content: {
     backgroundColor: "#fff",
-    marginHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 60,
-    borderRadius: 8,
+    marginHorizontal: 20 * scale,
+    paddingTop: 60 * scale,
+    paddingBottom: 60 * scale,
+    borderRadius: 8 * scale,
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 40 * scale,
   },
-  title: { fontSize: 22, fontWeight: "600", marginBottom: 5 },
+  title: { fontSize: 22 * scale, fontWeight: "600", marginBottom: 5 * scale },
   subtitle: {
-    fontSize: 14,
+    fontSize: 14 * scale,
     color: "#555",
     textAlign: "center",
-    marginBottom: 2,
+    marginBottom: 2 * scale,
   },
   codeContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 20 * scale,
+    marginBottom: 20 * scale,
   },
   codeInput: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 6,
-    width: 45,
-    height: 50,
+    borderRadius: 6 * scale,
+    width: 45 * scale,
+    height: 50 * scale,
     textAlign: "center",
-    fontSize: 18,
-    marginHorizontal: 5,
+    fontSize: 18 * scale,
+    marginHorizontal: 5 * scale,
     backgroundColor: "#fff",
   },
   verifyButton: {
     backgroundColor: "#002D62",
-    paddingVertical: 12,
-    paddingHorizontal: 50,
-    borderRadius: 6,
-    marginVertical: 10,
+    paddingVertical: 12 * scale,
+    paddingHorizontal: 50 * scale,
+    borderRadius: 6 * scale,
+    marginVertical: 10 * scale,
   },
-  verifyButtonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  verifyButtonText: { color: "#fff", fontWeight: "bold", fontSize: 16 * scale },
   resendText: {
-    marginTop: 15,
-    fontSize: 14,
+    marginTop: 15 * scale,
+    fontSize: 14 * scale,
     fontWeight: "600",
     color: "#004AAD",
   },
@@ -278,9 +277,10 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     backgroundColor: "#fff",
-    padding: 25,
-    borderRadius: 10,
+    padding: 25 * scale,
+    borderRadius: 10 * scale,
     alignItems: "center",
+    marginHorizontal: 20 * scale, // ✅ prevent modal from being too wide on tablets
   },
-  modalText: { fontSize: 16, fontWeight: "600", color: "green" },
+  modalText: { fontSize: 16 * scale, fontWeight: "600", color: "green", textAlign: "center" },
 });

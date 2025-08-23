@@ -7,9 +7,13 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  Dimensions,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+
+const { width } = Dimensions.get("window");
+const scale = width / 375; // base iPhone 11 width
 
 const PriceAlert = () => {
   const router = useRouter();
@@ -24,15 +28,11 @@ const PriceAlert = () => {
 
     try {
       setLoading(true);
-
-      // Call API to generate OTP and send email
       const response = await fetch(
         "https://regencyng.net/fs-api/proxy.php?type=daily_alert",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
         }
       );
@@ -40,10 +40,9 @@ const PriceAlert = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Navigate to verifyemail screen with email param
         router.push({
           pathname: "/verifyemail",
-          params: { email }, // pass email to next screen
+          params: { email },
         });
       } else {
         Alert.alert("Error", data?.message || "Failed to send OTP.");
@@ -61,7 +60,7 @@ const PriceAlert = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Feather name="arrow-left" size={22} color="#002B5B" />
+          <Feather name="arrow-left" size={22 * scale} color="#002B5B" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>First Securities Brokers</Text>
       </View>
@@ -105,56 +104,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    paddingTop: 40,
+    paddingHorizontal: 16 * scale,
+    paddingTop: 40 * scale,
     justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingBottom: 12,
-    marginTop: 10,
+    paddingBottom: 12 * scale,
+    marginTop: 10 * scale,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: 16 * scale,
     fontWeight: "600",
     color: "#002B5B",
-    marginLeft: 10,
+    marginLeft: 10 * scale,
   },
   content: {
     flex: 1,
     justifyContent: "flex-start",
-    paddingTop: 30,
+    paddingTop: 30 * scale,
   },
   title: {
-    fontSize: 18,
+    fontSize: 18 * scale,
     fontWeight: "600",
-    marginBottom: 6,
+    marginBottom: 6 * scale,
     color: "#000",
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 14 * scale,
     color: "#666",
-    marginBottom: 20,
+    marginBottom: 20 * scale,
   },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 12,
-    fontSize: 14,
+    borderRadius: 6 * scale,
+    padding: 12 * scale,
+    fontSize: 14 * scale,
   },
   button: {
     backgroundColor: "#002B5B",
-    paddingVertical: 14,
-    borderRadius: 6,
+    paddingVertical: 14 * scale,
+    borderRadius: 6 * scale,
     alignItems: "center",
-    marginBottom: 55,
-    marginTop: 20,
+    marginBottom: 55 * scale,
+    marginTop: 20 * scale,
   },
   buttonText: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 16 * scale,
   },
 });

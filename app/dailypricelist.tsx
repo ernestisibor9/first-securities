@@ -6,16 +6,21 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
+// Get screen width and set scale factor
+const { width } = Dimensions.get("window");
+const scale = width / 375; // 375 = base width (iPhone 11)
+
 const DailyPriceList = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [priceData, setPriceData] = useState(null);
+  const [priceData, setPriceData] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20; // Number of records per page
+  const itemsPerPage = 20;
 
   useEffect(() => {
     fetch("https://regencyng.net/fs-api/proxy.php?type=daily_price")
@@ -30,12 +35,16 @@ const DailyPriceList = () => {
       });
   }, []);
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  // Pagination calculation
+  // Pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = priceData?.stock.slice(
     startIndex,
@@ -50,17 +59,19 @@ const DailyPriceList = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Feather name="arrow-left" size={22} color="#002B5B" />
+          <Feather name="arrow-left" size={22 * scale} color="#002B5B" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Daily Price List</Text>
-        <View style={{ width: 22 }} />
+        <View style={{ width: 22 * scale }} />
       </View>
 
       {/* Content */}
       {loading ? (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#002B5B" />
-          <Text style={{ marginTop: 10 }}>Loading daily price list...</Text>
+          <Text style={[styles.loadingText, { marginTop: 10 * scale }]}>
+            Loading daily price list...
+          </Text>
         </View>
       ) : priceData ? (
         <>
@@ -69,7 +80,7 @@ const DailyPriceList = () => {
           </Text>
 
           <ScrollView style={{ flex: 1 }}>
-            {currentItems.map((item, idx) => (
+            {currentItems.map((item: any, idx: number) => (
               <View key={idx} style={styles.stockRow}>
                 <Text style={styles.stockName}>{item.name}</Text>
                 <View style={{ flexDirection: "row" }}>
@@ -77,12 +88,12 @@ const DailyPriceList = () => {
                     ₦{item.price.toFixed(2)} |{" "}
                   </Text>
                   <Text
-                    style={{
-                      color: item.change >= 0 ? "green" : "red",
-                      fontWeight: "500",
-                    }}
+                    style={[
+                      styles.changeText,
+                      { color: item.change >= 0 ? "green" : "red" },
+                    ]}
                   >
-                    <Text style={{ color: "black" }}>Chg: </Text>{" "}
+                    <Text style={{ color: "black" }}>Chg: </Text>
                     {item.change >= 0 ? "+" : ""}
                     {item.change.toFixed(2)}%
                   </Text>
@@ -91,7 +102,7 @@ const DailyPriceList = () => {
             ))}
           </ScrollView>
 
-          {/* Pagination Controls */}
+          {/* Pagination */}
           <View style={styles.pagination}>
             <TouchableOpacity
               style={[styles.pageButton, currentPage === 1 && { opacity: 0.5 }]}
@@ -110,7 +121,9 @@ const DailyPriceList = () => {
                 styles.pageButton,
                 currentPage === totalPages && { opacity: 0.5 },
               ]}
-              onPress={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              onPress={() =>
+                setCurrentPage((p) => Math.min(p + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
             >
               <Text style={styles.pageText}>Next</Text>
@@ -118,7 +131,7 @@ const DailyPriceList = () => {
           </View>
         </>
       ) : (
-        <Text style={{ textAlign: "center", marginTop: 20 }}>
+        <Text style={{ textAlign: "center", marginTop: 20 * scale }}>
           Failed to load data
         </Text>
       )}
@@ -132,19 +145,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 40,
-    marginBottom: 10,
+    paddingTop: 40 * scale,
+    marginBottom: 10 * scale,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    marginTop: 20,
+    paddingHorizontal: 16 * scale,
+    paddingBottom: 12 * scale,
+    marginTop: 20 * scale,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: 16 * scale,
     fontWeight: "700",
     color: "#002B5B",
   },
@@ -153,49 +166,58 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  loadingText: {
+    fontSize: 14 * scale,
+    color: "#555",
+  },
   dateText: {
-    fontSize: 27,
+    fontSize: 20 * scale,
     fontWeight: "600",
-    marginBottom: 8,
-    marginLeft: 16,
-    marginTop: 4,
+    marginBottom: 8 * scale,
+    marginLeft: 16 * scale,
+    marginTop: 4 * scale,
     color: "#002B5B",
   },
   stockRow: {
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    paddingVertical: 14 * scale,
+    paddingHorizontal: 16 * scale,
   },
   stockName: {
-    fontSize: 15,
+    fontSize: 15 * scale,
     fontWeight: "600",
-    marginBottom: 4,
+    marginBottom: 4 * scale,
   },
   stockPrice: {
-    fontSize: 14,
+    fontSize: 14 * scale,
     color: "#333",
+  },
+  changeText: {
+    fontSize: 13 * scale,
+    fontWeight: "500",
   },
   pagination: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 16,
+    paddingVertical: 16 * scale,
   },
   pageButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 16 * scale,
+    paddingVertical: 8 * scale,
     backgroundColor: "#002B5B",
-    borderRadius: 5,
-    marginHorizontal: 5,
+    borderRadius: 5 * scale,
+    marginHorizontal: 5 * scale,
   },
   pageText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: 13 * scale,
   },
   pageNumber: {
-    fontSize: 16,
+    fontSize: 14 * scale,
     fontWeight: "bold",
-    marginHorizontal: 10,
+    marginHorizontal: 10 * scale,
   },
 });

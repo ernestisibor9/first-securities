@@ -6,15 +6,19 @@ import {
   TouchableOpacity,
   Linking,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
+const { width } = Dimensions.get("window");
+const scale = width / 375; // base = iPhone 11 width
+
 const MarketInsight = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [insights, setInsights] = useState([]);
+  const [insights, setInsights] = useState<any[]>([]);
 
   useEffect(() => {
     fetch("https://regencyng.net/fs-api/proxy.php?type=market")
@@ -43,10 +47,10 @@ const MarketInsight = () => {
       {/* Header */}
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Feather name="arrow-left" size={24} color="#002B5B" />
+          <Feather name="arrow-left" size={22 * scale} color="#002B5B" />
         </TouchableOpacity>
         <Text style={styles.header}>Market Insight</Text>
-        <View style={{ width: 24 }} />
+        <View style={{ width: 24 * scale }} />
       </View>
 
       {/* Content */}
@@ -89,12 +93,12 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: 16 * scale,
     color: "#555",
   },
   headerContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: 16 * scale,
+    paddingVertical: 14 * scale,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -103,36 +107,36 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   header: {
-    fontSize: 18,
+    fontSize: 18 * scale,
     fontWeight: "bold",
     color: "#002B5B",
   },
   scrollContent: {
-    padding: 16,
+    padding: 16 * scale,
   },
   card: {
     backgroundColor: "#F5F7FA",
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
+    padding: 16 * scale,
+    borderRadius: 8 * scale,
+    marginBottom: 16 * scale,
   },
   title: {
     fontWeight: "700",
-    fontSize: 16,
-    marginBottom: 6,
+    fontSize: 16 * scale,
+    marginBottom: 6 * scale,
   },
   desc: {
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: 14 * scale,
+    marginBottom: 8 * scale,
     color: "#444",
   },
   link: {
-    fontSize: 12,
+    fontSize: 12 * scale,
     color: "#1E90FF",
   },
   time: {
-    fontSize: 12,
+    fontSize: 12 * scale,
     color: "#999",
-    marginTop: 4,
+    marginTop: 4 * scale,
   },
 });

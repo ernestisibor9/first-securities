@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -6,17 +7,18 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
+  Dimensions,
 } from "react-native";
-import React from "react";
 import { useRouter } from "expo-router";
 
+const { width } = Dimensions.get("window"); // screen width
+const scale = width / 375; // scale factor (base = iPhone 11 width)
 
-const index = () => {
+const Index = () => {
   const router = useRouter();
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Transparent Light Status Bar */}
-      {/* <StatusBar barStyle="light-content" translucent backgroundColor="transparent" /> */}
       <StatusBar
         barStyle="light-content"
         translucent
@@ -27,6 +29,7 @@ const index = () => {
       <Image
         source={require("../assets/images/logo.png")}
         style={styles.logo}
+        resizeMode="contain"
       />
 
       {/* Title */}
@@ -36,7 +39,6 @@ const index = () => {
       <Image
         source={require("../assets/images/bull-chart.jpg")}
         style={styles.mainImage}
-        resizeMode="cover"
       />
 
       {/* Main Text */}
@@ -62,7 +64,9 @@ const index = () => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push("https://myportfolio.fbnquest.com/Securities/Home/Login")}
+        onPress={() =>
+          router.push("/login")
+        }
       >
         <Text style={styles.buttonText}>LOGIN</Text>
       </TouchableOpacity>
@@ -70,7 +74,13 @@ const index = () => {
       {/* Sign up link */}
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => router.push("https://myportfolio.fbnquest.com/Securities/NewAccount/Registration")}>
+        <TouchableOpacity
+          onPress={() =>
+            router.push(
+              "/signup"
+            )
+          }
+        >
           <Text style={styles.signupLink}>Sign up</Text>
         </TouchableOpacity>
       </View>
@@ -88,7 +98,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
 
 const styles = StyleSheet.create({
   container: {
@@ -97,30 +107,34 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   logo: {
-    width: 80,
-    height: 60,
+    width: "25%", // responsive percentage
+    height: undefined,
+    aspectRatio: 4 / 3, // keeps proportions
     marginTop: 20,
     marginBottom: 10,
   },
   title: {
-    fontSize: 18,
+    fontSize: 18 * scale,
     fontWeight: "bold",
     marginBottom: 20,
   },
   mainImage: {
-    width: 310,
-    height: 190,
+    width: "90%", // responsive
+    height: undefined, // required with aspectRatio
+    aspectRatio: 16 / 9, // keep 16:9
     borderRadius: 10,
     marginBottom: 20,
+    resizeMode: "contain", // prevents cropping
   },
   heading: {
-    fontSize: 16,
+    fontSize: 16 * scale,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
+    paddingHorizontal: 20,
   },
   subHeading: {
-    fontSize: 14,
+    fontSize: 14 * scale,
     textAlign: "center",
     color: "#555",
     marginBottom: 30,
@@ -129,7 +143,6 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#002B5B",
     paddingVertical: 12,
-    paddingHorizontal: 25,
     borderRadius: 8,
     marginVertical: 8,
     width: "80%",
@@ -138,7 +151,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 15 * scale,
   },
   signupContainer: {
     flexDirection: "row",
@@ -147,10 +160,12 @@ const styles = StyleSheet.create({
   },
   signupText: {
     color: "#444",
+    fontSize: 13 * scale,
   },
   signupLink: {
     color: "#002B5B",
     fontWeight: "600",
+    fontSize: 13 * scale,
   },
   bottomLinks: {
     flexDirection: "row",
@@ -161,5 +176,6 @@ const styles = StyleSheet.create({
   bottomLinkText: {
     color: "#002B5B",
     fontWeight: "600",
+    fontSize: 13 * scale,
   },
 });
