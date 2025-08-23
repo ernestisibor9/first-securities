@@ -24,28 +24,38 @@ export default function PriceChart() {
   const [loadingChart, setLoadingChart] = useState(false);
 
   // Fetch stock list
-  useEffect(() => {
-    const fetchStocks = async () => {
-      try {
-        const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=stocks");
-        const data = await res.json();
+useEffect(() => {
+  const fetchStocks = async () => {
+    try {
+      const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=stocks");
+      const data = await res.json();
 
-        if (!Array.isArray(data)) {
-          console.error("API did not return an array:", data);
-          return;
-        }
-
-        setStocks(data);
-        if (data.length > 0) {
-          setSelectedStock(data[0].id);
-          setSelectedStockName(data[0].name);
-        }
-      } catch (err) {
-        console.error("Failed to fetch stocks:", err);
+      if (!Array.isArray(data)) {
+        console.error("API did not return an array:", data);
+        return;
       }
-    };
-    fetchStocks();
-  }, []);
+
+      setStocks(data);
+
+      // 🔹 Find ACCESSCORP in the response
+      const accesscorp = data.find((s) => s.name.toUpperCase() === "ACCESSCORP");
+
+      if (accesscorp) {
+        // ✅ Set ACCESSCORP as default
+        setSelectedStock(accesscorp.id);
+        setSelectedStockName(accesscorp.name);
+      } else if (data.length > 0) {
+        // fallback if ACCESSCORP not found
+        setSelectedStock(data[0].id);
+        setSelectedStockName(data[0].name);
+      }
+    } catch (err) {
+      console.error("Failed to fetch stocks:", err);
+    }
+  };
+  fetchStocks();
+}, []);
+
 
   // Fetch chart data when selectedStock changes
   useEffect(() => {
@@ -100,7 +110,7 @@ export default function PriceChart() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.back()} >
           <Feather name="arrow-left" size={22} color="#002B5B" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Stock Price Chart</Text>
@@ -187,6 +197,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginBottom: 40,
   },
+
   headerTitle: {
     fontSize: 16,
     fontWeight: "600",
