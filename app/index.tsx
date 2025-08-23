@@ -9,107 +9,110 @@ import {
   StatusBar,
   Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
-const { width } = Dimensions.get("window"); // screen width
+const { width, height } = Dimensions.get("window"); // screen dimensions
 const scale = width / 375; // scale factor (base = iPhone 11 width)
 
 const Index = () => {
   const router = useRouter();
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Transparent Light Status Bar */}
+    <SafeAreaView style={styles.safeArea}>
       <StatusBar
         barStyle="light-content"
         translucent
         backgroundColor="rgba(0, 43, 91, 0.8)"
       />
 
-      {/* Logo */}
-      <Image
-        source={require("../assets/images/logo.png")}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      {/* Title */}
-      <Text style={styles.title}>First Securities</Text>
-
-      {/* Bull Image */}
-      <Image
-        source={require("../assets/images/bull-chart.jpg")}
-        style={styles.mainImage}
-      />
-
-      {/* Main Text */}
-      <Text style={styles.heading}>Invest Smarter. Grow Your Wealth.</Text>
-      <Text style={styles.subHeading}>
-        Your trusted partner for navigating the stock market.
-      </Text>
-
-      {/* Buttons */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/marketinsight")}
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.buttonText}>MARKET INSIGHT</Text>
-      </TouchableOpacity>
+        {/* Logo */}
+        <Image
+          source={require("../assets/images/logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/dailypricelist")}
-      >
-        <Text style={styles.buttonText}>DAILY PRICE LIST</Text>
-      </TouchableOpacity>
+        {/* Title */}
+        <Text style={styles.title}>First Securities</Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          router.push("/login")
-        }
-      >
-        <Text style={styles.buttonText}>LOGIN</Text>
-      </TouchableOpacity>
+        {/* Bull Image */}
+        <Image
+          source={require("../assets/images/bull-chart.jpg")}
+          style={styles.mainImage}
+        />
 
-      {/* Sign up link */}
-      <View style={styles.signupContainer}>
-        <Text style={styles.signupText}>Don't have an account? </Text>
+        {/* Main Text */}
+        <Text style={styles.heading}>Invest Smarter. Grow Your Wealth.</Text>
+        <Text style={styles.subHeading}>
+          Your trusted partner for navigating the stock market.
+        </Text>
+
+        {/* Buttons */}
         <TouchableOpacity
-          onPress={() =>
-            router.push(
-              "/signup"
-            )
-          }
+          style={styles.button}
+          onPress={() => router.push("/marketinsight")}
         >
-          <Text style={styles.signupLink}>Sign up</Text>
+          <Text style={styles.buttonText}>MARKET INSIGHT</Text>
         </TouchableOpacity>
-      </View>
 
-      {/* Bottom links */}
-      <View style={styles.bottomLinks}>
-        <TouchableOpacity onPress={() => router.push("/pricechart")}>
-          <Text style={styles.bottomLinkText}>Price Chart</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/dailypricelist")}
+        >
+          <Text style={styles.buttonText}>DAILY PRICE LIST</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push("/pricealert")}>
-          <Text style={styles.bottomLinkText}>Price Alert</Text>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/login")}
+        >
+          <Text style={styles.buttonText}>LOGIN</Text>
         </TouchableOpacity>
-      </View>
-    </ScrollView>
+
+        {/* Sign up link */}
+        <View style={styles.signupContainer}>
+          <Text style={styles.signupText}>Don't have an account? </Text>
+          <TouchableOpacity onPress={() => router.push("/signup")}>
+            <Text style={styles.signupLink}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Bottom links */}
+        <View style={styles.bottomLinks}>
+          <TouchableOpacity onPress={() => router.push("/pricechart")}>
+            <Text style={styles.bottomLinkText}>Price Chart</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/pricealert")}>
+            <Text style={styles.bottomLinkText}>Price Alert</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default Index;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   container: {
+    flexGrow: 1, // ensures it stretches on tall devices
+    justifyContent: "center", // centers vertically on tall screens
     alignItems: "center",
     paddingVertical: 30,
     backgroundColor: "#fff",
   },
   logo: {
-    width: "25%", // responsive percentage
+    width: "25%",
     height: undefined,
-    aspectRatio: 4 / 3, // keeps proportions
+    aspectRatio: 4 / 3,
     marginTop: 20,
     marginBottom: 10,
   },
@@ -119,12 +122,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   mainImage: {
-    width: "90%", // responsive
-    height: undefined, // required with aspectRatio
-    aspectRatio: 16 / 9, // keep 16:9
+    width: "90%",
+    height: undefined,
+    aspectRatio: 16 / 9,
     borderRadius: 10,
     marginBottom: 20,
-    resizeMode: "contain", // prevents cropping
+    resizeMode: "contain",
   },
   heading: {
     fontSize: 16 * scale,

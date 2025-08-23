@@ -15,13 +15,14 @@ import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function PriceChart() {
-  const { width } = useWindowDimensions(); // ✅ responsive width
+  const { width, height } = useWindowDimensions(); // ✅ height included
   const router = useRouter();
+
   const [stocks, setStocks] = useState<any[]>([]);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
   const [selectedStockName, setSelectedStockName] = useState<string>("");
   const [chartData, setChartData] = useState({ labels: [], data: [] });
-  const [loadingChart, setLoadingChart] = useState(false);
+  const [loadingChart, setLoadingChart] = useState(true);
   const [favorites, setFavorites] = useState<string[]>([]);
 
   // ✅ Load favorites
@@ -37,7 +38,7 @@ export default function PriceChart() {
     loadFavorites();
   }, []);
 
-  // ✅ Fetch stocks
+  // ✅ Fetch stocks and set default = Accesscorp
   useEffect(() => {
     const fetchStocks = async () => {
       try {
@@ -46,6 +47,7 @@ export default function PriceChart() {
 
         if (Array.isArray(data)) {
           setStocks(data);
+
           const accesscorp = data.find((s) => s.name.toUpperCase() === "ACCESSCORP");
           if (accesscorp) {
             setSelectedStock(accesscorp.id);
@@ -62,7 +64,7 @@ export default function PriceChart() {
     fetchStocks();
   }, []);
 
-  // ✅ Fetch chart data
+  // ✅ Fetch chart data whenever selectedStock changes
   useEffect(() => {
     if (!selectedStock) return;
     const fetchChartData = async () => {
@@ -165,8 +167,8 @@ export default function PriceChart() {
                 labels: getReducedLabels(chartData.labels),
                 datasets: [{ data: chartData.data }],
               }}
-              width={Math.max(width * 0.95, chartData.labels.length * 60)} // ✅ adaptive
-              height={250}
+              width={Math.max(width * 0.95, chartData.labels.length * 60)}
+              height={height * 0.35}  // ✅ responsive height (35% of screen)
               yAxisLabel="₦"
               chartConfig={{
                 backgroundGradientFrom: "#fff",
