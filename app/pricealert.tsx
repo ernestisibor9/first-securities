@@ -49,7 +49,7 @@ const PriceAlert = () => {
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
-      Alert.alert("Error", "Something went wrong. Please try again.");
+      Alert.alert("Network Error", "Please check your internet connection and try again.");
     } finally {
       setLoading(false);
     }
