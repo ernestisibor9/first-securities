@@ -30,14 +30,15 @@ const Index = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Logo */}
-        <Image
-          source={require("../assets/images/logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <View style={{ marginTop: -30, marginBottom: 10 }}>
+          <Image
+            source={require("../assets/images/fslogo.png")}
+            style={{ width: 180, height: 130 }}
+          />
+        </View>
 
         {/* Title */}
-        <Text style={styles.title}>First Securities</Text>
+        {/* <Text style={styles.title}>First Securities</Text> */}
 
         {/* Bull Image */}
         <Image

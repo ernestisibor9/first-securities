@@ -7,23 +7,35 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   useWindowDimensions,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { LineChart } from "react-native-chart-kit";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LineChart } from "react-native-gifted-charts";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function PriceChart() {
-  const { width, height } = useWindowDimensions(); // ✅ height included
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
   const router = useRouter();
 
   const [stocks, setStocks] = useState<any[]>([]);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
   const [selectedStockName, setSelectedStockName] = useState<string>("");
-  const [chartData, setChartData] = useState({ labels: [], data: [] });
+  const [chartData, setChartData] = useState<{ date: Date; price: number }[]>([]);
   const [loadingChart, setLoadingChart] = useState(true);
   const [favorites, setFavorites] = useState<string[]>([]);
+
+  // ✅ Unlock screen rotation on mount
+  useEffect(() => {
+    ScreenOrientation.unlockAsync();
+
+    return () => {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
+  }, []);
 
   // ✅ Load favorites
   useEffect(() => {
@@ -32,23 +44,36 @@ export default function PriceChart() {
         const stored = await AsyncStorage.getItem("favorites");
         if (stored) setFavorites(JSON.parse(stored));
       } catch (err) {
-        console.error("Failed to load favorites:", err);
+        console.error("❌ Failed to load favorites:", err);
       }
     };
     loadFavorites();
   }, []);
 
-  // ✅ Fetch stocks and set default = Accesscorp
+  // ✅ Helper: safe JSON
+  const safeJson = async (res: Response) => {
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error("❌ Invalid JSON response:", text);
+      throw new Error("Invalid JSON response from API");
+    }
+  };
+
+  // ✅ Fetch stocks
   useEffect(() => {
     const fetchStocks = async () => {
       try {
         const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=stocks");
-        const data = await res.json();
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+        const data = await safeJson(res);
 
         if (Array.isArray(data)) {
           setStocks(data);
 
-          const accesscorp = data.find((s) => s.name.toUpperCase() === "ACCESSCORP");
+          // Default = Accesscorp
+          const accesscorp = data.find((s) => s.name?.toUpperCase() === "ACCESSCORP");
           if (accesscorp) {
             setSelectedStock(accesscorp.id);
             setSelectedStockName(accesscorp.name);
@@ -56,46 +81,75 @@ export default function PriceChart() {
             setSelectedStock(data[0].id);
             setSelectedStockName(data[0].name);
           }
+        } else {
+          console.error("❌ Stocks API did not return an array:", data);
         }
-      } catch (err) {
-        console.error("Failed to fetch stocks:", err);
+      } catch (err: any) {
+        console.error("❌ Failed to fetch stocks:", err);
+        Alert.alert("Error", "Unable to fetch stock list. Try again later.");
       }
     };
     fetchStocks();
   }, []);
 
-  // ✅ Fetch chart data whenever selectedStock changes
+  // ✅ Fetch chart data
   useEffect(() => {
     if (!selectedStock) return;
+
     const fetchChartData = async () => {
       setLoadingChart(true);
       try {
         const res = await fetch(
           `https://regencyng.net/fs-api/proxy.php?stock=${selectedStock}&type=stock_chart`
         );
-        const data = await res.json();
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+        const data = await safeJson(res);
 
         if (Array.isArray(data)) {
-          const labels = data.map((item) => {
-            const [day, month, year] = item.date.split("/");
-            const date = new Date(`${year}-${month}-${day}`);
-            return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-          });
-          const prices = data.map((item) => Number(item.price));
-          setChartData({ labels, data: prices });
+          const parsedData = data
+            .map((item) => {
+              try {
+                const [day, month, year] = item.date.split("/");
+                return {
+                  date: new Date(`${year}-${month}-${day}`),
+                  price: Number(item.price),
+                };
+              } catch {
+                return null;
+              }
+            })
+            .filter(Boolean) as { date: Date; price: number }[];
+
+          // Filter last 6 months
+          const cutoff = new Date();
+          cutoff.setMonth(cutoff.getMonth() - 6);
+          const recentData = parsedData.filter((d) => d.date >= cutoff);
+
+          setChartData(recentData);
+
+          // ✅ Find highest price
+          if (recentData.length > 0) {
+            const highest = recentData.reduce((prev, curr) =>
+              curr.price > prev.price ? curr : prev
+            );
+            console.log("📈 Highest Price:", highest.price, "on", highest.date);
+          }
         } else {
-          setChartData({ labels: [], data: [] });
+          console.error("❌ Chart API did not return an array:", data);
+          setChartData([]);
         }
 
         const stockObj = stocks.find((s) => s.id === selectedStock);
         if (stockObj) setSelectedStockName(stockObj.name);
-      } catch (err) {
-        console.error("Failed to fetch chart data:", err);
-        setChartData({ labels: [], data: [] });
+      } catch (err: any) {
+        console.error("❌ Failed to fetch chart data:", err);
+        Alert.alert("Error", "Unable to fetch chart data.");
+        setChartData([]);
       } finally {
         setLoadingChart(false);
       }
     };
+
     fetchChartData();
   }, [selectedStock]);
 
@@ -110,13 +164,25 @@ export default function PriceChart() {
       }
       setFavorites(updated);
       await AsyncStorage.setItem("favorites", JSON.stringify(updated));
-    } catch (err) {
-      console.error("Failed to toggle favorite:", err);
+    } catch (err: any) {
+      console.error("❌ Failed to toggle favorite:", err);
+      Alert.alert("Error", "Unable to update favorites.");
     }
   };
 
-  const getReducedLabels = (labels: string[]) =>
-    labels.map((label, index) => (index % 1 === 0 ? label : ""));
+  // ✅ Convert to GiftedCharts format
+  const chartPoints = chartData.map((item) => ({
+    value: item.price,
+    label: item.date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
+  }));
+
+  // ✅ Calculate Y-axis limits
+  const prices = chartPoints.map((p) => p.value);
+  const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+  const maxPrice = prices.length > 0 ? Math.max(...prices) : 0;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -129,11 +195,11 @@ export default function PriceChart() {
 
         {selectedStock && (
           <TouchableOpacity onPress={toggleFavorite} style={{ marginLeft: "auto" }}>
-            <Feather
-              name={favorites.includes(selectedStock) ? "star" : "star-outline"}
-              size={22}
-              color={favorites.includes(selectedStock) ? "#FFD700" : "#002B5B"}
-            />
+            {favorites.includes(selectedStock) ? (
+              <Feather name="star" size={22} color="#FFD700" />
+            ) : (
+              <Ionicons name="star-outline" size={22} color="#002B5B" />
+            )}
           </TouchableOpacity>
         )}
       </View>
@@ -160,28 +226,30 @@ export default function PriceChart() {
         <Text style={styles.chartTitle}>Stock Chart</Text>
         {loadingChart ? (
           <ActivityIndicator size="large" color="#002B5B" style={{ padding: 50 }} />
-        ) : chartData.data.length > 0 ? (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        ) : chartPoints.length > 0 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator>
             <LineChart
-              data={{
-                labels: getReducedLabels(chartData.labels),
-                datasets: [{ data: chartData.data }],
-              }}
-              width={Math.max(width * 0.95, chartData.labels.length * 60)}
-              height={height * 0.35}  // ✅ responsive height (35% of screen)
-              yAxisLabel="₦"
-              chartConfig={{
-                backgroundGradientFrom: "#fff",
-                backgroundGradientTo: "#fff",
-                decimalPlaces: 2,
-                color: (opacity = 1) => `rgba(0, 0, 128, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-                propsForDots: { r: "4", strokeWidth: "2", stroke: "#000080" },
-                propsForBackgroundLines: { stroke: "#ccc" },
-              }}
-              bezier
-              style={{ borderRadius: 8 }}
-              fromZero
+              data={chartPoints}
+              height={isLandscape ? height * 0.8 : height * 0.45}
+              width={isLandscape ? width * 1.5 : Math.max(width, chartPoints.length * 60)}
+              color="crimson"
+              thickness={2}
+              hideRules={false}
+              hideDataPoints={false}
+              dataPointsHeight={6}
+              dataPointsWidth={6}
+              dataPointsColor="crimson"
+              yAxisLabel=""
+              xAxisLabelTextStyle={{ fontSize: 10 }}
+              yAxisTextStyle={{ fontSize: 10 }}
+              xAxisColor="#ddd"
+              yAxisColor="#ddd"
+              showVerticalLines
+              spacing={10}
+              formatYLabel={(value) => `${value}`}
+              // ✅ Start Y-axis at min value instead of 0
+              yAxisOffset={minPrice}
+              yAxisExtraHeight={(maxPrice - minPrice) * 0.1}
             />
           </ScrollView>
         ) : (
