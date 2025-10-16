@@ -57,7 +57,7 @@ const Index = () => {
           style={styles.button}
           onPress={() => router.push("/marketinsight")}
         >
-          <Text style={styles.buttonText}>MARKET INSIGHT</Text>
+          <Text style={styles.buttonText}>MARKET INSIGHTS</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
