@@ -24,11 +24,7 @@
       "package": "com.ernzo.firstsecurities",
       "minSdkVersion": 29,
 
-      "permissions": [
-        "INTERNET",
-        "ACCESS_NETWORK_STATE",
-        "VIBRATE"
-      ]
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE", "VIBRATE"]
     },
     "web": {
       "bundler": "metro",
@@ -58,9 +54,8 @@
         "projectId": "8db528d3-594e-4d95-83e4-aadedac5e1c3"
       }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "1.0.0",
+
     "updates": {
       "url": "https://u.expo.dev/8db528d3-594e-4d95-83e4-aadedac5e1c3"
     }
