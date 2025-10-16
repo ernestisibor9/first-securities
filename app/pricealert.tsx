@@ -48,7 +48,6 @@ const PriceAlert = () => {
         Alert.alert("Error", data?.message || "Failed to send OTP.");
       }
     } catch (error) {
-      console.error("Error sending OTP:", error);
       Alert.alert("Network Error", "Please check your internet connection and try again.");
     } finally {
       setLoading(false);

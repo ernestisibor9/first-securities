@@ -44,7 +44,6 @@ export default function PriceChart() {
         const stored = await AsyncStorage.getItem("favorites");
         if (stored) setFavorites(JSON.parse(stored));
       } catch (err) {
-        console.error("❌ Failed to load favorites:", err);
       }
     };
     loadFavorites();
@@ -56,7 +55,6 @@ export default function PriceChart() {
     try {
       return JSON.parse(text);
     } catch {
-      console.error("❌ Invalid JSON response:", text);
       throw new Error("Invalid JSON response from API");
     }
   };
@@ -82,10 +80,8 @@ export default function PriceChart() {
             setSelectedStockName(data[0].name);
           }
         } else {
-          console.error("❌ Stocks API did not return an array:", data);
         }
       } catch (err: any) {
-        console.error("❌ Failed to fetch stocks:", err);
         Alert.alert("Error", "Unable to fetch stock list. Try again later.");
       }
     };
@@ -132,17 +128,14 @@ export default function PriceChart() {
             const highest = recentData.reduce((prev, curr) =>
               curr.price > prev.price ? curr : prev
             );
-            console.log("📈 Highest Price:", highest.price, "on", highest.date);
           }
         } else {
-          console.error("❌ Chart API did not return an array:", data);
           setChartData([]);
         }
 
         const stockObj = stocks.find((s) => s.id === selectedStock);
         if (stockObj) setSelectedStockName(stockObj.name);
       } catch (err: any) {
-        console.error("❌ Failed to fetch chart data:", err);
         Alert.alert("Error", "Unable to fetch chart data.");
         setChartData([]);
       } finally {
@@ -165,7 +158,6 @@ export default function PriceChart() {
       setFavorites(updated);
       await AsyncStorage.setItem("favorites", JSON.stringify(updated));
     } catch (err: any) {
-      console.error("❌ Failed to toggle favorite:", err);
       Alert.alert("Error", "Unable to update favorites.");
     }
   };

@@ -64,7 +64,7 @@ const Index = () => {
           style={styles.button}
           onPress={() => router.push("/dailypricelist")}
         >
-          <Text style={styles.buttonText}>DAILY PRICE LIST</Text>
+          <Text style={styles.buttonText}>DAILY PRICE LISTS</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

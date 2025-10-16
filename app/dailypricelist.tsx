@@ -30,7 +30,6 @@ const DailyPriceList = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching daily price list:", err);
         setLoading(false);
       });
   }, []);

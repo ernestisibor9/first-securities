@@ -83,7 +83,6 @@ export default function VerifyEmail() {
         alert("⚠️ Unexpected response. Please try again.");
       }
     } catch (error) {
-      console.error("Error verifying OTP:", error);
       alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -118,7 +117,6 @@ export default function VerifyEmail() {
         setIsResendDisabled(false);
       }
     } catch (error) {
-      console.error("Error resending OTP:", error);
       alert("Failed to resend OTP. Try again later.");
       setIsResendDisabled(false);
     }

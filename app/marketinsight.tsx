@@ -28,7 +28,6 @@ const MarketInsight = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching insights:", err);
         setLoading(false);
       });
   }, []);

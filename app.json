@@ -21,7 +21,14 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.ernzo.firstsecurities"
+      "package": "com.ernzo.firstsecurities",
+      "minSdkVersion": 29,
+
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "VIBRATE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -38,8 +45,10 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "./app.plugin.js"
     ],
+
     "experiments": {
       "typedRoutes": true
     },

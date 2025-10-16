@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { WebView } from "react-native-webview";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -12,7 +18,10 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header with Back button */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
           <Feather name="arrow-left" size={22} color="#002B5B" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>First Securities Login</Text>
@@ -21,20 +30,34 @@ export default function LoginScreen() {
       {/* WebView fills rest of screen */}
       <WebView
         style={{ flex: 1 }}
-        source={{ uri: "https://alabiansolutions.com/client-mobile-app/redirect.php" }}
+        source={{
+          uri: "https://alabiansolutions.com/client-mobile-app/redirect.php",
+        }}
         startInLoadingState
         renderLoading={() => (
-          <ActivityIndicator size="large" color="#002B5B" style={{ marginTop: 5 }} />
+          <ActivityIndicator
+            size="large"
+            color="#002B5B"
+            style={{ marginTop: 5 }}
+          />
         )}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        allowFileAccess={false}
+        allowUniversalAccessFromFileURLs={false}
+        setBuiltInZoomControls={false}
+        setDisplayZoomControls={false}
+        originWhitelist={["https://*"]}
+        setWebContentsDebuggingEnabled={false} // 👈 important for MobSF
       />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: "#fff" 
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
