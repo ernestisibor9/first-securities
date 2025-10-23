@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,14 +11,46 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-
-const { width } = Dimensions.get("window");
-const scale = width / 375; // base iPhone 11 width
+import * as ScreenOrientation from "expo-screen-orientation";
 
 const PriceAlert = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [orientation, setOrientation] = useState("PORTRAIT");
+
+  // --- Detect and respond to screen rotation ---
+  useEffect(() => {
+    // Get initial orientation
+    (async () => {
+      const currentOrientation = await ScreenOrientation.getOrientationAsync();
+      setOrientation(
+        currentOrientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+          currentOrientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+          ? "LANDSCAPE"
+          : "PORTRAIT"
+      );
+    })();
+
+    // Listen for orientation changes
+    const subscription = ScreenOrientation.addOrientationChangeListener((event) => {
+      const newOrientation =
+        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+          ? "LANDSCAPE"
+          : "PORTRAIT";
+      setOrientation(newOrientation);
+    });
+
+    // Cleanup on unmount
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+    };
+  }, []);
+
+  // Scale layout based on orientation
+  const { width } = Dimensions.get("window");
+  const scale = orientation === "LANDSCAPE" ? width / 812 : width / 375;
 
   const handleContinue = async () => {
     if (!email || !email.includes("@")) {
@@ -57,22 +89,26 @@ const PriceAlert = () => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { marginTop: 10 * scale }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Feather name="arrow-left" size={22 * scale} color="#002B5B" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>First Securities Brokers</Text>
+        <Text style={[styles.headerTitle, { fontSize: 16 * scale }]}>
+          First Securities Brokers
+        </Text>
       </View>
 
       {/* Content */}
-      <View style={styles.content}>
-        <Text style={styles.title}>Please provide your email address</Text>
-        <Text style={styles.subtitle}>
+      <View style={[styles.content, { paddingTop: 30 * scale }]}>
+        <Text style={[styles.title, { fontSize: 18 * scale }]}>
+          Please provide your email address
+        </Text>
+        <Text style={[styles.subtitle, { fontSize: 14 * scale }]}>
           This is required to confirm your identity
         </Text>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, { padding: 12 * scale, fontSize: 14 * scale }]}
           placeholder="Email Address"
           keyboardType="email-address"
           autoCapitalize="none"
@@ -83,14 +119,22 @@ const PriceAlert = () => {
 
       {/* Continue Button */}
       <TouchableOpacity
-        style={styles.button}
+        style={[
+          styles.button,
+          {
+            paddingVertical: 14 * scale,
+            marginBottom: orientation === "LANDSCAPE" ? 20 : 55 * scale,
+          },
+        ]}
         onPress={handleContinue}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>CONTINUE</Text>
+          <Text style={[styles.buttonText, { fontSize: 16 * scale }]}>
+            CONTINUE
+          </Text>
         )}
       </TouchableOpacity>
     </View>
@@ -103,56 +147,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 16 * scale,
-    paddingTop: 40 * scale,
+    paddingHorizontal: 16,
+    paddingTop: 40,
     justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingBottom: 12 * scale,
-    marginTop: 10 * scale,
+    paddingBottom: 12,
   },
   headerTitle: {
-    fontSize: 16 * scale,
     fontWeight: "600",
     color: "#002B5B",
-    marginLeft: 10 * scale,
+    marginLeft: 10,
   },
   content: {
     flex: 1,
     justifyContent: "flex-start",
-    paddingTop: 30 * scale,
   },
   title: {
-    fontSize: 18 * scale,
     fontWeight: "600",
-    marginBottom: 6 * scale,
+    marginBottom: 6,
     color: "#000",
   },
   subtitle: {
-    fontSize: 14 * scale,
     color: "#666",
-    marginBottom: 20 * scale,
+    marginBottom: 20,
   },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 6 * scale,
-    padding: 12 * scale,
-    fontSize: 14 * scale,
+    borderRadius: 6,
   },
   button: {
     backgroundColor: "#002B5B",
-    paddingVertical: 14 * scale,
-    borderRadius: 6 * scale,
+    borderRadius: 6,
     alignItems: "center",
-    marginBottom: 55 * scale,
-    marginTop: 20 * scale,
+    marginTop: 20,
   },
   buttonText: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 16 * scale,
   },
 });

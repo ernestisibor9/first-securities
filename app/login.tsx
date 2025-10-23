@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -8,73 +8,97 @@ import {
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function LoginScreen() {
-  const router = useRouter();
+  const webviewRef = useRef(null);
+  const [orientation, setOrientation] = useState("PORTRAIT_UP");
+  const url = "https://myportfolio.fbnquest.com/Securities";
+
+  // ✅ Enable auto-rotation and listen for changes
+  useEffect(() => {
+    ScreenOrientation.unlockAsync();
+    const subscription = ScreenOrientation.addOrientationChangeListener(
+      ({ orientationInfo }) => {
+        setOrientation(orientationInfo.orientation);
+      }
+    );
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+    };
+  }, []);
+
+  // ✅ Handle redirect when arrow or dashboard is pressed
+  const handleRedirect = () => {
+    if (webviewRef.current) {
+      webviewRef.current.stopLoading();
+      webviewRef.current.reload();
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header with Back button */}
+      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={handleRedirect} style={styles.backButton}>
           <Feather name="arrow-left" size={22} color="#002B5B" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>First Securities Login</Text>
+
+        <TouchableOpacity onPress={handleRedirect}>
+          <Text style={styles.headerTitle}>Dashboard</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* WebView fills rest of screen */}
+      {/* WebView */}
       <WebView
+        ref={webviewRef}
         style={{ flex: 1 }}
-        source={{
-          uri: "https://alabiansolutions.com/client-mobile-app/redirect.php",
-        }}
+        source={{ uri: url }}
         startInLoadingState
         renderLoading={() => (
-          <ActivityIndicator
-            size="large"
-            color="#002B5B"
-            style={{ marginTop: 5 }}
-          />
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="#002B5B" />
+          </View>
         )}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        allowFileAccess={false}
-        allowUniversalAccessFromFileURLs={false}
-        setBuiltInZoomControls={false}
-        setDisplayZoomControls={false}
+        javaScriptEnabled
+        domStorageEnabled
+        allowsInlineMediaPlayback
+        mediaPlaybackRequiresUserAction={false}
         originWhitelist={["https://*"]}
-        setWebContentsDebuggingEnabled={false} // 👈 important for MobSF
+        cacheEnabled
+        mixedContentMode="always"
       />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
+  container: { flex: 1, backgroundColor: "#fff" },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
+    justifyContent: "flex-start",
+    paddingHorizontal: 15,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
     backgroundColor: "#f9f9f9",
   },
-  backButton: {
-    padding: 6,
-  },
+
+  backButton: { paddingRight: 8 },
+
   headerTitle: {
     fontSize: 16,
     fontWeight: "600",
     color: "#002B5B",
-    marginLeft: 10,
+  },
+
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff", // optional for clarity
   },
 });

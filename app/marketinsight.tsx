@@ -11,6 +11,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 const { width } = Dimensions.get("window");
 const scale = width / 375; // base = iPhone 11 width
@@ -21,13 +22,30 @@ const MarketInsight = () => {
   const [insights, setInsights] = useState<any[]>([]);
 
   useEffect(() => {
+    // ✅ Allow automatic screen rotation
+    ScreenOrientation.unlockAsync();
+
+    // Optional: Listen for orientation change events
+    const subscription = ScreenOrientation.addOrientationChangeListener(
+      (event) => {
+        console.log("Orientation changed:", event.orientationInfo.orientation);
+      }
+    );
+
+    // Cleanup listener when component unmounts
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+    };
+  }, []);
+
+  useEffect(() => {
     fetch("https://regencyng.net/fs-api/proxy.php?type=market")
       .then((res) => res.json())
       .then((data) => {
         setInsights(data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
       });
   }, []);
@@ -57,7 +75,7 @@ const MarketInsight = () => {
         {insights.map((item, idx) => {
           const shortContent = String(item.content || "");
           const displayContent =
-            shortContent.length > 100
+            shortContent.length > 140
               ? shortContent.slice(0, 140) + "..."
               : shortContent;
 

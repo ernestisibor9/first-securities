@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,12 +11,32 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
+import "react-native-get-random-values";
 
-const { width, height } = Dimensions.get("window"); // screen dimensions
+const { width } = Dimensions.get("window"); // screen dimensions
 const scale = width / 375; // scale factor (base = iPhone 11 width)
 
 const Index = () => {
   const router = useRouter();
+
+  useEffect(() => {
+    // ✅ Allow screen auto-rotation
+    ScreenOrientation.unlockAsync();
+
+    // (Optional) Listen for orientation changes
+    const subscription = ScreenOrientation.addOrientationChangeListener(
+      (event) => {
+        console.log("Orientation changed:", event.orientationInfo.orientation);
+      }
+    );
+
+    // Clean up listener when component unmounts
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+    };
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar
@@ -37,9 +57,6 @@ const Index = () => {
           />
         </View>
 
-        {/* Title */}
-        {/* <Text style={styles.title}>First Securities</Text> */}
-
         {/* Bull Image */}
         <Image
           source={require("../assets/images/bull-chart.jpg")}
@@ -57,14 +74,14 @@ const Index = () => {
           style={styles.button}
           onPress={() => router.push("/marketinsight")}
         >
-          <Text style={styles.buttonText}>MARKET INSIGHTS</Text>
+          <Text style={styles.buttonText}>MARKET INSIGHT</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.push("/dailypricelist")}
         >
-          <Text style={styles.buttonText}>DAILY PRICE LISTS</Text>
+          <Text style={styles.buttonText}>DAILY PRICE LIST</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -104,23 +121,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   container: {
-    flexGrow: 1, // ensures it stretches on tall devices
-    justifyContent: "center", // centers vertically on tall screens
+    flexGrow: 1,
+    justifyContent: "center",
     alignItems: "center",
     paddingVertical: 30,
     backgroundColor: "#fff",
-  },
-  logo: {
-    width: "25%",
-    height: undefined,
-    aspectRatio: 4 / 3,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 18 * scale,
-    fontWeight: "bold",
-    marginBottom: 20,
   },
   mainImage: {
     width: "90%",

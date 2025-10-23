@@ -10,18 +10,49 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-
-// Get screen width and set scale factor
-const { width } = Dimensions.get("window");
-const scale = width / 375; // 375 = base width (iPhone 11)
+import * as ScreenOrientation from "expo-screen-orientation";
 
 const DailyPriceList = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [priceData, setPriceData] = useState<any>(null);
+  const [priceData, setPriceData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [orientation, setOrientation] = useState("PORTRAIT");
+
   const itemsPerPage = 20;
 
+  // --- Orientation setup ---
+  useEffect(() => {
+    // Get initial orientation
+    (async () => {
+      const current = await ScreenOrientation.getOrientationAsync();
+      setOrientation(
+        current === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+          current === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+          ? "LANDSCAPE"
+          : "PORTRAIT"
+      );
+    })();
+
+    // Listen for changes
+    const sub = ScreenOrientation.addOrientationChangeListener((event) => {
+      const newOrientation =
+        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+          ? "LANDSCAPE"
+          : "PORTRAIT";
+      setOrientation(newOrientation);
+    });
+
+    return () => ScreenOrientation.removeOrientationChangeListener(sub);
+  }, []);
+
+  // Adjust scaling dynamically
+  const { width } = Dimensions.get("window");
+  const scale =
+    orientation === "LANDSCAPE" ? width / 812 : width / 375; // base widths
+
+  // --- Fetch data ---
   useEffect(() => {
     fetch("https://regencyng.net/fs-api/proxy.php?type=daily_price")
       .then((res) => res.json())
@@ -29,21 +60,14 @@ const DailyPriceList = () => {
         setPriceData(data);
         setLoading(false);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  // Pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = priceData?.stock.slice(
     startIndex,
@@ -54,13 +78,23 @@ const DailyPriceList = () => {
     : 0;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: 40 * scale }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          {
+            marginTop: 20 * scale,
+            paddingHorizontal: orientation === "LANDSCAPE" ? 24 : 16 * scale,
+          },
+        ]}
+      >
         <TouchableOpacity onPress={() => router.back()}>
           <Feather name="arrow-left" size={22 * scale} color="#002B5B" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Daily Price List</Text>
+        <Text style={[styles.headerTitle, { fontSize: 16 * scale }]}>
+          Daily Price List
+        </Text>
         <View style={{ width: 22 * scale }} />
       </View>
 
@@ -74,22 +108,35 @@ const DailyPriceList = () => {
         </View>
       ) : priceData ? (
         <>
-          <Text style={styles.dateText}>
+          <Text
+            style={[
+              styles.dateText,
+              {
+                fontSize: 20 * scale,
+                marginLeft: orientation === "LANDSCAPE" ? 24 : 16 * scale,
+              },
+            ]}
+          >
             Daily Price List - {formatDate(priceData.date)}
           </Text>
 
           <ScrollView style={{ flex: 1 }}>
-            {currentItems.map((item: any, idx: number) => (
+            {currentItems.map((item, idx) => (
               <View key={idx} style={styles.stockRow}>
-                <Text style={styles.stockName}>{item.name}</Text>
+                <Text style={[styles.stockName, { fontSize: 15 * scale }]}>
+                  {item.name}
+                </Text>
                 <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.stockPrice}>
+                  <Text style={[styles.stockPrice, { fontSize: 14 * scale }]}>
                     ₦{item.price.toFixed(2)} |{" "}
                   </Text>
                   <Text
                     style={[
                       styles.changeText,
-                      { color: item.change >= 0 ? "green" : "red" },
+                      {
+                        color: item.change >= 0 ? "green" : "red",
+                        fontSize: 13 * scale,
+                      },
                     ]}
                   >
                     <Text style={{ color: "black" }}>Chg: </Text>
@@ -104,14 +151,21 @@ const DailyPriceList = () => {
           {/* Pagination */}
           <View style={styles.pagination}>
             <TouchableOpacity
-              style={[styles.pageButton, currentPage === 1 && { opacity: 0.5 }]}
+              style={[
+                styles.pageButton,
+                currentPage === 1 && { opacity: 0.5 },
+              ]}
               onPress={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
             >
-              <Text style={styles.pageText}>Prev</Text>
+              <Text style={[styles.pageText, { fontSize: 13 * scale }]}>
+                Prev
+              </Text>
             </TouchableOpacity>
 
-            <Text style={styles.pageNumber}>
+            <Text
+              style={[styles.pageNumber, { fontSize: 14 * scale, marginHorizontal: 10 * scale }]}
+            >
               {currentPage} / {totalPages}
             </Text>
 
@@ -125,7 +179,9 @@ const DailyPriceList = () => {
               }
               disabled={currentPage === totalPages}
             >
-              <Text style={styles.pageText}>Next</Text>
+              <Text style={[styles.pageText, { fontSize: 13 * scale }]}>
+                Next
+              </Text>
             </TouchableOpacity>
           </View>
         </>
@@ -144,19 +200,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 40 * scale,
-    marginBottom: 10 * scale,
+    marginBottom: 10,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16 * scale,
-    paddingBottom: 12 * scale,
-    marginTop: 20 * scale,
+    paddingBottom: 12,
   },
   headerTitle: {
-    fontSize: 16 * scale,
     fontWeight: "700",
     color: "#002B5B",
   },
@@ -166,57 +218,48 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
-    fontSize: 14 * scale,
     color: "#555",
   },
   dateText: {
-    fontSize: 20 * scale,
     fontWeight: "600",
-    marginBottom: 8 * scale,
-    marginLeft: 16 * scale,
-    marginTop: 4 * scale,
+    marginBottom: 8,
+    marginTop: 4,
     color: "#002B5B",
   },
   stockRow: {
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
-    paddingVertical: 14 * scale,
-    paddingHorizontal: 16 * scale,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
   },
   stockName: {
-    fontSize: 15 * scale,
     fontWeight: "600",
-    marginBottom: 4 * scale,
+    marginBottom: 4,
   },
   stockPrice: {
-    fontSize: 14 * scale,
     color: "#333",
   },
   changeText: {
-    fontSize: 13 * scale,
     fontWeight: "500",
   },
   pagination: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 16 * scale,
+    paddingVertical: 16,
   },
   pageButton: {
-    paddingHorizontal: 16 * scale,
-    paddingVertical: 8 * scale,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     backgroundColor: "#002B5B",
-    borderRadius: 5 * scale,
-    marginHorizontal: 5 * scale,
+    borderRadius: 5,
+    marginHorizontal: 5,
   },
   pageText: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 13 * scale,
   },
   pageNumber: {
-    fontSize: 14 * scale,
     fontWeight: "bold",
-    marginHorizontal: 10 * scale,
   },
 });

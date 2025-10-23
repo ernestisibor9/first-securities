@@ -12,19 +12,51 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ernzo.firstsecurities",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSExceptionDomains": {
+            "localhost": {
+              "NSExceptionAllowsInsecureHTTPLoads": false
+            },
+            "127.0.0.1": {
+              "NSExceptionAllowsInsecureHTTPLoads": false
+            }
+          }
+        }
       }
     },
     "android": {
+      "package": "com.ernzo.firstsecurities",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.ernzo.firstsecurities",
-      "minSdkVersion": 29,
-
-      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE", "VIBRATE"]
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "VIBRATE"
+      ],
+      "blockedPermissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "SYSTEM_ALERT_WINDOW"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +65,9 @@
     },
     "plugins": [
       "expo-router",
+      "./app.minSdkFix.js",
+      "./app.disableWebViewDebug.js",
+      "./app.plugin.js",
       [
         "expo-splash-screen",
         {
@@ -42,9 +77,8 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "./app.plugin.js"
+      "expo-secure-store"
     ],
-
     "experiments": {
       "typedRoutes": true
     },
@@ -55,7 +89,6 @@
       }
     },
     "runtimeVersion": "1.0.0",
-
     "updates": {
       "url": "https://u.expo.dev/8db528d3-594e-4d95-83e4-aadedac5e1c3"
     }
