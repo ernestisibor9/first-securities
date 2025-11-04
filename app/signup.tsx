@@ -12,6 +12,7 @@ import { WebView } from "react-native-webview";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { useRouter } from "expo-router";
 
 export default function SignUpScreen() {
   const [orientation, setOrientation] = useState("PORTRAIT");
@@ -20,8 +21,9 @@ export default function SignUpScreen() {
   );
 
   const { width, height } = useWindowDimensions();
+  const router = useRouter();
 
-  // ✅ Allow auto-rotation and detect orientation dynamically
+  // ✅ Detect and handle orientation changes dynamically
   useEffect(() => {
     ScreenOrientation.unlockAsync();
 
@@ -29,7 +31,7 @@ export default function SignUpScreen() {
       const o = orientationInfo.orientation;
       setOrientation(
         o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-        o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+          o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
           ? "LANDSCAPE"
           : "PORTRAIT"
       );
@@ -41,12 +43,14 @@ export default function SignUpScreen() {
     };
   }, []);
 
-  // ✅ Redirect function for both Dashboard & Arrow buttons
+  const handleGoBack = () => {
+    router.back();
+  };
+
   const redirectToDashboard = () => {
     setCurrentUrl("https://myportfolio.fbnquest.com/Securities");
   };
 
-  // ✅ Dynamic styles based on orientation
   const isLandscape = orientation === "LANDSCAPE";
 
   return (
@@ -56,24 +60,30 @@ export default function SignUpScreen() {
         { backgroundColor: isLandscape ? "#fff" : "#f9f9f9" },
       ]}
     >
-      {/* ✅ Header visible only in portrait mode */}
-      {!isLandscape && (
-        <View style={styles.header}>
-          <View style={styles.leftGroup}>
-            <TouchableOpacity onPress={redirectToDashboard} style={styles.backButton}>
-              <Feather name="arrow-left" size={22} color="#002B5B" />
-            </TouchableOpacity>
+      {/* ✅ Always render header but hide with opacity in landscape */}
+      <View
+        style={[
+          styles.header,
+          { opacity: isLandscape ? 0 : 1, height: isLandscape ? 0 : "auto" },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={handleGoBack}
+          style={styles.homeButton}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Feather name="arrow-left" size={22} color="#002B5B" />
+          <Text style={styles.homeText}>Home</Text>
+        </TouchableOpacity>
 
-            <TouchableOpacity onPress={redirectToDashboard}>
-              <Text style={styles.dashboardText}>Dashboard</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+        <TouchableOpacity onPress={redirectToDashboard} style={styles.dashboardButton}>
+          <Text style={styles.dashboardText}>Dashboard</Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* 🌐 WebView (takes full screen in landscape) */}
+      {/* 🌍 WebView */}
       <WebView
-        key={currentUrl} // ensures reload when URL changes
+        key={currentUrl}
         style={{
           flex: 1,
           width: "100%",
@@ -108,20 +118,28 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
     backgroundColor: "#fff",
-    elevation: 2, // subtle shadow for Android
+    elevation: 3,
+    zIndex: 10,
   },
-  leftGroup: {
+  homeButton: {
     flexDirection: "row",
     alignItems: "center",
+    padding: 6,
   },
-  backButton: {
-    paddingRight: 8,
+  homeText: {
+    marginLeft: 6,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#002B5B",
+  },
+  dashboardButton: {
+    padding: 6,
   },
   dashboardText: {
     color: "#002B5B",

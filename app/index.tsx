@@ -52,14 +52,14 @@ const Index = () => {
         {/* Logo */}
         <View style={{ marginTop: -30, marginBottom: 10 }}>
           <Image
-            source={require("../assets/images/fslogo.png")}
-            style={{ width: 180, height: 130 }}
+            source={require("../assets/images/fslogo2.png")}
+            style={{ width: 330, height: 100, resizeMode: "contain" }}
           />
         </View>
 
         {/* Bull Image */}
         <Image
-          source={require("../assets/images/bull-chart.jpg")}
+          source={require("../assets/images/customer.png")}
           style={styles.mainImage}
         />
 
@@ -108,6 +108,12 @@ const Index = () => {
             <Text style={styles.bottomLinkText}>Price Alert</Text>
           </TouchableOpacity>
         </View>
+        {/* Footer / Regulatory text */}
+<Text style={styles.footerText}>
+  First Securities is registered as a broker dealer{"\n"}
+  and regulated by the Securities and Exchange{"\n"}
+  Commission, Nigeria.
+</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -187,4 +193,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 13 * scale,
   },
+  footerText: {
+  color: "#555",
+  fontSize: 12 * scale,
+  textAlign: "center",
+  marginTop: 15,
+  paddingHorizontal: 20,
+  lineHeight: 18,
+},
+
 });
