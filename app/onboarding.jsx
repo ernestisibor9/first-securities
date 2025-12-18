@@ -1,78 +1,53 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
-import Swiper from "react-native-swiper";
 import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
 const Onboarding = () => {
   const router = useRouter();
-  const swiperRef = useRef(null);
 
+  // Automatically go to home after 8 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/"); // auto redirect after 10s
-    }, 10000);
+      router.replace("/");
+    }, 8000);
     return () => clearTimeout(timer);
   }, []);
 
-  const slides = [
-    {
-      id: 1,
-      image: require("../assets/images/unlock.jpg"),
-      title: "Unlock New Possibilities",
-      subtitle: "Disciplined Savings and Steady Gains",
-    },
-    {
-      id: 2,
-      image: require("../assets/images/grow.jpg"),
-      title: "Grow Your Wealth",
-      subtitle: "Invest and Save across Currencies",
-    },
-  ];
+  const goToHome = () => {
+    router.replace("/");
+  };
 
   return (
-    <Swiper
-      ref={swiperRef}
-      loop={false}
-      dot={<View style={styles.dot} />}
-      activeDot={<View style={styles.activeDot} />}
-      showsPagination
-    >
-      {slides.map((item) => (
-        <View key={item.id} style={styles.slide}>
-          <Image source={item.image} style={styles.image} resizeMode="contain" />
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.subtitle}>{item.subtitle}</Text>
+    <View style={styles.container}>
+      <Image
+        source={require("../assets/images/risks.png")}
+        style={styles.image}
+        resizeMode="contain"
+      />
 
-          <View style={styles.controls}>
-            <TouchableOpacity onPress={() => router.replace("/")}>
-              <Text style={styles.skip}>Skip</Text>
-            </TouchableOpacity>
+      <Text style={styles.title}>Securities Trading is Risky</Text>
+      <Text style={styles.subtitle}> Prices can fall anytime, leading to losses. Invest wisely.</Text>
 
-            <TouchableOpacity
-              style={styles.nextButton}
-              onPress={() => {
-                if (swiperRef.current && item.id < slides.length) {
-                  swiperRef.current.scrollBy(1);
-                } else {
-                  router.replace("/");
-                }
-              }}
-            >
-              <Text style={styles.nextText}>›</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
-    </Swiper>
+      {/* Skip and Next Buttons */}
+      <View style={styles.controls}>
+        {/* <TouchableOpacity onPress={goToHome}>
+          <Text style={styles.skip}>Skip</Text>
+        </TouchableOpacity> */}
+
+        <TouchableOpacity style={styles.nextButton} onPress={goToHome}>
+          <Text style={styles.nextText}>Continue ›</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
 export default Onboarding;
 
 const styles = StyleSheet.create({
-  slide: {
+  container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
@@ -99,7 +74,7 @@ const styles = StyleSheet.create({
   controls: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "85%",
+    width: "80%",
     position: "absolute",
     bottom: 60,
   },
@@ -109,26 +84,13 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     backgroundColor: "#002B5B",
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 6,
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
   },
   nextText: {
     color: "#fff",
-    fontSize: 22,
-  },
-  dot: {
-    backgroundColor: "#ccc",
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 3,
-  },
-  activeDot: {
-    backgroundColor: "#002B5B",
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginHorizontal: 3,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

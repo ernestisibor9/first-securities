@@ -13,6 +13,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 import "react-native-get-random-values";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import disclaimer from "./disclaimer";
 
 const { width } = Dimensions.get("window"); // screen dimensions
 const scale = width / 375; // scale factor (base = iPhone 11 width)
@@ -37,6 +39,7 @@ const Index = () => {
     };
   }, []);
 
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar
@@ -53,7 +56,7 @@ const Index = () => {
         <View style={{ marginTop: -30, marginBottom: 10 }}>
           <Image
             source={require("../assets/images/fslogo2.png")}
-            style={{ width: 330, height: 100, resizeMode: "contain" }}
+            style={{ width: 320, height: 100, resizeMode: "contain" }}
           />
         </View>
 
@@ -109,11 +112,10 @@ const Index = () => {
           </TouchableOpacity>
         </View>
         {/* Footer / Regulatory text */}
-<Text style={styles.footerText}>
-  First Securities is registered as a broker dealer{"\n"}
-  and regulated by the Securities and Exchange{"\n"}
-  Commission, Nigeria.
-</Text>
+
+          <Text style={styles.footerText}>
+          <TouchableOpacity onPress={() => router.push("/disclaimer")}><Text style={styles.bottomLinkTextDis}>Disclaimer</Text></TouchableOpacity>
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -194,12 +196,16 @@ const styles = StyleSheet.create({
     fontSize: 13 * scale,
   },
   footerText: {
-  color: "#555",
-  fontSize: 12 * scale,
-  textAlign: "center",
-  marginTop: 15,
-  paddingHorizontal: 20,
-  lineHeight: 18,
-},
-
+    color: "#555",
+    fontSize: 9 * scale,
+    textAlign: "center",
+    marginTop: 15,
+    paddingHorizontal: 20,
+    lineHeight: 18,
+  },
+  bottomLinkTextDis: {
+    color: "red",
+    fontWeight: "600",
+    fontSize: 13 * scale,
+  },
 });

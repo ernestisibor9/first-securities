@@ -17,7 +17,7 @@ export default function LoginScreen() {
   const webviewRef = useRef(null);
   const [orientation, setOrientation] = useState("PORTRAIT");
   const router = useRouter();
-  const url = "https://myportfolio.fbnquest.com/Securities";
+  const url = "https://myportfolio.first-securities.com/securities/Home/Login";
 
   // ✅ Enable auto-rotation and track orientation
   useEffect(() => {

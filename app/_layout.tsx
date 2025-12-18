@@ -3,8 +3,6 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-import 'react-native-get-random-values';
-
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -23,7 +21,6 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
-        <Stack.Screen name="onboarding"  options={{ headerShown: false }} />
         <Stack.Screen name="index"  options={{ headerShown: false }} />
         <Stack.Screen name="marketinsight" options={{ headerShown: false }}/>
         <Stack.Screen name="dailypricelist" options={{ headerShown: false }}/>
@@ -32,6 +29,7 @@ export default function RootLayout() {
         <Stack.Screen name="verifyemail" options={{ headerShown: false }}/>
         <Stack.Screen name="pricealert" options={{ headerShown: false }}/>
          <Stack.Screen name="pricechart" options={{ headerShown: false }}/>
+          <Stack.Screen name="disclaimer" options={{ headerShown: false }}/>
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

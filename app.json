@@ -68,6 +68,7 @@
       "./app.minSdkFix.js",
       "./app.disableWebViewDebug.js",
       "./app.plugin.js",
+      "./plugins/withJitpack.js",
       [
         "expo-splash-screen",
         {
