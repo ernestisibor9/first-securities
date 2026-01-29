@@ -17,7 +17,7 @@ import { useRouter } from "expo-router";
 export default function SignUpScreen() {
   const [orientation, setOrientation] = useState("PORTRAIT");
   const [currentUrl, setCurrentUrl] = useState(
-    "https://myportfolio.fbnquest.com/Securities/NewAccount/Registration"
+    "https://myportfolio.first-securities.com/securities/NewAccount/Registration"
   );
 
   const { width, height } = useWindowDimensions();
