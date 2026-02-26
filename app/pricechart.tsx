@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   Alert,
+  Modal,
+  Platform,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -15,18 +17,28 @@ import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LineChart } from "react-native-gifted-charts";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+
+interface Stock {
+  id: string;
+  name: string;
+}
 
 export default function PriceChart() {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
-  const [stocks, setStocks] = useState<any[]>([]);
+  const [stocks, setStocks] = useState<Stock[]>([]);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
   const [selectedStockName, setSelectedStockName] = useState<string>("");
   const [chartData, setChartData] = useState<{ date: Date; price: number }[]>([]);
   const [loadingChart, setLoadingChart] = useState(true);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [tempStock, setTempStock] = useState<string | null>(null);
 
   // ✅ Unlock screen rotation on mount
   useEffect(() => {
@@ -65,7 +77,7 @@ export default function PriceChart() {
       try {
         const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=stocks");
         if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-        const data = await safeJson(res);
+        const data: Stock[] = await safeJson(res);
 
         if (Array.isArray(data)) {
           setStocks(data);
@@ -103,7 +115,7 @@ export default function PriceChart() {
 
         if (Array.isArray(data)) {
           const parsedData = data
-            .map((item) => {
+            .map((item: { date: string; price: string }) => {
               try {
                 const [day, month, year] = item.date.split("/");
                 return {
@@ -123,9 +135,9 @@ export default function PriceChart() {
 
           setChartData(recentData);
 
-          // ✅ Find highest price
+          // ✅ Find highest price (checked if you need this value later, removed unused variable for now)
           if (recentData.length > 0) {
-            const highest = recentData.reduce((prev, curr) =>
+            recentData.reduce((prev, curr) =>
               curr.price > prev.price ? curr : prev
             );
           }
@@ -133,7 +145,7 @@ export default function PriceChart() {
           setChartData([]);
         }
 
-        const stockObj = stocks.find((s) => s.id === selectedStock);
+        const stockObj = stocks.find((s) => s.id === (selectedStock || ""));
         if (stockObj) setSelectedStockName(stockObj.name);
       } catch (err: any) {
         Alert.alert("Error", "Unable to fetch chart data.");
@@ -163,12 +175,13 @@ export default function PriceChart() {
   };
 
   // ✅ Convert to GiftedCharts format
-  const chartPoints = chartData.map((item) => ({
+  const chartPoints = chartData.map((item, index) => ({
     value: item.price,
-    label: item.date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    }),
+    // Show a label every 5 trading days (≈ 1 calendar week)
+    label: index % 5 === 0 ? item.date.toLocaleDateString("en-US", {
+      month: "short" as const,
+      day: "numeric" as const,
+    }) : "",
   }));
 
   // ✅ Calculate Y-axis limits
@@ -177,9 +190,13 @@ export default function PriceChart() {
   const maxPrice = prices.length > 0 ? Math.max(...prices) : 0;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView 
+      style={{ backgroundColor: "#f5f5f5" }}
+      contentContainerStyle={styles.container}
+    >
+      <StatusBar style="dark" />
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { marginTop: Math.max(insets.top, 20) }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Feather name="arrow-left" size={22} color="#002B5B" />
         </TouchableOpacity>
@@ -196,22 +213,67 @@ export default function PriceChart() {
         )}
       </View>
 
-      {/* Stock Picker */}
-      <View style={[styles.pickerContainer, { width: width * 0.9 }]}>
-        <Picker
-          selectedValue={selectedStock}
-          onValueChange={(itemValue) => {
-            setSelectedStock(itemValue);
-            const stockObj = stocks.find((s) => s.id === itemValue);
-            if (stockObj) setSelectedStockName(stockObj.name);
-          }}
-          style={{ width: "100%", height: 50 }}
-        >
-          {stocks.map((stock) => (
-            <Picker.Item key={stock.id} label={stock.name} value={stock.id} />
-          ))}
-        </Picker>
-      </View>
+      {/* Stock Selector Button */}
+      <TouchableOpacity
+        style={[styles.pickerButton, { width: width * 0.9 }]}
+        onPress={() => {
+          setTempStock(selectedStock);
+          setPickerVisible(true);
+        }}
+      >
+        <Text style={styles.pickerButtonText} numberOfLines={1}>
+          {selectedStockName || "Select a stock..."}
+        </Text>
+        <Feather name="chevron-down" size={18} color="#002B5B" />
+      </TouchableOpacity>
+
+      {/* Native Modal Picker */}
+      <Modal
+        visible={pickerVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setPickerVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setPickerVisible(false)}
+        />
+        <View style={styles.modalSheet}>
+          {/* Modal Header */}
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={() => setPickerVisible(false)}>
+              <Text style={styles.modalCancel}>Cancel</Text>
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Select Stock</Text>
+            <TouchableOpacity
+              onPress={() => {
+                if (tempStock) {
+                  setSelectedStock(tempStock);
+                  const stockObj = stocks.find((s) => s.id === tempStock);
+                  if (stockObj) setSelectedStockName(stockObj.name);
+                }
+                setPickerVisible(false);
+              }}
+            >
+              <Text style={styles.modalDone}>Done</Text>
+            </TouchableOpacity>
+          </View>
+          {/* Picker Wheel */}
+          <Picker
+            selectedValue={tempStock}
+            onValueChange={(val) => {
+              const v = val as string | null;
+              setTempStock(v);
+            }}
+            style={{ width: "100%" }}
+          >
+            {stocks.map((stock: Stock) => (
+              <Picker.Item key={stock.id} label={stock.name} value={stock.id} color="#000" />
+            ))}
+          </Picker>
+        </View>
+      </Modal>
 
       {/* Chart */}
       <View style={[styles.chartCard, { width: width * 0.95 }]}>
@@ -223,7 +285,7 @@ export default function PriceChart() {
             <LineChart
               data={chartPoints}
               height={isLandscape ? height * 0.8 : height * 0.45}
-              width={isLandscape ? width * 1.5 : Math.max(width, chartPoints.length * 60)}
+              width={isLandscape ? width * 1.5 : Math.max(width, chartPoints.length * 62)}
               color="crimson"
               thickness={2}
               hideRules={false}
@@ -231,13 +293,14 @@ export default function PriceChart() {
               dataPointsHeight={6}
               dataPointsWidth={6}
               dataPointsColor="crimson"
-              yAxisLabel=""
-              xAxisLabelTextStyle={{ fontSize: 10 }}
-              yAxisTextStyle={{ fontSize: 10 }}
+              yAxisLabelPrefix=""
+              xAxisLabelTextStyle={{ fontSize: 10, color: "#333" }}
+              yAxisTextStyle={{ fontSize: 10, color: "#333" }}
               xAxisColor="#ddd"
               yAxisColor="#ddd"
               showVerticalLines
-              spacing={10}
+              spacing={40}
+              initialSpacing={20}
               formatYLabel={(value) => `${value}`}
               // ✅ Start Y-axis at min value instead of 0
               yAxisOffset={minPrice}
@@ -262,7 +325,7 @@ export default function PriceChart() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, backgroundColor: "#f5f5f5", alignItems: "center" },
+  container: { flexGrow: 1, padding: 16, backgroundColor: "#f5f5f5", alignItems: "center" },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -277,12 +340,57 @@ const styles = StyleSheet.create({
     color: "#002B5B",
     marginLeft: 10,
   },
-  pickerContainer: {
+  pickerButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     marginBottom: 20,
-    overflow: "hidden",
+  },
+  pickerButtonText: {
+    fontSize: 15,
+    color: "#002B5B",
+    fontWeight: "600",
+    flex: 1,
+    marginRight: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
+  modalSheet: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom: 30,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#002B5B",
+  },
+  modalCancel: {
+    fontSize: 15,
+    color: "#888",
+  },
+  modalDone: {
+    fontSize: 15,
+    color: "#002B5B",
+    fontWeight: "700",
   },
   chartCard: {
     backgroundColor: "#fff",

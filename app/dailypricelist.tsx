@@ -11,13 +11,27 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+
+interface StockItem {
+  name: string;
+  price: number;
+  change: number;
+}
+
+interface PriceData {
+  date: string;
+  stock: StockItem[];
+}
 
 const DailyPriceList = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [priceData, setPriceData] = useState(null);
+  const [priceData, setPriceData] = useState<PriceData | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [orientation, setOrientation] = useState("PORTRAIT");
+  const insets = useSafeAreaInsets();
 
   const itemsPerPage = 20;
 
@@ -63,8 +77,8 @@ const DailyPriceList = () => {
       .catch(() => setLoading(false));
   }, []);
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
@@ -78,13 +92,14 @@ const DailyPriceList = () => {
     : 0;
 
   return (
-    <View style={[styles.container, { paddingTop: 40 * scale }]}>
+    <View style={[styles.container, { paddingTop: Math.max(insets.top, 20), paddingBottom: Math.max(insets.bottom, 10) }]}>
+      <StatusBar style="dark" />
       {/* Header */}
       <View
         style={[
           styles.header,
           {
-            marginTop: 20 * scale,
+            marginTop: 10 * scale,
             paddingHorizontal: orientation === "LANDSCAPE" ? 24 : 16 * scale,
           },
         ]}
@@ -121,7 +136,7 @@ const DailyPriceList = () => {
           </Text>
 
           <ScrollView style={{ flex: 1 }}>
-            {currentItems.map((item, idx) => (
+            {currentItems?.map((item: StockItem, idx: number) => (
               <View key={idx} style={styles.stockRow}>
                 <Text style={[styles.stockName, { fontSize: 15 * scale }]}>
                   {item.name}
@@ -200,7 +215,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    marginBottom: 10,
   },
   header: {
     flexDirection: "row",
