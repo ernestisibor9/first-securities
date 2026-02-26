@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   View,
   ActivityIndicator,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   Platform,
 } from "react-native";
 import { WebView } from "react-native-webview";
@@ -15,15 +14,14 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { useRouter } from "expo-router";
 
 export default function SignUpScreen() {
+  const webviewRef = useRef(null); // ✅ MUST be before usage
   const [orientation, setOrientation] = useState("PORTRAIT");
-  const [currentUrl, setCurrentUrl] = useState(
-    "https://myportfolio.first-securities.com/securities/NewAccount/Registration"
-  );
 
-  const { width, height } = useWindowDimensions();
   const router = useRouter();
+  const initialUrl =
+    "https://myportfolio.first-securities.com/securities/NewAccount/Registration";
 
-  // ✅ Detect and handle orientation changes dynamically
+  // ✅ Orientation handling
   useEffect(() => {
     ScreenOrientation.unlockAsync();
 
@@ -31,24 +29,29 @@ export default function SignUpScreen() {
       const o = orientationInfo.orientation;
       setOrientation(
         o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-          o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+        o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
           ? "LANDSCAPE"
           : "PORTRAIT"
       );
     };
 
-    const subscription = ScreenOrientation.addOrientationChangeListener(onChange);
-    return () => {
+    const subscription =
+      ScreenOrientation.addOrientationChangeListener(onChange);
+
+    return () =>
       ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
   }, []);
 
   const handleGoBack = () => {
     router.back();
   };
 
+  // ✅ Dashboard behaves EXACTLY like Login
   const redirectToDashboard = () => {
-    setCurrentUrl("https://myportfolio.fbnquest.com/Securities");
+    webviewRef.current?.injectJavaScript(`
+      window.location.href = "https://myportfolio.first-securities.com/Securities";
+      true;
+    `);
   };
 
   const isLandscape = orientation === "LANDSCAPE";
@@ -60,37 +63,36 @@ export default function SignUpScreen() {
         { backgroundColor: isLandscape ? "#fff" : "#f9f9f9" },
       ]}
     >
-      {/* ✅ Always render header but hide with opacity in landscape */}
+      {/* Header */}
       <View
         style={[
           styles.header,
           { opacity: isLandscape ? 0 : 1, height: isLandscape ? 0 : "auto" },
         ]}
       >
-        <TouchableOpacity
-          onPress={handleGoBack}
-          style={styles.homeButton}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
+        <TouchableOpacity onPress={handleGoBack} style={styles.homeButton}>
           <Feather name="arrow-left" size={22} color="#002B5B" />
           <Text style={styles.homeText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={redirectToDashboard} style={styles.dashboardButton}>
+        <TouchableOpacity
+          onPress={redirectToDashboard}
+          style={styles.dashboardButton}
+        >
           <Text style={styles.dashboardText}>Dashboard</Text>
         </TouchableOpacity>
       </View>
 
-      {/* 🌍 WebView */}
+      {/* WebView */}
       <WebView
-        key={currentUrl}
+        ref={webviewRef}
         style={{
           flex: 1,
           width: "100%",
           height: "100%",
           borderRadius: isLandscape ? 0 : 8,
         }}
-        source={{ uri: currentUrl }}
+        source={{ uri: initialUrl }}
         startInLoadingState
         renderLoading={() => (
           <View style={styles.loadingContainer}>
@@ -100,12 +102,9 @@ export default function SignUpScreen() {
         )}
         javaScriptEnabled
         domStorageEnabled
-        allowFileAccess={false}
-        allowUniversalAccessFromFileURLs={false}
         originWhitelist={["https://*"]}
         setBuiltInZoomControls={Platform.OS === "android"}
         setDisplayZoomControls={false}
-        setWebContentsDebuggingEnabled={false}
       />
     </SafeAreaView>
   );
