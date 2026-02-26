@@ -2,7 +2,7 @@
   "expo": {
     "name": "First-Securities",
     "slug": "first-securities",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "firstsecurities",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ernzo.firstsecurities",
+      "bundleIdentifier": "com.firstsecurities.app",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSAppTransportSecurity": {
@@ -27,7 +27,7 @@
       }
     },
     "android": {
-      "package": "com.ernzo.firstsecurities",
+      "package": "com.uncks.firstsecurities",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -83,15 +83,13 @@
     "experiments": {
       "typedRoutes": true
     },
+    "runtimeVersion": "1.0.0",
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "8db528d3-594e-4d95-83e4-aadedac5e1c3"
+        "projectId": "065e47fd-f342-40da-9fb6-e05e3b9ff705"
       }
     },
-    "runtimeVersion": "1.0.0",
-    "updates": {
-      "url": "https://u.expo.dev/8db528d3-594e-4d95-83e4-aadedac5e1c3"
-    }
+    "owner": "uncks"
   }
 }
