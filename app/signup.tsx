@@ -19,7 +19,7 @@ export default function SignUpScreen() {
 
   const router = useRouter();
   const initialUrl =
-    "https://myportfolio.first-securities.com/securities/NewAccount/Registration";
+    "https://alabiansolutions.com/client-mobile-app/sign-up/index.html";
 
   // ✅ Orientation handling
   useEffect(() => {

@@ -17,7 +17,7 @@ export default function LoginScreen() {
   const webviewRef = useRef(null);
   const [orientation, setOrientation] = useState("PORTRAIT");
   const router = useRouter();
-  const url = "https://myportfolio.first-securities.com/securities/Home/Login";
+  const url = "https://alabiansolutions.com/client-mobile-app/redirect.php";
 
   // ✅ Enable auto-rotation and track orientation
   useEffect(() => {
