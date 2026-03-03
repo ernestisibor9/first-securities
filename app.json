@@ -13,6 +13,9 @@
       "bundleIdentifier": "com.firstsecurities.app",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "This app needs access to your camera to take photos for document verification and profile updates.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to allow you to upload images for document verification and profile updates.",
+        "NSPhotoLibraryAddUsageDescription": "This app needs permission to save photos to your library.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
           "NSExceptionDomains": {
