@@ -13,9 +13,10 @@
       "bundleIdentifier": "com.firstsecurities.app",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "This app needs access to your camera to take photos for document verification and profile updates.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to allow you to upload images for document verification and profile updates.",
-        "NSPhotoLibraryAddUsageDescription": "This app needs permission to save photos to your library.",
+        "NSCameraUsageDescription": "This app needs access to your camera to take photos and videos for document verification and profile updates.",
+        "NSMicrophoneUsageDescription": "This app needs access to your microphone when recording videos for document verification and profile updates.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to allow you to upload images and videos for document verification and profile updates.",
+        "NSPhotoLibraryAddUsageDescription": "This app needs permission to save photos and videos to your library.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
           "NSExceptionDomains": {
@@ -39,7 +40,11 @@
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE",
-        "VIBRATE"
+        "VIBRATE",
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO"
       ],
       "blockedPermissions": [
         "READ_EXTERNAL_STORAGE",
