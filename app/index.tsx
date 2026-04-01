@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import "react-native-get-random-values";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BrandButton } from "@/components/BrandButton";
+import Animated, { FadeInUp, FadeInDown, ZoomIn } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window"); // screen dimensions
 const scale = width / 375; // scale factor (base = iPhone 11 width)
@@ -43,66 +45,64 @@ const Index = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Logo */}
-        <View style={styles.logoContainer}>
+        <Animated.View entering={FadeInDown.delay(200).duration(800)} style={styles.logoContainer}>
           <Image
             source={require("../assets/images/logo2.png")}
             style={styles.logo}
           />
-        </View>
+        </Animated.View>
 
         {/* Bull Image */}
-        <Image
-          source={require("../assets/images/customer.png")}
-          style={styles.mainImage}
-        />
+        <Animated.View entering={FadeInUp.delay(400).duration(1000)}>
+          <Image
+            source={require("../assets/images/customer.png")}
+            style={styles.mainImage}
+          />
+        </Animated.View>
 
         {/* Main Text */}
-        <Text style={styles.heading}>Invest Smarter. Grow Your Wealth.</Text>
-        <Text style={styles.subHeading}>
-          Your trusted partner for navigating the stock market.
-        </Text>
+        <Animated.View entering={FadeInDown.delay(600).duration(800)}>
+          <Text style={styles.heading}>Invest Smarter. Grow Your Wealth.</Text>
+          <Text style={styles.subHeading}>
+            Your trusted partner for navigating the stock market.
+          </Text>
+        </Animated.View>
 
         {/* Buttons */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/marketinsight")}
-        >
-          <Text style={styles.buttonText}>MARKET INSIGHT</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/dailypricelist")}
-        >
-          <Text style={styles.buttonText}>DAILY PRICE LIST</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/login")}
-        >
-          <Text style={styles.buttonText}>LOGIN</Text>
-        </TouchableOpacity>
+        <Animated.View entering={FadeInUp.delay(800).duration(800)} style={{ width: '100%', alignItems: 'center' }}>
+          <BrandButton
+            title="MARKET INSIGHT"
+            onPress={() => router.push("/marketinsight")}
+          />
+          <BrandButton
+            title="DAILY PRICE LIST"
+            onPress={() => router.push("/dailypricelist")}
+          />
+          <BrandButton
+            title="LOGIN"
+            onPress={() => router.push("/login")}
+          />
+        </Animated.View>
 
         {/* Sign up link */}
-        <View style={styles.signupContainer}>
+        <Animated.View entering={FadeInUp.delay(1000).duration(800)} style={styles.signupContainer}>
           <Text style={styles.signupText}>Don't have an account? </Text>
           <TouchableOpacity onPress={() => router.push("/signup")}>
             <Text style={styles.signupLink}>Sign up</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
 
         {/* Bottom links */}
-        <View style={styles.bottomLinks}>
+        <Animated.View entering={FadeInUp.delay(1200).duration(800)} style={styles.bottomLinks}>
           <TouchableOpacity onPress={() => router.push("/pricechart")}>
             <Text style={styles.bottomLinkText}>Price Chart</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/pricealert")}>
             <Text style={styles.bottomLinkText}>Price Alert</Text>
           </TouchableOpacity>
-        </View>
-        {/* Footer / Regulatory text */}
+        </Animated.View>
 
+        {/* Footer / Regulatory text */}
         <Text style={styles.footerText}>
           <TouchableOpacity onPress={() => router.push("/disclaimer")}>
             <Text style={styles.bottomLinkTextDis}>Disclaimer</Text>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "flex-end",
     paddingHorizontal: 20,
-    marginTop: 0,
+    marginTop: 10,
     marginBottom: 10,
   },
   logo: {
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 16 / 9,
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     resizeMode: "contain",
   },
   heading: {
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   button: {
-    backgroundColor: "#002B5B",
+    backgroundColor: "#00338f",
     paddingVertical: 16,
     borderRadius: 8,
     marginVertical: 8,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     fontFamily: "Inter-SemiBold",
-    color: "#002B5B",
+    color: "#00338f",
     fontWeight: "600",
     fontSize: 13 * scale,
   },
@@ -200,8 +200,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   bottomLinkText: {
-    fontFamily: "Inter-SemiBold",
-    color: "#002B5B",
+    fontFamily: "Inter-Bold",
+    color: "#00338f",
     fontWeight: "600",
     fontSize: 13 * scale,
   },
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   bottomLinkTextDis: {
     fontFamily: "Inter-SemiBold",
-    color: "red",
+    color: "#EEB72B",
     fontWeight: "600",
     fontSize: 13 * scale,
   },

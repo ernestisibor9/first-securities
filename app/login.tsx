@@ -14,7 +14,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
-  const webviewRef = useRef(null);
+  const webviewRef = useRef<WebView>(null);
   const [orientation, setOrientation] = useState("PORTRAIT");
   const router = useRouter();
   const url = "https://alabiansolutions.com/client-mobile-app/redirect.php";
@@ -23,7 +23,7 @@ export default function LoginScreen() {
   useEffect(() => {
     ScreenOrientation.unlockAsync();
 
-    const onChange = ({ orientationInfo }) => {
+    const onChange = ({ orientationInfo }: ScreenOrientation.OrientationChangeEvent) => {
       const o = orientationInfo.orientation;
       setOrientation(
         o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
@@ -58,12 +58,12 @@ export default function LoginScreen() {
         <View style={styles.header}>
           {/* ⬅️ Back/Home */}
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Feather name="arrow-left" size={22} color="#002B5B" />
+            <Feather name="arrow-left" size={22} color="#00338f" />
             <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
 
           {/* 🧭 Dashboard */}
-          <TouchableOpacity onPress={() => webviewRef.current && webviewRef.current.reload()}>
+          <TouchableOpacity onPress={() => webviewRef.current?.reload()}>
             <Text style={styles.headerTitle}>Dashboard</Text>
           </TouchableOpacity>
         </View>
@@ -83,7 +83,7 @@ export default function LoginScreen() {
           startInLoadingState
           renderLoading={() => (
             <View style={styles.loaderContainer}>
-              <ActivityIndicator size="large" color="#002B5B" />
+              <ActivityIndicator size="large" color="#00338f" />
               <Text style={styles.loadingText}>Loading...</Text>
             </View>
           )}
@@ -136,14 +136,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
-    color: "#002B5B",
+    color: "#00338f",
   },
 
   headerTitle: {
     fontFamily: 'Inter-SemiBold',
     fontSize: 16,
     fontWeight: "600",
-    color: "#002B5B",
+    color: "#00338f",
   },
 
   loaderContainer: {

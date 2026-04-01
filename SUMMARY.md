@@ -1,9 +1,67 @@
-# First Securities Session Summary - 2026-03-30 16:35
+# First Securities App — Session Summary
 
-- Verified image dimensions:
-  - `customer.png`: 1600x896 (used via `mainImage` with `16/9` aspect ratio).
-  - `fslogo2.png`: 330x100 (used as `320x100`).
-- Confirmed code usage in `app/index.tsx`:
-  - Logo is explicitly set to `320x100`.
-  - Bull image uses `90%` width and `16:9` aspect ratio.
-- Identified that `mainImage` refers to the style object in the code.
+## Brand Identity
+- **Primary**: `#00338f` (applied globally, replaces all old `#002B5B`)
+- **Accent**: `#EEB72B` (Disclaimer link, onboarding risk warning, disclaimer title)
+- **Secondary**: `#4C707F` (available in `Colors.brand.secondary` for future use)
+- All colors centralized in `constants/Colors.ts` under `Colors.brand`
+
+## Typography
+- All screens use **Inter** font family (Regular, Medium, SemiBold, Bold)
+- Central tokens in `constants/Typography.ts`
+- `components/ThemedText.tsx` is the standard text component
+
+## Theme
+- **Light Mode Only** — enforced via `app.json` (`userInterfaceStyle: "light"`) and `hooks/useColorScheme.ts`
+- `StatusBar` managed centrally in `app/_layout.tsx` with `style="dark"`
+
+## Screen Transitions (`app/_layout.tsx`)
+| Screen | Animation |
+|---|---|
+| `login`, `signup` | `slide_from_bottom` |
+| `marketinsight`, `dailypricelist`, `pricechart`, `pricealert`, `verifyemail` | `fade_from_bottom` |
+| `index`, `disclaimer` | `fade` |
+
+## Components Built
+| Component | Purpose |
+|---|---|
+| `components/BrandButton.tsx` | Reusable button with Haptic Feedback + Spring scale animation |
+| `components/SkeletonRow.tsx` | Pulsing ghost row for list loading states |
+| `components/SkeletonCard.tsx` | Pulsing ghost card for card-based loading states |
+
+## Screens Upgraded
+### `app/index.tsx`
+- Logo: `logo2.png`, `190x50`, right-aligned
+- Staggered fade-in animations for all elements (Reanimated)
+- Buttons replaced with `BrandButton` (haptics + spring)
+
+### `app/dailypricelist.tsx`
+- **BlurView** absolute header (`expo-blur`, `intensity=80`)
+- **Pull-to-Refresh** in brand blue
+- Skeleton loading (10 pulsing rows)
+
+### `app/marketinsight.tsx`
+- **BlurView** absolute header
+- **Pull-to-Refresh** with live `isRefreshing` state
+- Skeleton loading (4 pulsing cards)
+- Card title color updated to `#00338f`
+
+### `app/verifyemail.tsx`
+- OTP boxes are now individual `OtpBox` components
+- **Animated focus glow**: border interpolates grey → `#00338f`, shadow blooms on focus
+- All TypeScript errors fixed (`interval` type, `TextInput` ref)
+
+### `app/disclaimer.tsx`
+- `SafeAreaView` migrated from `react-native` → `react-native-safe-area-context`
+- Title color: `#EEB72B`
+
+### `app/login.tsx` / `app/signup.tsx`
+- `webviewRef` properly typed as `useRef<WebView>`
+- Orientation listener typed as `ScreenOrientation.OrientationChangeEvent`
+
+### `app/onboarding.jsx`
+- Title color updated to `#EEB72B`
+
+## Known Linting Notes
+- `verifyemail.tsx` — all errors resolved ✅
+- `login.tsx` / `signup.tsx` — all errors resolved ✅

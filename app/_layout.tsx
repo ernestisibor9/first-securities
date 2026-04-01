@@ -31,16 +31,15 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={DefaultTheme}>
       <Stack>
-        {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
-        <Stack.Screen name="index"  options={{ headerShown: false }} />
-        <Stack.Screen name="marketinsight" options={{ headerShown: false }}/>
-        <Stack.Screen name="dailypricelist" options={{ headerShown: false }}/>
-        <Stack.Screen name="login" options={{ headerShown: false }}/>
-        <Stack.Screen name="signup" options={{ headerShown: false }}/>
-        <Stack.Screen name="verifyemail" options={{ headerShown: false }}/>
-        <Stack.Screen name="pricealert" options={{ headerShown: false }}/>
-         <Stack.Screen name="pricechart" options={{ headerShown: false }}/>
-          <Stack.Screen name="disclaimer" options={{ headerShown: false }}/>
+        <Stack.Screen name="index" options={{ headerShown: false, animation: 'fade' }} />
+        <Stack.Screen name="marketinsight" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+        <Stack.Screen name="dailypricelist" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+        <Stack.Screen name="login" options={{ headerShown: false, animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="signup" options={{ headerShown: false, animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="verifyemail" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+        <Stack.Screen name="pricealert" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+        <Stack.Screen name="pricechart" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+        <Stack.Screen name="disclaimer" options={{ headerShown: false, animation: 'fade' }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="dark" />

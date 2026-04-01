@@ -13,25 +13,82 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolateColor,
+} from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
-const scale = width / 375; // base on iPhone 11 width
+const scale = width / 375;
 
+// --- Animated OTP Box ---
+const OtpBox = ({
+  value,
+  inputRef,
+  onChangeText,
+  onFocus,
+  onBlur,
+  focused,
+}: {
+  value: string;
+  inputRef: (ref: TextInput | null) => void;
+  onChangeText: (text: string) => void;
+  onFocus: () => void;
+  onBlur: () => void;
+  focused: boolean;
+}) => {
+  const focusProgress = useSharedValue(0);
+
+  useEffect(() => {
+    focusProgress.value = withTiming(focused ? 1 : 0, { duration: 200 });
+  }, [focused]);
+
+  const animatedBox = useAnimatedStyle(() => ({
+    borderColor: interpolateColor(
+      focusProgress.value,
+      [0, 1],
+      ["#ccc", "#00338f"]
+    ),
+    shadowOpacity: focusProgress.value * 0.25,
+    shadowRadius: focusProgress.value * 8,
+    elevation: focusProgress.value * 4,
+  }));
+
+  return (
+    <Animated.View style={[styles.codeInputWrapper, animatedBox]}>
+      <TextInput
+        ref={inputRef}
+        style={styles.codeInput}
+        maxLength={1}
+        keyboardType="numeric"
+        onChangeText={onChangeText}
+        value={value}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+    </Animated.View>
+  );
+};
+
+// --- Main Screen ---
 export default function VerifyEmail() {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [timer, setTimer] = useState(60);
   const [resendCount, setResendCount] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
 
-  const inputs = useRef([]);
+  const inputs = useRef<(TextInput | null)[]>([]);
   const router = useRouter();
   const { email } = useLocalSearchParams();
 
-  // Countdown effect
+  // Countdown
   useEffect(() => {
-    let interval;
+    let interval: ReturnType<typeof setInterval>;
     if (isResendDisabled && timer > 0) {
       interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     } else if (timer === 0) {
@@ -40,27 +97,23 @@ export default function VerifyEmail() {
     return () => clearInterval(interval);
   }, [isResendDisabled, timer]);
 
-  const handleChange = (text, index) => {
+  const handleChange = (text: string, index: number) => {
     const newCode = [...code];
     newCode[index] = text;
     setCode(newCode);
-
     if (text && index < 5) {
-      inputs.current[index + 1].focus();
+      inputs.current[index + 1]?.focus();
     }
   };
 
   const handleVerify = async () => {
     const otp = code.join("");
-
     if (otp.length !== 6) {
       alert("Please enter the 6-digit OTP.");
       return;
     }
-
     try {
       setLoading(true);
-
       const response = await fetch(
         "https://regencyng.net/fs-api/proxy.php?type=daily_alert_confirmation",
         {
@@ -69,7 +122,6 @@ export default function VerifyEmail() {
           body: JSON.stringify({ email, otp }),
         }
       );
-
       const data = await response.json();
       if (data.status === "ok") {
         setModalVisible(true);
@@ -94,11 +146,9 @@ export default function VerifyEmail() {
       alert("❌ You have reached the maximum resend attempts.");
       return;
     }
-
     try {
       setIsResendDisabled(true);
       setTimer(60);
-
       const response = await fetch(
         "https://regencyng.net/fs-api/proxy.php?type=daily_alert",
         {
@@ -107,7 +157,6 @@ export default function VerifyEmail() {
           body: JSON.stringify({ email }),
         }
       );
-
       const data = await response.json();
       if (data?.otp) {
         setResendCount((prev) => prev + 1);
@@ -128,7 +177,7 @@ export default function VerifyEmail() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24 * scale} color="black" />
+            <Ionicons name="arrow-back" size={24 * scale} color="#00338f" />
           </TouchableOpacity>
           <Text style={styles.headerText}>Verify Email</Text>
         </View>
@@ -141,17 +190,17 @@ export default function VerifyEmail() {
             Enter the 6-digit code to verify your account
           </Text>
 
-          {/* Code Inputs */}
+          {/* Animated OTP Inputs */}
           <View style={styles.codeContainer}>
             {code.map((digit, index) => (
-              <TextInput
+              <OtpBox
                 key={index}
-                ref={(ref) => (inputs.current[index] = ref)}
-                style={styles.codeInput}
-                maxLength={1}
-                keyboardType="numeric"
-                onChangeText={(text) => handleChange(text, index)}
                 value={digit}
+                focused={focusedIndex === index}
+                inputRef={(ref) => (inputs.current[index] = ref)}
+                onChangeText={(text) => handleChange(text, index)}
+                onFocus={() => setFocusedIndex(index)}
+                onBlur={() => setFocusedIndex(null)}
               />
             ))}
           </View>
@@ -190,7 +239,7 @@ export default function VerifyEmail() {
         </View>
       </ScrollView>
 
-      {/* ✅ Success Modal */}
+      {/* Success Modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -220,28 +269,34 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   headerText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 16 * scale,
     fontWeight: "600",
     marginLeft: 10 * scale,
+    color: "#00338f",
   },
   content: {
     backgroundColor: "#fff",
     marginHorizontal: 20 * scale,
     paddingTop: 60 * scale,
     paddingBottom: 60 * scale,
-    borderRadius: 8 * scale,
+    borderRadius: 12 * scale,
     alignItems: "center",
     marginTop: 40 * scale,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 3,
   },
   title: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 22 * scale,
     fontWeight: "600",
     marginBottom: 5 * scale,
   },
   subtitle: {
-    fontFamily: 'Inter',
+    fontFamily: "Inter",
     fontSize: 14 * scale,
     color: "#555",
     textAlign: "center",
@@ -250,40 +305,53 @@ const styles = StyleSheet.create({
   codeContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 20 * scale,
-    marginBottom: 20 * scale,
+    marginTop: 24 * scale,
+    marginBottom: 24 * scale,
   },
-  codeInput: {
-    fontFamily: 'Inter',
-    borderWidth: 1,
+  codeInputWrapper: {
+    borderWidth: 1.5,
     borderColor: "#ccc",
-    borderRadius: 6 * scale,
+    borderRadius: 8 * scale,
     width: 45 * scale,
-    height: 50 * scale,
-    textAlign: "center",
-    fontSize: 18 * scale,
+    height: 52 * scale,
     marginHorizontal: 5 * scale,
     backgroundColor: "#fff",
+    shadowColor: "#00338f",
+    shadowOffset: { width: 0, height: 0 },
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  codeInput: {
+    fontFamily: "Inter",
+    width: "100%",
+    height: "100%",
+    textAlign: "center",
+    fontSize: 20 * scale,
   },
   verifyButton: {
-    backgroundColor: "#002D62",
-    paddingVertical: 12 * scale,
+    backgroundColor: "#00338f",
+    paddingVertical: 14 * scale,
     paddingHorizontal: 50 * scale,
-    borderRadius: 6 * scale,
+    borderRadius: 10 * scale,
     marginVertical: 10 * scale,
+    shadowColor: "#00338f",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   verifyButtonText: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16 * scale,
   },
   resendText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     marginTop: 15 * scale,
     fontSize: 14 * scale,
     fontWeight: "600",
-    color: "#004AAD",
+    color: "#00338f",
   },
   modalOverlay: {
     flex: 1,
@@ -294,12 +362,12 @@ const styles = StyleSheet.create({
   modalBox: {
     backgroundColor: "#fff",
     padding: 25 * scale,
-    borderRadius: 10 * scale,
+    borderRadius: 14 * scale,
     alignItems: "center",
-    marginHorizontal: 20 * scale, // ✅ prevent modal from being too wide on tablets
+    marginHorizontal: 20 * scale,
   },
   modalText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 16 * scale,
     fontWeight: "600",
     color: "green",

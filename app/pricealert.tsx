@@ -91,7 +91,7 @@ const PriceAlert = () => {
       {/* Header */}
       <View style={[styles.header, { marginTop: 10 * scale }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Feather name="arrow-left" size={22 * scale} color="#002B5B" />
+          <Feather name="arrow-left" size={22 * scale} color="#00338f" />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { fontSize: 16 * scale }]}>
           First Invest Brokers
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Inter-SemiBold',
     fontWeight: "600",
-    color: "#002B5B",
+    color: "#00338f",
     marginLeft: 10,
   },
   content: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   button: {
-    backgroundColor: "#002B5B",
+    backgroundColor: "#00338f",
     borderRadius: 6,
     alignItems: "center",
     marginTop: 20,

@@ -198,7 +198,7 @@ export default function PriceChart() {
       {/* Header */}
       <View style={[styles.header, { marginTop: Math.max(insets.top, 20) }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Feather name="arrow-left" size={22} color="#002B5B" />
+          <Feather name="arrow-left" size={22} color="#00338f" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Stock Price Chart</Text>
 
@@ -207,7 +207,7 @@ export default function PriceChart() {
             {favorites.includes(selectedStock) ? (
               <Feather name="star" size={22} color="#FFD700" />
             ) : (
-              <Ionicons name="star-outline" size={22} color="#002B5B" />
+              <Ionicons name="star-outline" size={22} color="#00338f" />
             )}
           </TouchableOpacity>
         )}
@@ -224,7 +224,7 @@ export default function PriceChart() {
         <Text style={styles.pickerButtonText} numberOfLines={1}>
           {selectedStockName || "Select a stock..."}
         </Text>
-        <Feather name="chevron-down" size={18} color="#002B5B" />
+        <Feather name="chevron-down" size={18} color="#00338f" />
       </TouchableOpacity>
 
       {/* Native Modal Picker */}
@@ -279,7 +279,7 @@ export default function PriceChart() {
       <View style={[styles.chartCard, { width: width * 0.95 }]}>
         <Text style={styles.chartTitle}>Stock Chart</Text>
         {loadingChart ? (
-          <ActivityIndicator size="large" color="#002B5B" style={{ padding: 50 }} />
+          <ActivityIndicator size="large" color="#00338f" style={{ padding: 50 }} />
         ) : chartPoints.length > 0 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator>
             <LineChart
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-SemiBold',
     fontSize: 16,
     fontWeight: "600",
-    color: "#002B5B",
+    color: "#00338f",
     marginLeft: 10,
   },
   pickerButton: {
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
   pickerButtonText: {
     fontFamily: 'Inter-SemiBold',
     fontSize: 15,
-    color: "#002B5B",
+    color: "#00338f",
     fontWeight: "600",
     flex: 1,
     marginRight: 8,
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     fontSize: 16,
     fontWeight: "700",
-    color: "#002B5B",
+    color: "#00338f",
   },
   modalCancel: {
     fontFamily: 'Inter',
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   modalDone: {
     fontFamily: 'Inter-Bold',
     fontSize: 15,
-    color: "#002B5B",
+    color: "#00338f",
     fontWeight: "700",
   },
   chartCard: {
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-SemiBold',
     fontSize: 14,
     fontWeight: "600",
-    color: "#002B5B",
+    color: "#00338f",
     textAlign: "center",
     marginTop: 10,
   },

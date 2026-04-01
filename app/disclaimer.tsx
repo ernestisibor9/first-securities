@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
 import { useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Disclaimer = () => {
   const router = useRouter();
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-SemiBold',
     fontSize: 18,
     fontWeight: "600",
-    color: "#002B5B",
+    color: "#00338f",
   },
   container: {
     flex: 1,
@@ -99,6 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     marginBottom: 15,
+    color: "#EEB72B",
   },
   paragraph: {
     fontFamily: 'Inter',

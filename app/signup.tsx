@@ -14,7 +14,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { useRouter } from "expo-router";
 
 export default function SignUpScreen() {
-  const webviewRef = useRef(null); // ✅ MUST be before usage
+  const webviewRef = useRef<WebView>(null); // ✅ MUST be before usage
   const [orientation, setOrientation] = useState("PORTRAIT");
 
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function SignUpScreen() {
   useEffect(() => {
     ScreenOrientation.unlockAsync();
 
-    const onChange = ({ orientationInfo }) => {
+    const onChange = ({ orientationInfo }: ScreenOrientation.OrientationChangeEvent) => {
       const o = orientationInfo.orientation;
       setOrientation(
         o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
@@ -71,7 +71,7 @@ export default function SignUpScreen() {
         ]}
       >
         <TouchableOpacity onPress={handleGoBack} style={styles.homeButton}>
-          <Feather name="arrow-left" size={22} color="#002B5B" />
+          <Feather name="arrow-left" size={22} color="#00338f" />
           <Text style={styles.homeText}>Home</Text>
         </TouchableOpacity>
 
@@ -96,7 +96,7 @@ export default function SignUpScreen() {
         startInLoadingState
         renderLoading={() => (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#002B5B" />
+            <ActivityIndicator size="large" color="#00338f" />
             <Text style={styles.loadingText}>Loading...</Text>
           </View>
         )}
@@ -136,14 +136,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
-    color: "#002B5B",
+    color: "#00338f",
   },
   dashboardButton: {
     padding: 6,
   },
   dashboardText: {
     fontFamily: 'Inter-SemiBold',
-    color: "#002B5B",
+    color: "#00338f",
     fontWeight: "600",
     fontSize: 16,
   },

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     fontSize: 22,
     fontWeight: "bold",
-    color: "#002B5B",
+    color: "#EEB72B",
     marginTop: 20,
     textAlign: "center",
   },
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   nextButton: {
-    backgroundColor: "#002B5B",
+    backgroundColor: "#00338f",
     borderRadius: 25,
     paddingHorizontal: 20,
     paddingVertical: 8,
