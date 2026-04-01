@@ -34,8 +34,8 @@ const Disclaimer = () => {
 
         <Text style={styles.paragraph}>
           By accessing and using the First Invest mobile and online trading
-          application provided by First Securities Brokers Limited, you acknowledge
-          and agree to the following risks associated with electronic trading:
+          application provided by First Invest Brokers Limited, you acknowledge
+          and agree to the following terms and conditions:
         </Text>
 
         <Text style={styles.sectionTitle}>System & Connectivity Risks</Text>
@@ -51,8 +51,12 @@ const Disclaimer = () => {
         <Text style={styles.bullet}>• There is no guarantee that orders will be executed immediately or at the requested price.</Text>
 
         <Text style={styles.sectionTitle}>Security Risks</Text>
-        <Text style={styles.bullet}>• While First Securities Brokers Limited employs robust security measures, trading via First Invest carries inherent risks of unauthorized access, hacking, phishing, or data breaches.</Text>
-        <Text style={styles.bullet}>• Clients are responsible for safeguarding login credentials and ensuring secure access to their accounts.</Text>
+        <Text style={styles.bullet}>• While First Invest Brokers Limited employs robust security measures, trading via First Invest carries inherent risks of unauthorized access, hacking, phishing, or data breaches.</Text>
+        <Text style={styles.bullet}>• You are responsible for maintaining the confidentiality of your login credentials and ensuring the security of your device. Any transactions executed using your credentials will be deemed authorized by you.</Text>
+
+        <Text style={styles.sectionTitle}>Limitation of Liability</Text>
+        <Text style={styles.bullet}>• First Invest Brokers Limited is not liable for losses arising from technical failures, connectivity issues, or misuse of the First Invest application.</Text>
+        <Text style={styles.bullet}>• Clients must ensure compliance with all trading and reporting obligations.</Text>
 
         <Text style={styles.sectionTitle}>Regulatory & Compliance Risks</Text>
         <Text style={styles.bullet}>• Transactions executed through First Invest are subject to applicable laws, regulations, and exchange rules.</Text>
@@ -60,7 +64,7 @@ const Disclaimer = () => {
 
         <Text style={styles.sectionTitle}>Client Responsibility</Text>
         <Text style={styles.bullet}>• You are solely responsible for verifying trade confirmations, monitoring account activity, and maintaining adequate risk controls.</Text>
-        <Text style={styles.bullet}>• First Securities Brokers Limited is not liable for losses arising from technical failures, connectivity issues, or misuse of the First Invest application.</Text>
+        <Text style={styles.bullet}>• First Invest Brokers Limited is not liable for losses arising from technical failures, connectivity issues, or misuse of the First Invest application.</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -80,6 +84,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   backText: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 18,
     fontWeight: "600",
     color: "#002B5B",
@@ -90,22 +95,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
+    fontFamily: 'Inter-Bold',
     fontSize: 22,
     fontWeight: '700',
     marginBottom: 15,
   },
   paragraph: {
+    fontFamily: 'Inter',
     fontSize: 16,
     marginBottom: 20,
     lineHeight: 22,
   },
   sectionTitle: {
+    fontFamily: 'Inter-Bold',
     fontSize: 18,
     fontWeight: '700',
     marginTop: 15,
     marginBottom: 8,
   },
   bullet: {
+    fontFamily: 'Inter',
     fontSize: 16,
     lineHeight: 22,
     marginBottom: 10,

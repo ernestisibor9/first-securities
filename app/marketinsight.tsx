@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   loadingText: {
+    fontFamily: 'Inter',
     marginTop: 10,
     fontSize: 16 * scale,
     color: "#555",
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   header: {
+    fontFamily: 'Inter-Bold',
     fontSize: 18 * scale,
     fontWeight: "bold",
     color: "#002B5B",
@@ -138,20 +140,24 @@ const styles = StyleSheet.create({
     marginBottom: 16 * scale,
   },
   title: {
+    fontFamily: 'Inter-Bold',
     fontWeight: "700",
     fontSize: 16 * scale,
     marginBottom: 6 * scale,
   },
   desc: {
+    fontFamily: 'Inter',
     fontSize: 14 * scale,
     marginBottom: 8 * scale,
     color: "#444",
   },
   link: {
+    fontFamily: 'Inter',
     fontSize: 12 * scale,
     color: "#1E90FF",
   },
   time: {
+    fontFamily: 'Inter',
     fontSize: 12 * scale,
     color: "#999",
     marginTop: 4 * scale,

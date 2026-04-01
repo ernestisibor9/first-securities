@@ -100,8 +100,8 @@ export default function LoginScreen() {
 
         {/* Footer / Regulatory text */}
         <Text style={styles.footerText}>
-          First Securities is registered as a broker dealer{"\n"}
-          and regulated by the Securities and Exchange{"\n"}
+          First Invest is registered as a broker dealer{"\n"}
+          in Nigeria and a member of the NGX Exchange.{"\n"}
           Commission, Nigeria.
         </Text>
       </View>
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
   },
 
   backText: {
+    fontFamily: 'Inter-SemiBold',
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 16,
     fontWeight: "600",
     color: "#002B5B",
@@ -151,12 +153,14 @@ const styles = StyleSheet.create({
   },
 
   loadingText: {
+    fontFamily: 'Inter',
     marginTop: 10,
     color: "#444",
     fontSize: 14,
   },
 
   footerText: {
+    fontFamily: 'Inter',
     textAlign: "center",
     fontSize: 12,
     color: "#555",

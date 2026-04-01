@@ -94,7 +94,7 @@ const PriceAlert = () => {
           <Feather name="arrow-left" size={22 * scale} color="#002B5B" />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { fontSize: 16 * scale }]}>
-          First Securities Brokers
+          First Invest Brokers
         </Text>
       </View>
 
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
+    fontFamily: 'Inter-SemiBold',
     fontWeight: "600",
     color: "#002B5B",
     marginLeft: 10,
@@ -166,15 +167,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   title: {
+    fontFamily: 'Inter-SemiBold',
     fontWeight: "600",
     marginBottom: 6,
     color: "#000",
   },
   subtitle: {
+    fontFamily: 'Inter',
     color: "#666",
     marginBottom: 20,
   },
   input: {
+    fontFamily: 'Inter',
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 6,
@@ -186,6 +190,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonText: {
+    fontFamily: 'Inter-SemiBold',
     color: "#fff",
     fontWeight: "600",
   },

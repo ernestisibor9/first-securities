@@ -19,7 +19,7 @@ export default function SignUpScreen() {
 
   const router = useRouter();
   const initialUrl =
-    "https://alabiansolutions.com/client-mobile-app/sign-up/index.html";
+    "https://alabiansolutions.com/client-mobile-app/fs-signup.php";
 
   // ✅ Orientation handling
   useEffect(() => {
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   homeText: {
+    fontFamily: 'Inter-SemiBold',
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
@@ -141,6 +142,7 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   dashboardText: {
+    fontFamily: 'Inter-SemiBold',
     color: "#002B5B",
     fontWeight: "600",
     fontSize: 16,
@@ -151,6 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
+    fontFamily: 'Inter',
     marginTop: 10,
     color: "#444",
     fontSize: 14,

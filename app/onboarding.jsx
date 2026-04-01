@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     height: 250,
   },
   title: {
+    fontFamily: 'Inter-Bold',
     fontSize: 22,
     fontWeight: "bold",
     color: "#002B5B",
@@ -66,6 +67,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   subtitle: {
+    fontFamily: 'Inter',
     fontSize: 15,
     color: "#555",
     marginTop: 8,
@@ -79,6 +81,7 @@ const styles = StyleSheet.create({
     bottom: 60,
   },
   skip: {
+    fontFamily: 'Inter',
     color: "#777",
     fontSize: 16,
   },
@@ -89,6 +92,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   nextText: {
+    fontFamily: 'Inter-SemiBold',
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",

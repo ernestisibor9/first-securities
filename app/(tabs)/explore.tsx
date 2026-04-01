@@ -58,8 +58,8 @@ export default function TabTwoScreen() {
       <Collapsible title="Custom fonts">
         <ThemedText>
           Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
+          <ThemedText style={{ fontFamily: 'Inter' }}>
+            custom fonts such as Inter.
           </ThemedText>
         </ThemedText>
         <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">

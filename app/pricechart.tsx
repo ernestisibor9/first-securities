@@ -335,6 +335,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerTitle: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 16,
     fontWeight: "600",
     color: "#002B5B",
@@ -353,6 +354,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   pickerButtonText: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 15,
     color: "#002B5B",
     fontWeight: "600",
@@ -379,15 +381,18 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   modalTitle: {
+    fontFamily: 'Inter-Bold',
     fontSize: 16,
     fontWeight: "700",
     color: "#002B5B",
   },
   modalCancel: {
+    fontFamily: 'Inter',
     fontSize: 15,
     color: "#888",
   },
   modalDone: {
+    fontFamily: 'Inter-Bold',
     fontSize: 15,
     color: "#002B5B",
     fontWeight: "700",
@@ -403,12 +408,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   chartTitle: {
+    fontFamily: 'Inter-Bold',
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
     textAlign: "center",
   },
   stockInfo: {
+    fontFamily: 'Inter-SemiBold',
     fontSize: 14,
     fontWeight: "600",
     color: "#002B5B",

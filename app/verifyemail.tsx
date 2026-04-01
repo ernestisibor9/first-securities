@@ -219,7 +219,12 @@ const styles = StyleSheet.create({
     paddingVertical: 20 * scale,
     backgroundColor: "#fff",
   },
-  headerText: { fontSize: 16 * scale, fontWeight: "600", marginLeft: 10 * scale },
+  headerText: {
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 16 * scale,
+    fontWeight: "600",
+    marginLeft: 10 * scale,
+  },
   content: {
     backgroundColor: "#fff",
     marginHorizontal: 20 * scale,
@@ -229,8 +234,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 40 * scale,
   },
-  title: { fontSize: 22 * scale, fontWeight: "600", marginBottom: 5 * scale },
+  title: {
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 22 * scale,
+    fontWeight: "600",
+    marginBottom: 5 * scale,
+  },
   subtitle: {
+    fontFamily: 'Inter',
     fontSize: 14 * scale,
     color: "#555",
     textAlign: "center",
@@ -243,6 +254,7 @@ const styles = StyleSheet.create({
     marginBottom: 20 * scale,
   },
   codeInput: {
+    fontFamily: 'Inter',
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 6 * scale,
@@ -260,8 +272,14 @@ const styles = StyleSheet.create({
     borderRadius: 6 * scale,
     marginVertical: 10 * scale,
   },
-  verifyButtonText: { color: "#fff", fontWeight: "bold", fontSize: 16 * scale },
+  verifyButtonText: {
+    fontFamily: 'Inter-Bold',
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16 * scale,
+  },
   resendText: {
+    fontFamily: 'Inter-SemiBold',
     marginTop: 15 * scale,
     fontSize: 14 * scale,
     fontWeight: "600",
@@ -280,5 +298,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 20 * scale, // ✅ prevent modal from being too wide on tablets
   },
-  modalText: { fontSize: 16 * scale, fontWeight: "600", color: "green", textAlign: "center" },
+  modalText: {
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 16 * scale,
+    fontWeight: "600",
+    color: "green",
+    textAlign: "center",
+  },
 });

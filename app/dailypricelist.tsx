@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
+    fontFamily: 'Inter-Bold',
     fontWeight: "700",
     color: "#002B5B",
   },
@@ -232,9 +233,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
+    fontFamily: 'Inter',
     color: "#555",
   },
   dateText: {
+    fontFamily: 'Inter-SemiBold',
     fontWeight: "600",
     marginBottom: 8,
     marginTop: 4,
@@ -247,13 +250,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   stockName: {
+    fontFamily: 'Inter-SemiBold',
     fontWeight: "600",
     marginBottom: 4,
   },
   stockPrice: {
+    fontFamily: 'Inter',
     color: "#333",
   },
   changeText: {
+    fontFamily: 'Inter-Medium',
     fontWeight: "500",
   },
   pagination: {
@@ -270,10 +276,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   pageText: {
+    fontFamily: 'Inter-Bold',
     color: "#fff",
     fontWeight: "bold",
   },
   pageNumber: {
+    fontFamily: 'Inter-Bold',
     fontWeight: "bold",
   },
 });

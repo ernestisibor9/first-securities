@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "First-Securities",
+    "name": "First Invest",
     "slug": "first-securities",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "firstsecurities",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,

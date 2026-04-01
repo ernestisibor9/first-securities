@@ -1,11 +1,12 @@
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { Typography } from '@/constants/Typography';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link' | 'medium';
 };
 
 export function ThemedText({
@@ -17,15 +18,22 @@ export function ThemedText({
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
+  const getVariantStyle = () => {
+    switch (type) {
+      case 'title': return styles.title;
+      case 'subtitle': return styles.subtitle;
+      case 'defaultSemiBold': return styles.defaultSemiBold;
+      case 'medium': return styles.medium;
+      case 'link': return styles.link;
+      default: return styles.default;
+    }
+  };
+
   return (
     <Text
       style={[
         { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
+        getVariantStyle(),
         style,
       ]}
       {...rest}
@@ -35,26 +43,37 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: Typography.sizes.md,
+    lineHeight: Typography.lineHeights.normal,
+    fontFamily: Typography.fonts.regular,
   },
   defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: Typography.sizes.md,
+    lineHeight: Typography.lineHeights.normal,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: '600',
   },
+  medium: {
+    fontSize: Typography.sizes.md,
+    lineHeight: Typography.lineHeights.normal,
+    fontFamily: Typography.fonts.medium,
+    fontWeight: '500',
+  },
   title: {
-    fontSize: 32,
+    fontSize: Typography.sizes.title,
+    lineHeight: Typography.lineHeights.relaxed,
+    fontFamily: Typography.fonts.bold,
     fontWeight: 'bold',
-    lineHeight: 32,
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: Typography.sizes.xl,
+    fontFamily: Typography.fonts.bold,
     fontWeight: 'bold',
   },
   link: {
     lineHeight: 30,
-    fontSize: 16,
+    fontSize: Typography.sizes.md,
     color: '#0a7ea4',
+    fontFamily: Typography.fonts.regular,
   },
 });
