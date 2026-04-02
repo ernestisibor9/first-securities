@@ -70,8 +70,8 @@ const MarketInsight = () => {
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={onRefresh}
-            tintColor="#00338f"
-            colors={["#00338f"]}
+            tintColor="#0033A0"
+            colors={["#0033A0"]}
             progressViewOffset={Platform.OS === 'ios' ? 90 : 110}
           />
         }
@@ -114,7 +114,7 @@ const MarketInsight = () => {
       >
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Feather name="arrow-left" size={22 * scale} color="#00338f" />
+            <Feather name="arrow-left" size={22 * scale} color="#0033A0" />
           </TouchableOpacity>
           <Text style={styles.headerTitleText}>Market Insight</Text>
           <View style={{ width: 40 }} />
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Bold",
     fontSize: 18,
     fontWeight: "700",
-    color: "#00338f",
+    color: "#0033A0",
   },
   backButton: {
     padding: 4,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16 * scale,
     marginBottom: 6 * scale,
-    color: "#00338f",
+    color: "#0033A0",
   },
   desc: {
     fontFamily: "Inter",
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   link: {
     fontFamily: "Inter-Medium",
-    color: "#00338f",
+    color: "#0033A0",
     fontSize: 12 * scale,
     marginBottom: 8 * scale,
     textDecorationLine: "underline",

@@ -71,7 +71,7 @@ export default function SignUpScreen() {
         ]}
       >
         <TouchableOpacity onPress={handleGoBack} style={styles.homeButton}>
-          <Feather name="arrow-left" size={22} color="#00338f" />
+          <Feather name="arrow-left" size={22} color="#0033A0" />
           <Text style={styles.homeText}>Home</Text>
         </TouchableOpacity>
 
@@ -96,7 +96,7 @@ export default function SignUpScreen() {
         startInLoadingState
         renderLoading={() => (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#00338f" />
+            <ActivityIndicator size="large" color="#0033A0" />
             <Text style={styles.loadingText}>Loading...</Text>
           </View>
         )}
@@ -136,14 +136,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
-    color: "#00338f",
+    color: "#0033A0",
   },
   dashboardButton: {
     padding: 6,
   },
   dashboardText: {
     fontFamily: 'Inter-SemiBold',
-    color: "#00338f",
+    color: "#0033A0",
     fontWeight: "600",
     fontSize: 16,
   },

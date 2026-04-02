@@ -49,7 +49,7 @@ const OtpBox = ({
     borderColor: interpolateColor(
       focusProgress.value,
       [0, 1],
-      ["#ccc", "#00338f"]
+      ["#ccc", "#0033A0"]
     ),
     shadowOpacity: focusProgress.value * 0.25,
     shadowRadius: focusProgress.value * 8,
@@ -177,7 +177,7 @@ export default function VerifyEmail() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24 * scale} color="#00338f" />
+            <Ionicons name="arrow-back" size={24 * scale} color="#0033A0" />
           </TouchableOpacity>
           <Text style={styles.headerText}>Verify Email</Text>
         </View>
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     fontSize: 16 * scale,
     fontWeight: "600",
     marginLeft: 10 * scale,
-    color: "#00338f",
+    color: "#0033A0",
   },
   content: {
     backgroundColor: "#fff",
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     height: 52 * scale,
     marginHorizontal: 5 * scale,
     backgroundColor: "#fff",
-    shadowColor: "#00338f",
+    shadowColor: "#0033A0",
     shadowOffset: { width: 0, height: 0 },
     justifyContent: "center",
     alignItems: "center",
@@ -329,12 +329,12 @@ const styles = StyleSheet.create({
     fontSize: 20 * scale,
   },
   verifyButton: {
-    backgroundColor: "#00338f",
+    backgroundColor: "#0033A0",
     paddingVertical: 14 * scale,
     paddingHorizontal: 50 * scale,
     borderRadius: 10 * scale,
     marginVertical: 10 * scale,
-    shadowColor: "#00338f",
+    shadowColor: "#0033A0",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     marginTop: 15 * scale,
     fontSize: 14 * scale,
     fontWeight: "600",
-    color: "#00338f",
+    color: "#0033A0",
   },
   modalOverlay: {
     flex: 1,

@@ -93,8 +93,8 @@ const DailyPriceList = () => {
           <RefreshControl
             refreshing={false}
             onRefresh={onRefresh}
-            tintColor="#00338f"
-            colors={["#00338f"]}
+            tintColor="#0033A0"
+            colors={["#0033A0"]}
             progressViewOffset={Platform.OS === 'ios' ? 90 : 110}
           />
         }
@@ -181,7 +181,7 @@ const DailyPriceList = () => {
       >
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Feather name="arrow-left" size={22 * scale} color="#00338f" />
+            <Feather name="arrow-left" size={22 * scale} color="#0033A0" />
           </TouchableOpacity>
           <Text style={styles.headerTitleText}>Daily Price List</Text>
           <View style={{ width: 40 }} />
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     fontSize: 18,
     fontWeight: "700",
-    color: "#00338f",
+    color: "#0033A0",
   },
   backButton: {
     padding: 4,
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 16,
     marginTop: 4,
-    color: "#00338f",
+    color: "#0033A0",
   },
   stockRow: {
     borderBottomWidth: 1,
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   pageButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "#00338f",
+    backgroundColor: "#0033A0",
     borderRadius: 8,
     marginHorizontal: 10,
   },

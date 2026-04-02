@@ -58,7 +58,7 @@ export default function LoginScreen() {
         <View style={styles.header}>
           {/* ⬅️ Back/Home */}
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Feather name="arrow-left" size={22} color="#00338f" />
+            <Feather name="arrow-left" size={22} color="#0033A0" />
             <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
 
@@ -83,7 +83,7 @@ export default function LoginScreen() {
           startInLoadingState
           renderLoading={() => (
             <View style={styles.loaderContainer}>
-              <ActivityIndicator size="large" color="#00338f" />
+              <ActivityIndicator size="large" color="#0033A0" />
               <Text style={styles.loadingText}>Loading...</Text>
             </View>
           )}
@@ -136,14 +136,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
-    color: "#00338f",
+    color: "#0033A0",
   },
 
   headerTitle: {
     fontFamily: 'Inter-SemiBold',
     fontSize: 16,
     fontWeight: "600",
-    color: "#00338f",
+    color: "#0033A0",
   },
 
   loaderContainer: {

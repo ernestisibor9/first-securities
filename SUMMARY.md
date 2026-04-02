@@ -1,10 +1,11 @@
 # First Securities App — Session Summary
 
 ## Brand Identity
-- **Primary**: `#00338f` (applied globally, replaces all old `#002B5B`)
-- **Accent**: `#EEB72B` (Disclaimer link, onboarding risk warning, disclaimer title)
-- **Secondary**: `#4C707F` (available in `Colors.brand.secondary` for future use)
-- All colors centralized in `constants/Colors.ts` under `Colors.brand`
+- **Primary**: `#0033A0` (First Securities Blue — applied globally)
+- **Accent/Yellow**: `#EAAA00` (First Securities Yellow — disclaimer titles/links)
+- **Secondary**: `#4C707F` (Steel Gray — available in `Colors.brand.secondary`)
+- **Full Palette**: Purple, Red, Orange, Cyan, Green available in `Colors.brand.palette` (Corporate Manual)
+- Colors centralized in `constants/Colors.ts` under `Colors.brand`
 
 ## Typography
 - All screens use **Inter** font family (Regular, Medium, SemiBold, Bold)
@@ -44,23 +45,23 @@
 - **BlurView** absolute header
 - **Pull-to-Refresh** with live `isRefreshing` state
 - Skeleton loading (4 pulsing cards)
-- Card title color updated to `#00338f`
+- Card title color updated to `#0033A0`
 
 ### `app/verifyemail.tsx`
 - OTP boxes are now individual `OtpBox` components
-- **Animated focus glow**: border interpolates grey → `#00338f`, shadow blooms on focus
+- **Animated focus glow**: border interpolates grey → `#0033A0`, shadow blooms on focus
 - All TypeScript errors fixed (`interval` type, `TextInput` ref)
 
 ### `app/disclaimer.tsx`
 - `SafeAreaView` migrated from `react-native` → `react-native-safe-area-context`
-- Title color: `#EEB72B`
+- Title color: `#EAAA00`
 
 ### `app/login.tsx` / `app/signup.tsx`
 - `webviewRef` properly typed as `useRef<WebView>`
 - Orientation listener typed as `ScreenOrientation.OrientationChangeEvent`
 
 ### `app/onboarding.jsx`
-- Title color updated to `#EEB72B`
+- Title color updated to `#EAAA00`
 
 ## Known Linting Notes
 - `verifyemail.tsx` — all errors resolved ✅

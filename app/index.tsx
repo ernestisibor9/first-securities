@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   button: {
-    backgroundColor: "#00338f",
+    backgroundColor: "#0033A0",
     paddingVertical: 16,
     borderRadius: 8,
     marginVertical: 8,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     fontFamily: "Inter-SemiBold",
-    color: "#00338f",
+    color: "#0033A0",
     fontWeight: "600",
     fontSize: 13 * scale,
   },
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   bottomLinkText: {
     fontFamily: "Inter-Bold",
-    color: "#00338f",
+    color: "#0033A0",
     fontWeight: "600",
     fontSize: 13 * scale,
   },
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   bottomLinkTextDis: {
     fontFamily: "Inter-SemiBold",
-    color: "#EEB72B",
+    color: "#EAAA00",
     fontWeight: "600",
     fontSize: 13 * scale,
   },

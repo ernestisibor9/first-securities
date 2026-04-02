@@ -10,10 +10,10 @@ export const Colors = {
   light: {
     text: '#11181C',
     background: '#fff',
-    tint: '#00338f', // Primary brand color
+    tint: '#0033A0', // Primary brand color
     icon: '#687076',
     tabIconDefault: '#687076',
-    tabIconSelected: '#00338f',
+    tabIconSelected: '#0033A0',
   },
   dark: {
     text: '#ECEDEE',
@@ -24,8 +24,16 @@ export const Colors = {
     tabIconSelected: '#fff',
   },
   brand: {
-    primary: '#00338f',
-    secondary: '#4C707F',
-    accent: '#EEB72B', // Disclaimer color
+    primary: '#0033A0', // First Securities Blue
+    yellow: '#EAAA00',  // First Securities Yellow
+    accent: '#EAAA00',  // Alias for yellow used in the app
+    secondary: '#4C707F', // Original steel gray color
+    palette: {
+      purple: '#7a3c97',
+      red: '#d11e3a',
+      orange: '#f6862b',
+      cyan: '#008ec4',
+      green: '#79b076',
+    },
   }
 };

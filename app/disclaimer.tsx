@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-SemiBold',
     fontSize: 18,
     fontWeight: "600",
-    color: "#00338f",
+    color: "#0033A0",
   },
   container: {
     flex: 1,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     marginBottom: 15,
-    color: "#EEB72B",
+    color: "#EAAA00",
   },
   paragraph: {
     fontFamily: 'Inter',
