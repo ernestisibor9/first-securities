@@ -100,7 +100,7 @@ export default function LoginScreen() {
 
         {/* Footer / Regulatory text */}
         <Text style={styles.footerText}>
-          First Invest is registered as a broker dealer{"\n"}
+          FirstInvest is registered as a broker dealer{"\n"}
           in Nigeria and a member of the NGX Exchange.{"\n"}
           Commission, Nigeria.
         </Text>

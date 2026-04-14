@@ -94,7 +94,7 @@ const PriceAlert = () => {
           <Feather name="arrow-left" size={22 * scale} color="#0033A0" />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { fontSize: 16 * scale }]}>
-          First Invest Brokers
+          FirstInvest Brokers
         </Text>
       </View>
 

@@ -4,22 +4,23 @@ import React, { useEffect } from "react";
 import {
   Dimensions,
   Image,
-  ScrollView,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import "react-native-get-random-values";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { BrandButton } from "@/components/BrandButton";
-import Animated, { FadeInUp, FadeInDown, ZoomIn } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
+import { Colors } from "@/constants/Colors";
 
 const { width } = Dimensions.get("window"); // screen dimensions
 const scale = width / 375; // scale factor (base = iPhone 11 width)
 
 const Index = () => {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     // ✅ Allow screen auto-rotation
@@ -39,12 +40,19 @@ const Index = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
+    <ImageBackground
+      // using the existing customer.png or another placeholder if not provided
+      source={require("../assets/images/customer.png")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <LinearGradient
+        colors={["rgba(255, 255, 255, 0.40)", "rgba(0, 53, 160, 0.45)", "#79B076"]}
+        locations={[0, 0.2, 1]}
+        style={[styles.overlay, { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10 }]}
       >
-        {/* Logo */}
+        
+        {/* Logo Top Right */}
         <Animated.View entering={FadeInDown.delay(200).duration(800)} style={styles.logoContainer}>
           <Image
             source={require("../assets/images/logo2.png")}
@@ -52,172 +60,181 @@ const Index = () => {
           />
         </Animated.View>
 
-        {/* Bull Image */}
-        <Animated.View entering={FadeInUp.delay(400).duration(1000)}>
-          <Image
-            source={require("../assets/images/customer.png")}
-            style={styles.mainImage}
-          />
-        </Animated.View>
+        {/* Spacer */}
+        <View style={styles.spacer} />
 
-        {/* Main Text */}
-        <Animated.View entering={FadeInDown.delay(600).duration(800)}>
-          <Text style={styles.heading}>Invest Smarter. Grow Your Wealth.</Text>
-          <Text style={styles.subHeading}>
-            Your trusted partner for navigating the stock market.
+        {/* Hero Text */}
+        <Animated.View entering={FadeInUp.delay(400).duration(1000)} style={styles.textContainer}>
+          <Text style={styles.heroLine}>
+            <Text style={styles.highlightText}>Trade </Text>
+            Smarter
+          </Text>
+          <Text style={styles.heroLine}>Grow Your Wealth</Text>
+          <Text style={styles.subText}>
+            Your trusted partner for navigating the Nigerian Stock Market.
           </Text>
         </Animated.View>
 
-        {/* Buttons */}
-        <Animated.View entering={FadeInUp.delay(800).duration(800)} style={{ width: '100%', alignItems: 'center' }}>
-          <BrandButton
-            title="MARKET INSIGHT"
-            onPress={() => router.push("/marketinsight")}
-          />
-          <BrandButton
-            title="DAILY PRICE LIST"
-            onPress={() => router.push("/dailypricelist")}
-          />
-          <BrandButton
-            title="LOGIN"
+        {/* Middle Links */}
+        <Animated.View entering={FadeInUp.delay(600).duration(800)} style={styles.middleLinksContainer}>
+          <TouchableOpacity onPress={() => router.push("/marketinsight")} style={styles.middleLinkBtn}>
+            <Text style={styles.middleLinkText}>MARKET INSIGHT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/dailypricelist")} style={styles.middleLinkBtn}>
+            <Text style={styles.middleLinkText}>DAILY PRICE LIST</Text>
+          </TouchableOpacity>
+        </Animated.View>
+
+        {/* Primary Action */}
+        <Animated.View entering={FadeInUp.delay(800).duration(800)} style={styles.actionContainer}>
+          <TouchableOpacity 
+            style={styles.primaryButton}
             onPress={() => router.push("/login")}
-          />
-        </Animated.View>
-
-        {/* Sign up link */}
-        <Animated.View entering={FadeInUp.delay(1000).duration(800)} style={styles.signupContainer}>
-          <Text style={styles.signupText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => router.push("/signup")}>
-            <Text style={styles.signupLink}>Sign up</Text>
+            activeOpacity={0.8}
+          >
+            <Text style={styles.primaryButtonText}>LOGIN</Text>
           </TouchableOpacity>
         </Animated.View>
 
-        {/* Bottom links */}
-        <Animated.View entering={FadeInUp.delay(1200).duration(800)} style={styles.bottomLinks}>
-          <TouchableOpacity onPress={() => router.push("/pricechart")}>
-            <Text style={styles.bottomLinkText}>Price Chart</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/pricealert")}>
-            <Text style={styles.bottomLinkText}>Price Alert</Text>
+        {/* Footer Links */}
+        <Animated.View entering={FadeInUp.delay(1000).duration(800)} style={styles.footerContainer}>
+          <View style={styles.signupContainer}>
+            <Text style={styles.footerText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => router.push("/signup")}>
+              <Text style={styles.signupText}>Sign up</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.bottomLinkRow}>
+            <TouchableOpacity onPress={() => router.push("/pricechart")}>
+              <Text style={styles.footerLinkText}>Price Chart</Text>
+            </TouchableOpacity>
+            <Text style={styles.divider}>        </Text>
+            <TouchableOpacity onPress={() => router.push("/pricealert")}>
+              <Text style={styles.footerLinkText}>Price Alert</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity onPress={() => router.push("/disclaimer")} style={styles.disclaimerBtn}>
+            <Text style={styles.disclaimerText}>DISCLAIMER</Text>
           </TouchableOpacity>
         </Animated.View>
-
-        {/* Footer / Regulatory text */}
-        <Text style={styles.footerText}>
-          <TouchableOpacity onPress={() => router.push("/disclaimer")}>
-            <Text style={styles.bottomLinkTextDis}>Disclaimer</Text>
-          </TouchableOpacity>
-        </Text>
-      </ScrollView>
-    </SafeAreaView>
+      </LinearGradient>
+    </ImageBackground>
   );
 };
 
 export default Index;
 
 const styles = StyleSheet.create({
-  safeArea: {
+  background: {
     flex: 1,
-    backgroundColor: "#fff",
+    width: "100%",
+    height: "100%",
   },
-  container: {
-    flexGrow: 1,
-    alignItems: "center",
-    paddingVertical: 30,
-    backgroundColor: "#fff",
+  overlay: {
+    flex: 1,
+    paddingHorizontal: 25,
   },
   logoContainer: {
-    width: "100%",
     alignItems: "flex-end",
-    paddingHorizontal: 20,
     marginTop: 10,
-    marginBottom: 10,
   },
   logo: {
-    width: 190,
-    height: 50,
+    width: 220,
+    height: 60,
     resizeMode: "contain",
   },
-  mainImage: {
-    width: "90%",
-    height: undefined,
-    aspectRatio: 16 / 9,
-    borderRadius: 10,
-    marginBottom: 10,
-    resizeMode: "contain",
+  spacer: {
+    flex: 1, // pushes text down toward the middle
   },
-  heading: {
+  textContainer: {
+    marginBottom: 50,
+  },
+  heroLine: {
+    fontFamily: "Inter-Bold",
+    fontSize: 34 * scale,
+    color: "#FFFFFF",
+    lineHeight: 40 * scale,
+  },
+  highlightText: {
+    color: Colors.brand.yellow,
+  },
+  subText: {
+    fontFamily: "Inter-SemiBold",
+    fontSize: 15 * scale,
+    color: "#FFFFFF",
+    marginTop: 12,
+    lineHeight: 22 * scale,
+    maxWidth: "85%",
+  },
+  middleLinksContainer: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  middleLinkBtn: {
+    paddingVertical: 12,
+  },
+  middleLinkText: {
     fontFamily: "Inter-Bold",
     fontSize: 16 * scale,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 10,
-    marginTop: 10,
-    paddingHorizontal: 20,
+    color: "#FFFFFF",
+    textDecorationLine: "underline",
+    letterSpacing: 0.5,
   },
-  subHeading: {
-    fontFamily: "Inter",
-    fontSize: 14 * scale,
-    textAlign: "center",
-    color: "#555",
-    marginBottom: 40,
-    paddingHorizontal: 20,
+  actionContainer: {
+    alignItems: "center",
+    marginBottom: 30,
   },
-  button: {
-    backgroundColor: "#0033A0",
+  primaryButton: {
+    backgroundColor: Colors.brand.yellow,
+    width: "100%",
     paddingVertical: 16,
-    borderRadius: 8,
-    marginVertical: 8,
-    width: "80%",
+    borderRadius: 12,
     alignItems: "center",
   },
-  buttonText: {
-    fontFamily: "Inter-SemiBold",
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 15 * scale,
+  primaryButtonText: {
+    fontFamily: "Inter-Bold",
+    color: "#11181C",
+    fontSize: 16 * scale,
+  },
+  footerContainer: {
+    alignItems: "center",
+    marginBottom: 10,
   },
   signupContainer: {
     flexDirection: "row",
-    marginTop: 30,
     marginBottom: 20,
-  },
-  signupText: {
-    fontFamily: "Inter",
-    color: "#444",
-    fontSize: 13 * scale,
-  },
-  signupLink: {
-    fontFamily: "Inter-SemiBold",
-    color: "#0033A0",
-    fontWeight: "600",
-    fontSize: 13 * scale,
-  },
-  bottomLinks: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "80%",
-    marginTop: 20,
-  },
-  bottomLinkText: {
-    fontFamily: "Inter-Bold",
-    color: "#0033A0",
-    fontWeight: "600",
-    fontSize: 13 * scale,
   },
   footerText: {
     fontFamily: "Inter",
-    color: "#555",
-    fontSize: 9 * scale,
-    textAlign: "center",
-    marginTop: 35,
-    paddingHorizontal: 20,
-    lineHeight: 18,
+    color: "#EAEAEA",
+    fontSize: 14 * scale,
   },
-  bottomLinkTextDis: {
+  signupText: {
+    fontFamily: "Inter-Bold",
+    color: "#FFFFFF",
+    fontSize: 14 * scale,
+  },
+  bottomLinkRow: {
+    flexDirection: "row",
+    marginBottom: 25,
+  },
+  footerLinkText: {
     fontFamily: "Inter-SemiBold",
-    color: "#EAAA00",
-    fontWeight: "600",
-    fontSize: 13 * scale,
+    color: "#FFFFFF",
+    fontSize: 14 * scale,
+  },
+  divider: {
+    color: "transparent",
+  },
+  disclaimerBtn: {
+    paddingVertical: 10,
+  },
+  disclaimerText: {
+    fontFamily: "Inter-Bold",
+    color: Colors.brand.yellow,
+    fontSize: 14 * scale,
+    letterSpacing: 0.5,
   },
 });

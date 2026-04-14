@@ -1,8 +1,8 @@
-# First Securities App — Session Summary
+# FirstInvest App — Session Summary
 
 ## Brand Identity
-- **Primary**: `#0033A0` (First Securities Blue — applied globally)
-- **Accent/Yellow**: `#EAAA00` (First Securities Yellow — disclaimer titles/links)
+- **Primary**: `#0033A0` (FirstInvest Blue — applied globally)
+- **Accent/Yellow**: `#EAAA00` (FirstInvest Yellow — disclaimer titles/links)
 - **Secondary**: `#4C707F` (Steel Gray — available in `Colors.brand.secondary`)
 - **Full Palette**: Purple, Red, Orange, Cyan, Green available in `Colors.brand.palette` (Corporate Manual)
 - Colors centralized in `constants/Colors.ts` under `Colors.brand`

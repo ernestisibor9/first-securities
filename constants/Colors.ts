@@ -24,8 +24,8 @@ export const Colors = {
     tabIconSelected: '#fff',
   },
   brand: {
-    primary: '#0033A0', // First Securities Blue
-    yellow: '#EAAA00',  // First Securities Yellow
+    primary: '#0033A0', // FirstInvest Blue
+    yellow: '#EAAA00',  // FirstInvest Yellow
     accent: '#EAAA00',  // Alias for yellow used in the app
     secondary: '#4C707F', // Original steel gray color
     palette: {
