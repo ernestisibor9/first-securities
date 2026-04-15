@@ -10,10 +10,10 @@ export const Colors = {
   light: {
     text: '#11181C',
     background: '#fff',
-    tint: '#0033A0', // Primary brand color
+    tint: '#152e4d', // Primary brand color
     icon: '#687076',
     tabIconDefault: '#687076',
-    tabIconSelected: '#0033A0',
+    tabIconSelected: '#152e4d',
   },
   dark: {
     text: '#ECEDEE',
@@ -24,9 +24,9 @@ export const Colors = {
     tabIconSelected: '#fff',
   },
   brand: {
-    primary: '#0033A0', // FirstInvest Blue
-    yellow: '#EAAA00',  // FirstInvest Yellow
-    accent: '#EAAA00',  // Alias for yellow used in the app
+    primary: '#152e4d', // FirstInvest Blue
+    yellow: '#edb73a',  // FirstInvest Yellow
+    accent: '#edb73a',  // Alias for yellow used in the app
     secondary: '#4C707F', // Original steel gray color
     palette: {
       purple: '#7a3c97',

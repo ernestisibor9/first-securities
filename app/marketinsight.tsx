@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { BlurView } from "expo-blur";
 import { SkeletonCard } from "@/components/SkeletonCard";
+import { Colors } from "@/constants/Colors";
 
 const { width } = Dimensions.get("window");
 const scale = width / 375;
@@ -70,8 +71,8 @@ const MarketInsight = () => {
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={onRefresh}
-            tintColor="#0033A0"
-            colors={["#0033A0"]}
+            tintColor={Colors.brand.primary}
+            colors={[Colors.brand.primary]}
             progressViewOffset={Platform.OS === 'ios' ? 90 : 110}
           />
         }
@@ -114,7 +115,7 @@ const MarketInsight = () => {
       >
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Feather name="arrow-left" size={22 * scale} color="#0033A0" />
+            <Feather name="arrow-left" size={22 * scale} color={Colors.brand.primary} />
           </TouchableOpacity>
           <Text style={styles.headerTitleText}>Market Insight</Text>
           <View style={{ width: 40 }} />
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Bold",
     fontSize: 18,
     fontWeight: "700",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   backButton: {
     padding: 4,
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16 * scale,
     marginBottom: 6 * scale,
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   desc: {
     fontFamily: "Inter",
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
   },
   link: {
     fontFamily: "Inter-Medium",
-    color: "#0033A0",
+    color: Colors.brand.primary,
     fontSize: 12 * scale,
     marginBottom: 8 * scale,
     textDecorationLine: "underline",

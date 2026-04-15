@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { BlurView } from "expo-blur";
 import { SkeletonRow } from "@/components/SkeletonRow";
+import { Colors } from "@/constants/Colors";
 
 interface StockItem {
   name: string;
@@ -93,8 +94,8 @@ const DailyPriceList = () => {
           <RefreshControl
             refreshing={false}
             onRefresh={onRefresh}
-            tintColor="#0033A0"
-            colors={["#0033A0"]}
+            tintColor={Colors.brand.primary}
+            colors={[Colors.brand.primary]}
             progressViewOffset={Platform.OS === 'ios' ? 90 : 110}
           />
         }
@@ -181,7 +182,7 @@ const DailyPriceList = () => {
       >
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Feather name="arrow-left" size={22 * scale} color="#0033A0" />
+            <Feather name="arrow-left" size={22 * scale} color={Colors.brand.primary} />
           </TouchableOpacity>
           <Text style={styles.headerTitleText}>Daily Price List</Text>
           <View style={{ width: 40 }} />
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     fontSize: 18,
     fontWeight: "700",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   backButton: {
     padding: 4,
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 16,
     marginTop: 4,
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   stockRow: {
     borderBottomWidth: 1,
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
   pageButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "#0033A0",
+    backgroundColor: Colors.brand.primary,
     borderRadius: 8,
     marginHorizontal: 10,
   },

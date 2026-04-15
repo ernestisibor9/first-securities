@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
+import { Colors } from "@/constants/Colors";
 
 export default function SignUpScreen() {
   const webviewRef = useRef<WebView>(null); // ✅ MUST be before usage
@@ -73,7 +74,7 @@ export default function SignUpScreen() {
         ]}
       >
         <TouchableOpacity onPress={handleGoBack} style={styles.homeButton}>
-          <Feather name="arrow-left" size={22} color="#0033A0" />
+          <Feather name="arrow-left" size={22} color={Colors.brand.primary} />
           <Text style={styles.homeText}>Home</Text>
         </TouchableOpacity>
 
@@ -98,7 +99,7 @@ export default function SignUpScreen() {
         startInLoadingState
         renderLoading={() => (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0033A0" />
+            <ActivityIndicator size="large" color={Colors.brand.primary} />
             <Text style={styles.loadingText}>Loading...</Text>
           </View>
         )}
@@ -138,14 +139,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   dashboardButton: {
     padding: 6,
   },
   dashboardText: {
     fontFamily: "Inter-SemiBold",
-    color: "#0033A0",
+    color: Colors.brand.primary,
     fontWeight: "600",
     fontSize: 16,
   },

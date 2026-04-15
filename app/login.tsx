@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
+import { Colors } from "@/constants/Colors";
 
 export default function LoginScreen() {
   const webviewRef = useRef<WebView>(null);
@@ -61,7 +62,7 @@ export default function LoginScreen() {
         <View style={styles.header}>
           {/* ⬅️ Back/Home */}
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Feather name="arrow-left" size={22} color="#0033A0" />
+            <Feather name="arrow-left" size={22} color={Colors.brand.primary} />
             <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
 
@@ -86,7 +87,7 @@ export default function LoginScreen() {
           startInLoadingState
           renderLoading={() => (
             <View style={styles.loaderContainer}>
-              <ActivityIndicator size="large" color="#0033A0" />
+              <ActivityIndicator size="large" color={Colors.brand.primary} />
               <Text style={styles.loadingText}>Loading...</Text>
             </View>
           )}
@@ -139,14 +140,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
 
   headerTitle: {
     fontFamily: "Inter-SemiBold",
     fontSize: 16,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
 
   loaderContainer: {

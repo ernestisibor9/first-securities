@@ -47,7 +47,7 @@ const Index = () => {
       resizeMode="cover"
     >
       <LinearGradient
-        colors={["rgba(255, 255, 255, 0.40)", "rgba(0, 53, 160, 0.45)", "#79B076"]}
+        colors={["rgba(255, 255, 255, 0.40)", "rgba(21, 46, 77, 0.45)", "#79B076"]}
         locations={[0, 0.2, 1]}
         style={[styles.overlay, { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10 }]}
       >
