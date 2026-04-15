@@ -1,39 +1,42 @@
-import React, { useEffect, useState, useRef } from "react";
+import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  StyleSheet,
-  View,
   ActivityIndicator,
+  Platform,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  Platform,
+  View,
 } from "react-native";
-import { WebView } from "react-native-webview";
-import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ScreenOrientation from "expo-screen-orientation";
-import { useRouter } from "expo-router";
+import { WebView } from "react-native-webview";
 
 export default function LoginScreen() {
   const webviewRef = useRef<WebView>(null);
   const [orientation, setOrientation] = useState("PORTRAIT");
   const router = useRouter();
-  const url = "https://alabiansolutions.com/client-mobile-app/redirect.php";
+  const url = "https://alabiansolutions.com/client-mobile-app1/redirect.php";
 
   // ✅ Enable auto-rotation and track orientation
   useEffect(() => {
     ScreenOrientation.unlockAsync();
 
-    const onChange = ({ orientationInfo }: ScreenOrientation.OrientationChangeEvent) => {
+    const onChange = ({
+      orientationInfo,
+    }: ScreenOrientation.OrientationChangeEvent) => {
       const o = orientationInfo.orientation;
       setOrientation(
         o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
           o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
           ? "LANDSCAPE"
-          : "PORTRAIT"
+          : "PORTRAIT",
       );
     };
 
-    const subscription = ScreenOrientation.addOrientationChangeListener(onChange);
+    const subscription =
+      ScreenOrientation.addOrientationChangeListener(onChange);
     return () => {
       ScreenOrientation.removeOrientationChangeListener(subscription);
     };
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
   },
 
   backText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 16,
     fontWeight: "600",
     color: "#0033A0",
@@ -153,14 +156,14 @@ const styles = StyleSheet.create({
   },
 
   loadingText: {
-    fontFamily: 'Inter',
+    fontFamily: "Inter",
     marginTop: 10,
     color: "#444",
     fontSize: 14,
   },
 
   footerText: {
-    fontFamily: 'Inter',
+    fontFamily: "Inter",
     textAlign: "center",
     fontSize: 12,
     color: "#555",
