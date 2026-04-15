@@ -19,7 +19,7 @@ export default function SignUpScreen() {
 
   const router = useRouter();
   const initialUrl =
-    "https://alabiansolutions.com/client-mobile-app/fs-signup.php";
+    "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
 
   // ✅ Orientation handling
   useEffect(() => {
