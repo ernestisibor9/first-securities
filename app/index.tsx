@@ -1,3 +1,5 @@
+import { Colors } from "@/constants/Colors";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 import React, { useEffect } from "react";
@@ -10,10 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
-import { Colors } from "@/constants/Colors";
 
 const { width } = Dimensions.get("window"); // screen dimensions
 const scale = width / 375; // scale factor (base = iPhone 11 width)
@@ -47,13 +47,22 @@ const Index = () => {
       resizeMode="cover"
     >
       <LinearGradient
-        colors={["rgba(255, 255, 255, 0.40)", "rgba(21, 46, 77, 0.45)", "#79B076"]}
+        colors={[
+          "rgba(255, 255, 255, 0.40)",
+          "rgba(21, 46, 77, 0.45)",
+          "#79B076",
+        ]}
         locations={[0, 0.2, 1]}
-        style={[styles.overlay, { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10 }]}
+        style={[
+          styles.overlay,
+          { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10 },
+        ]}
       >
-        
         {/* Logo Top Right */}
-        <Animated.View entering={FadeInDown.delay(200).duration(800)} style={styles.logoContainer}>
+        <Animated.View
+          entering={FadeInDown.delay(200).duration(800)}
+          style={styles.logoContainer}
+        >
           <Image
             source={require("../assets/images/logo2.png")}
             style={styles.logo}
@@ -64,7 +73,10 @@ const Index = () => {
         <View style={styles.spacer} />
 
         {/* Hero Text */}
-        <Animated.View entering={FadeInUp.delay(400).duration(1000)} style={styles.textContainer}>
+        <Animated.View
+          entering={FadeInUp.delay(400).duration(1000)}
+          style={styles.textContainer}
+        >
           <Text style={styles.heroLine}>
             <Text style={styles.highlightText}>Trade </Text>
             Smarter
@@ -76,18 +88,30 @@ const Index = () => {
         </Animated.View>
 
         {/* Middle Links */}
-        <Animated.View entering={FadeInUp.delay(600).duration(800)} style={styles.middleLinksContainer}>
-          <TouchableOpacity onPress={() => router.push("/marketinsight")} style={styles.middleLinkBtn}>
+        <Animated.View
+          entering={FadeInUp.delay(600).duration(800)}
+          style={styles.middleLinksContainer}
+        >
+          <TouchableOpacity
+            onPress={() => router.push("/marketinsight")}
+            style={styles.middleLinkBtn}
+          >
             <Text style={styles.middleLinkText}>MARKET INSIGHT</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/dailypricelist")} style={styles.middleLinkBtn}>
+          <TouchableOpacity
+            onPress={() => router.push("/dailypricelist")}
+            style={styles.middleLinkBtn}
+          >
             <Text style={styles.middleLinkText}>DAILY PRICE LIST</Text>
           </TouchableOpacity>
         </Animated.View>
 
         {/* Primary Action */}
-        <Animated.View entering={FadeInUp.delay(800).duration(800)} style={styles.actionContainer}>
-          <TouchableOpacity 
+        <Animated.View
+          entering={FadeInUp.delay(800).duration(800)}
+          style={styles.actionContainer}
+        >
+          <TouchableOpacity
             style={styles.primaryButton}
             onPress={() => router.push("/login")}
             activeOpacity={0.8}
@@ -97,7 +121,10 @@ const Index = () => {
         </Animated.View>
 
         {/* Footer Links */}
-        <Animated.View entering={FadeInUp.delay(1000).duration(800)} style={styles.footerContainer}>
+        <Animated.View
+          entering={FadeInUp.delay(1000).duration(800)}
+          style={styles.footerContainer}
+        >
           <View style={styles.signupContainer}>
             <Text style={styles.footerText}>Don't have an account? </Text>
             <TouchableOpacity onPress={() => router.push("/signup")}>
@@ -109,13 +136,16 @@ const Index = () => {
             <TouchableOpacity onPress={() => router.push("/pricechart")}>
               <Text style={styles.footerLinkText}>Price Chart</Text>
             </TouchableOpacity>
-            <Text style={styles.divider}>        </Text>
+            <Text style={styles.divider}> </Text>
             <TouchableOpacity onPress={() => router.push("/pricealert")}>
               <Text style={styles.footerLinkText}>Price Alert</Text>
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity onPress={() => router.push("/disclaimer")} style={styles.disclaimerBtn}>
+          <TouchableOpacity
+            onPress={() => router.push("/disclaimer")}
+            style={styles.disclaimerBtn}
+          >
             <Text style={styles.disclaimerText}>DISCLAIMER</Text>
           </TouchableOpacity>
         </Animated.View>

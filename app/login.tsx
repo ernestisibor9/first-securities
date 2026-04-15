@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -12,7 +13,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
-import { Colors } from "@/constants/Colors";
 
 export default function LoginScreen() {
   const webviewRef = useRef<WebView>(null);
