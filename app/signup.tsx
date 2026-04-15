@@ -49,7 +49,7 @@ export default function SignUpScreen() {
   // ✅ Dashboard behaves EXACTLY like Login
   const redirectToDashboard = () => {
     webviewRef.current?.injectJavaScript(`
-      window.location.href = "https://alabiansolutions.com/client-mobile-app/redirect.php";
+      window.location.href = "https://alabiansolutions.com/client-mobile-app1/redirect.php";
       true;
     `);
   };
