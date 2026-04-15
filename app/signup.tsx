@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  StyleSheet,
-  View,
   ActivityIndicator,
+  Platform,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  Platform,
+  View,
 } from "react-native";
-import { WebView } from "react-native-webview";
-import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ScreenOrientation from "expo-screen-orientation";
-import { useRouter } from "expo-router";
+import { WebView } from "react-native-webview";
 
 export default function SignUpScreen() {
   const webviewRef = useRef<WebView>(null); // ✅ MUST be before usage
@@ -25,13 +25,15 @@ export default function SignUpScreen() {
   useEffect(() => {
     ScreenOrientation.unlockAsync();
 
-    const onChange = ({ orientationInfo }: ScreenOrientation.OrientationChangeEvent) => {
+    const onChange = ({
+      orientationInfo,
+    }: ScreenOrientation.OrientationChangeEvent) => {
       const o = orientationInfo.orientation;
       setOrientation(
         o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-        o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+          o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
           ? "LANDSCAPE"
-          : "PORTRAIT"
+          : "PORTRAIT",
       );
     };
 
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   homeText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     marginLeft: 6,
     fontSize: 16,
     fontWeight: "600",
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   dashboardText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     color: "#0033A0",
     fontWeight: "600",
     fontSize: 16,
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loadingText: {
-    fontFamily: 'Inter',
+    fontFamily: "Inter",
     marginTop: 10,
     color: "#444",
     fontSize: 14,
