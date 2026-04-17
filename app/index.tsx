@@ -136,7 +136,6 @@ const Index = () => {
             <TouchableOpacity onPress={() => router.push("/pricechart")}>
               <Text style={styles.footerLinkText}>Price Chart</Text>
             </TouchableOpacity>
-            <Text style={styles.divider}> </Text>
             <TouchableOpacity onPress={() => router.push("/pricealert")}>
               <Text style={styles.footerLinkText}>Price Alert</Text>
             </TouchableOpacity>
@@ -249,14 +248,13 @@ const styles = StyleSheet.create({
   bottomLinkRow: {
     flexDirection: "row",
     marginBottom: 25,
+    gap: 120,
+    justifyContent: "center",
   },
   footerLinkText: {
     fontFamily: "Inter-SemiBold",
     color: "#FFFFFF",
     fontSize: 14 * scale,
-  },
-  divider: {
-    color: "transparent",
   },
   disclaimerBtn: {
     paddingVertical: 10,
