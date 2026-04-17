@@ -1,37 +1,29 @@
+import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import React, { useEffect } from 'react';
-import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from "expo-router";
+import { Colors } from '@/constants/Colors';
+import { Typography } from '@/constants/Typography';
+import { useOrientation } from '@/hooks/useOrientation';
 
 const Disclaimer = () => {
   const router = useRouter();
-
-  // Allow auto-rotation
-  useEffect(() => {
-    ScreenOrientation.unlockAsync();
-
-    // Optional: lock back to portrait when leaving screen
-    return () => {
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-    };
-  }, []);
+  const { scale } = useOrientation();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       {/* Back Button */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>← Back</Text>
+          <Text style={[styles.backText, { fontSize: Typography.sizes.md * scale }]}>← Back</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Scrollable Disclaimer */}
       <ScrollView 
         style={styles.container}
         contentContainerStyle={{ paddingBottom: 120 }}   // 👈 FIX: prevents hidden text
       >
-        <Text style={styles.title}>Important Notice to Clients</Text>
+        <Text style={[styles.title, { fontSize: Typography.sizes.xxl * scale }]}>Important Notice to Clients</Text>
 
         <Text style={styles.paragraph}>
           By accessing and using the FirstInvest mobile and online trading
@@ -81,14 +73,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   backBtn: {
-    width: 70,
+    width: 80,
     paddingVertical: 6,
   },
   backText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   container: {
     flex: 1,
@@ -96,29 +87,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 22,
+    fontFamily: Typography.fonts.bold,
     fontWeight: '700',
     marginBottom: 15,
-    color: "#EAAA00",
+    color: Colors.brand.yellow,
   },
   paragraph: {
-    fontFamily: 'Inter',
+    fontFamily: Typography.fonts.regular,
     fontSize: 16,
     marginBottom: 20,
     lineHeight: 22,
   },
   sectionTitle: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: Typography.fonts.bold,
     fontSize: 18,
     fontWeight: '700',
     marginTop: 15,
     marginBottom: 8,
+    color: Colors.brand.primary,
   },
   bullet: {
-    fontFamily: 'Inter',
-    fontSize: 16,
+    fontFamily: Typography.fonts.regular,
+    fontSize: 15,
     lineHeight: 22,
     marginBottom: 10,
+    color: '#333',
   },
 });

@@ -4,11 +4,13 @@ import {
   Pressable, 
   ViewStyle, 
   TextStyle, 
-  Platform 
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { ThemedText } from './ThemedText';
 import { Colors } from '@/constants/Colors';
+import { useOrientation } from '@/hooks/useOrientation';
 import Animated, { 
   useAnimatedStyle, 
   useSharedValue, 
@@ -20,7 +22,9 @@ interface BrandButtonProps {
   onPress: () => void;
   style?: ViewStyle;
   textStyle?: TextStyle;
-  type?: 'primary' | 'secondary' | 'outline';
+  type?: 'primary' | 'secondary' | 'outline' | 'yellow';
+  disabled?: boolean;
+  loading?: boolean;
 }
 
 export const BrandButton = ({ 
@@ -28,29 +32,35 @@ export const BrandButton = ({
   onPress, 
   style, 
   textStyle,
-  type = 'primary'
+  type = 'primary',
+  disabled = false,
+  loading = false
 }: BrandButtonProps) => {
-  const scale = useSharedValue(1);
+  const { scale: globalScale } = useOrientation();
+  const pressScale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ scale: pressScale.value }],
+    opacity: disabled ? 0.6 : 1,
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.96);
+    if (disabled) return;
+    pressScale.value = withSpring(0.96);
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1);
+    pressScale.value = withSpring(1);
   };
 
   const getButtonStyle = () => {
     switch (type) {
       case 'outline': return styles.outlineButton;
       case 'secondary': return styles.secondaryButton;
+      case 'yellow': return styles.yellowButton;
       default: return styles.primaryButton;
     }
   };
@@ -58,7 +68,7 @@ export const BrandButton = ({
   const getTextStyle = () => {
     switch (type) {
       case 'outline': return { color: Colors.brand.primary };
-      case 'secondary': return { color: '#fff' };
+      case 'yellow': return { color: '#11181C' };
       default: return { color: '#fff' };
     }
   };
@@ -69,19 +79,30 @@ export const BrandButton = ({
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
+        disabled={disabled}
         style={({ pressed }) => [
           styles.button,
           getButtonStyle(),
+          { paddingVertical: 16 * globalScale, borderRadius: 12 * globalScale },
           style,
           pressed && styles.pressed
         ]}
       >
-        <ThemedText 
-          type="defaultSemiBold" 
-          style={[styles.text, getTextStyle(), textStyle]}
-        >
-          {title}
-        </ThemedText>
+        {loading ? (
+          <ActivityIndicator color={type === 'yellow' ? '#11181C' : '#fff'} />
+        ) : (
+          <ThemedText 
+            type="defaultSemiBold" 
+            style={[
+              styles.text, 
+              { fontSize: 16 * globalScale },
+              getTextStyle(), 
+              textStyle
+            ]}
+          >
+            {title}
+          </ThemedText>
+        )}
       </Pressable>
     </Animated.View>
   );
@@ -89,12 +110,9 @@ export const BrandButton = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '80%',
-    marginVertical: 8,
+    width: '100%',
   },
   button: {
-    paddingVertical: 16,
-    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -109,13 +127,15 @@ const styles = StyleSheet.create({
   secondaryButton: {
     backgroundColor: Colors.brand.secondary,
   },
+  yellowButton: {
+    backgroundColor: Colors.brand.yellow,
+  },
   outlineButton: {
     backgroundColor: 'transparent',
     borderWidth: 1.5,
     borderColor: Colors.brand.primary,
   },
   text: {
-    fontSize: 16,
   },
   pressed: {
     opacity: 0.9,

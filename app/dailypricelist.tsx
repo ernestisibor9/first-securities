@@ -8,15 +8,18 @@ import {
   Dimensions,
   RefreshControl,
   Platform,
+  TextInput,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
+import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
+import { useOrientation } from "@/hooks/useOrientation";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { BlurView } from "expo-blur";
 import { SkeletonRow } from "@/components/SkeletonRow";
-import { Colors } from "@/constants/Colors";
 
 interface StockItem {
   name: string;
@@ -34,27 +37,10 @@ const DailyPriceList = () => {
   const [loading, setLoading] = useState(true);
   const [priceData, setPriceData] = useState<PriceData | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [orientation, setOrientation] = useState("PORTRAIT");
+  const [searchQuery, setSearchQuery] = useState("");
+  const { isLandscape, scale } = useOrientation();
   const insets = useSafeAreaInsets();
-
   const itemsPerPage = 20;
-
-  useEffect(() => {
-    ScreenOrientation.unlockAsync();
-    return () => ScreenOrientation.removeOrientationChangeListener(sub);
-  }, []);
-
-  const sub = ScreenOrientation.addOrientationChangeListener((event) => {
-    const newOrientation =
-      event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-      event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-        ? "LANDSCAPE"
-        : "PORTRAIT";
-    setOrientation(newOrientation);
-  });
-
-  const { width } = Dimensions.get("window");
-  const scale = orientation === "LANDSCAPE" ? width / 812 : width / 375;
 
   const onRefresh = React.useCallback(() => {
     setLoading(true);
@@ -76,9 +62,18 @@ const DailyPriceList = () => {
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
+  const filteredStocks = priceData?.stock.filter(s => 
+    s.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+ 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = priceData?.stock.slice(startIndex, startIndex + itemsPerPage);
-  const totalPages = priceData ? Math.ceil(priceData.stock.length / itemsPerPage) : 0;
+  const currentItems = filteredStocks.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(filteredStocks.length / itemsPerPage);
+ 
+  // Reset to page 1 when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   return (
     <View style={styles.container}>
@@ -87,7 +82,7 @@ const DailyPriceList = () => {
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
-          paddingTop: Platform.OS === 'ios' ? (orientation === "LANDSCAPE" ? 80 : 100) : 100,
+          paddingTop: Platform.OS === 'ios' ? (isLandscape ? 130 : 180) : 180,
           paddingBottom: insets.bottom + 20,
         }}
         refreshControl={
@@ -112,62 +107,74 @@ const DailyPriceList = () => {
               style={[
                 styles.dateText,
                 {
-                  fontSize: 20 * scale,
-                  marginLeft: orientation === "LANDSCAPE" ? 24 : 16 * scale,
+                  fontSize: Typography.sizes.xl * scale,
+                  marginLeft: isLandscape ? 24 : 16 * scale,
+                  marginTop: 8 * scale,
                 },
               ]}
             >
               Daily Price List - {formatDate(priceData.date)}
             </Text>
-
-            {currentItems?.map((item: StockItem, idx: number) => (
-              <View key={idx} style={styles.stockRow}>
-                <Text style={[styles.stockName, { fontSize: 15 * scale }]}>
-                  {item.name}
+ 
+            {currentItems.length === 0 ? (
+              <View style={[styles.emptyContainer, { marginTop: 40 * scale }]}>
+                <Feather name="search" size={50 * scale} color="#ccc" />
+                <Text style={[styles.emptyText, { fontSize: Typography.sizes.md * scale, marginTop: 10 * scale }]}>
+                  No stocks found matching "{searchQuery}"
                 </Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={[styles.stockPrice, { fontSize: 14 * scale }]}>
-                    ₦{item.price.toFixed(2)} |{" "}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.changeText,
-                      {
-                        color: item.change >= 0 ? "green" : "red",
-                        fontSize: 13 * scale,
-                      },
-                    ]}
-                  >
-                    <Text style={{ color: "black" }}>Chg: </Text>
-                    {item.change >= 0 ? "+" : ""}
-                    {item.change.toFixed(2)}%
-                  </Text>
-                </View>
               </View>
-            ))}
+            ) : (
+              currentItems.map((item: StockItem, idx: number) => (
+                <View key={idx} style={styles.stockRow}>
+                  <Text style={[styles.stockName, { fontSize: 15 * scale }]}>
+                    {item.name}
+                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text style={[styles.stockPrice, { fontSize: 14 * scale }]}>
+                      ₦{item.price.toFixed(2)} |{" "}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.changeText,
+                        {
+                          color: item.change >= 0 ? "green" : "red",
+                          fontSize: 13 * scale,
+                        },
+                      ]}
+                    >
+                      <Text style={{ color: "black" }}>Chg: </Text>
+                      {item.change >= 0 ? "+" : ""}
+                      {item.change.toFixed(2)}%
+                    </Text>
+                  </View>
+                </View>
+              ))
+            )}
 
             {/* Pagination */}
-            <View style={styles.pagination}>
-              <TouchableOpacity
-                style={[styles.pageButton, currentPage === 1 && { opacity: 0.5 }]}
-                onPress={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                <Text style={[styles.pageText, { fontSize: 13 * scale }]}>Prev</Text>
-              </TouchableOpacity>
+            {totalPages > 1 && (
+              <View style={styles.pagination}>
+                <TouchableOpacity
+                  style={[styles.pageButton, currentPage === 1 && { opacity: 0.5 }]}
+                  onPress={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  <Text style={[styles.pageText, { fontSize: 13 * scale }]}>Prev</Text>
+                </TouchableOpacity>
 
-              <Text style={[styles.pageNumber, { fontSize: 14 * scale, marginHorizontal: 10 * scale }]}>
-                {currentPage} / {totalPages}
-              </Text>
+                <Text style={[styles.pageNumber, { fontSize: 14 * scale, marginHorizontal: 10 * scale }]}>
+                  {currentPage} / {totalPages}
+                </Text>
 
-              <TouchableOpacity
-                style={[styles.pageButton, currentPage === totalPages && { opacity: 0.5 }]}
-                onPress={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                <Text style={[styles.pageText, { fontSize: 13 * scale }]}>Next</Text>
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity
+                  style={[styles.pageButton, currentPage === totalPages && { opacity: 0.5 }]}
+                  onPress={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  <Text style={[styles.pageText, { fontSize: 13 * scale }]}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </>
         ) : (
           <Text style={{ textAlign: "center", marginTop: 20 * scale }}>Failed to load data</Text>
@@ -186,6 +193,23 @@ const DailyPriceList = () => {
           </TouchableOpacity>
           <Text style={styles.headerTitleText}>Daily Price List</Text>
           <View style={{ width: 40 }} />
+        </View>
+ 
+        {/* Search Bar */}
+        <View style={[styles.searchContainer, { marginHorizontal: 16 * scale, marginBottom: 12 * scale }]}>
+          <Feather name="search" size={18 * scale} color="#666" style={{ marginRight: 8 * scale }} />
+          <TextInput
+            placeholder="Search stock name..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={[styles.searchInput, { fontSize: 14 * scale, height: 40 * scale }]}
+            placeholderTextColor="#999"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Feather name="x-circle" size={18 * scale} color="#999" />
+            </TouchableOpacity>
+          )}
         </View>
       </BlurView>
     </View>
@@ -216,8 +240,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   headerTitleText: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 18,
+    fontFamily: Typography.fonts.bold,
+    fontSize: Typography.sizes.lg,
     fontWeight: "700",
     color: Colors.brand.primary,
   },
@@ -225,7 +249,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   dateText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
     marginBottom: 16,
     marginTop: 4,
@@ -238,16 +262,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   stockName: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
     marginBottom: 4,
   },
   stockPrice: {
-    fontFamily: 'Inter',
+    fontFamily: Typography.fonts.regular,
     color: "#333",
   },
   changeText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: Typography.fonts.medium,
     fontWeight: "500",
   },
   pagination: {
@@ -264,12 +288,34 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   pageText: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: Typography.fonts.bold,
     color: "#fff",
     fontWeight: "bold",
   },
   pageNumber: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: Typography.fonts.bold,
     fontWeight: "bold",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.05)",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: Typography.fonts.regular,
+    color: "#333",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 40,
+  },
+  emptyText: {
+    fontFamily: Typography.fonts.medium,
+    color: "#999",
+    textAlign: "center",
   },
 });

@@ -1,41 +1,39 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Linking,
-  Dimensions,
-  RefreshControl,
-  Platform,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
-import { BlurView } from "expo-blur";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { Colors } from "@/constants/Colors";
-
-const { width } = Dimensions.get("window");
-const scale = width / 375;
+import { Typography } from "@/constants/Typography";
+import { useOrientation } from "@/hooks/useOrientation";
+import { Feather } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import {
+  Linking,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const MarketInsight = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [insights, setInsights] = useState<any[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { scale, isLandscape } = useOrientation();
   const insets = useSafeAreaInsets();
-
-  useEffect(() => {
-    ScreenOrientation.unlockAsync();
-  }, []);
 
   const fetchData = async () => {
     try {
-      const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=market");
+      const res = await fetch(
+        "https://regencyng.net/fs-api/proxy.php?type=market",
+      );
       const data = await res.json();
       setInsights(data);
     } catch (err) {
@@ -54,6 +52,10 @@ const MarketInsight = () => {
     setIsRefreshing(true);
     fetchData();
   };
+  const filteredInsights = insights.filter(item => 
+    String(item.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    String(item.content || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <View style={styles.container}>
@@ -63,8 +65,9 @@ const MarketInsight = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: Platform.OS === 'ios' ? 100 : 100,
+            paddingTop: Platform.OS === "ios" ? (isLandscape ? 130 : 180) : 180,
             paddingBottom: insets.bottom + 20,
+            paddingHorizontal: 16 * scale,
           },
         ]}
         refreshControl={
@@ -73,7 +76,7 @@ const MarketInsight = () => {
             onRefresh={onRefresh}
             tintColor={Colors.brand.primary}
             colors={[Colors.brand.primary]}
-            progressViewOffset={Platform.OS === 'ios' ? 90 : 110}
+            progressViewOffset={Platform.OS === "ios" ? 90 : 110}
           />
         }
       >
@@ -83,8 +86,15 @@ const MarketInsight = () => {
               <SkeletonCard key={i} />
             ))}
           </View>
+        ) : filteredInsights.length === 0 ? (
+          <View style={[styles.emptyContainer, { marginTop: 40 * scale }]}>
+            <Feather name="search" size={50 * scale} color="#ccc" />
+            <Text style={[styles.emptyText, { fontSize: Typography.sizes.md * scale, marginTop: 10 * scale }]}>
+              No insights found matching "{searchQuery}"
+            </Text>
+          </View>
         ) : (
-          insights.map((item, idx) => {
+          filteredInsights.map((item, idx) => {
             const shortContent = String(item.content || "");
             const displayContent =
               shortContent.length > 140
@@ -92,15 +102,50 @@ const MarketInsight = () => {
                 : shortContent;
 
             return (
-              <View key={idx} style={styles.card}>
-                <Text style={styles.title}>{String(item.title || "")}</Text>
-                <Text style={styles.desc}>{displayContent}</Text>
+              <View
+                key={idx}
+                style={[
+                  styles.card,
+                  {
+                    padding: 16 * scale,
+                    borderRadius: 12 * scale,
+                    marginBottom: 16 * scale,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.title,
+                    { fontSize: 16 * scale, marginBottom: 6 * scale },
+                  ]}
+                >
+                  {String(item.title || "")}
+                </Text>
+                <Text
+                  style={[
+                    styles.desc,
+                    { fontSize: 14 * scale, marginBottom: 8 * scale },
+                  ]}
+                >
+                  {displayContent}
+                </Text>
                 {item.url ? (
-                  <TouchableOpacity onPress={() => Linking.openURL(String(item.url))}>
-                    <Text style={styles.link}>{String(item.url)}</Text>
+                  <TouchableOpacity
+                    onPress={() => Linking.openURL(String(item.url))}
+                  >
+                    <Text
+                      style={[
+                        styles.link,
+                        { fontSize: 12 * scale, marginBottom: 8 * scale },
+                      ]}
+                    >
+                      {String(item.url)}
+                    </Text>
                   </TouchableOpacity>
                 ) : null}
-                <Text style={styles.time}>{String(item.date || "")}</Text>
+                <Text style={[styles.time, { fontSize: 11 * scale }]}>
+                  {String(item.date || "")}
+                </Text>
               </View>
             );
           })
@@ -111,14 +156,41 @@ const MarketInsight = () => {
       <BlurView
         intensity={80}
         tint="light"
-        style={[styles.headerAbsolute, { paddingTop: Math.max(insets.top, 20) }]}
+        style={[
+          styles.headerAbsolute,
+          { paddingTop: Math.max(insets.top, 20) },
+        ]}
       >
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Feather name="arrow-left" size={22 * scale} color={Colors.brand.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <Feather
+              name="arrow-left"
+              size={22 * scale}
+              color={Colors.brand.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitleText}>Market Insight</Text>
           <View style={{ width: 40 }} />
+        </View>
+ 
+        {/* Search Bar with breathing room */}
+        <View style={[styles.searchContainer, { marginHorizontal: 16 * scale, marginBottom: 16 * scale }]}>
+          <Feather name="search" size={18 * scale} color="#666" style={{ marginRight: 8 * scale }} />
+          <TextInput
+            placeholder="Search insights..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={[styles.searchInput, { fontSize: 14 * scale, height: 40 * scale }]}
+            placeholderTextColor="#999"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Feather name="x-circle" size={18 * scale} color="#999" />
+            </TouchableOpacity>
+          )}
         </View>
       </BlurView>
     </View>
@@ -149,22 +221,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   headerTitleText: {
-    fontFamily: "Inter-Bold",
-    fontSize: 18,
+    fontFamily: Typography.fonts.bold,
+    fontSize: Typography.sizes.lg,
     fontWeight: "700",
     color: Colors.brand.primary,
   },
   backButton: {
     padding: 4,
   },
-  scrollContent: {
-    paddingHorizontal: 16 * scale,
-  },
+  scrollContent: {},
   card: {
     backgroundColor: "#F5F7FA",
-    padding: 16 * scale,
-    borderRadius: 12 * scale,
-    marginBottom: 16 * scale,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -172,29 +239,44 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   title: {
-    fontFamily: "Inter-Bold",
+    fontFamily: Typography.fonts.bold,
     fontWeight: "700",
-    fontSize: 16 * scale,
-    marginBottom: 6 * scale,
     color: Colors.brand.primary,
   },
   desc: {
-    fontFamily: "Inter",
-    fontSize: 14 * scale,
-    marginBottom: 8 * scale,
+    fontFamily: Typography.fonts.regular,
     color: "#444",
   },
   link: {
-    fontFamily: "Inter-Medium",
+    fontFamily: Typography.fonts.medium,
     color: Colors.brand.primary,
-    fontSize: 12 * scale,
-    marginBottom: 8 * scale,
     textDecorationLine: "underline",
   },
   time: {
-    fontFamily: "Inter",
-    fontSize: 11 * scale,
+    fontFamily: Typography.fonts.regular,
     color: "#888",
     textAlign: "right",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.05)",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: Typography.fonts.regular,
+    color: "#333",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 40,
+  },
+  emptyText: {
+    fontFamily: Typography.fonts.medium,
+    color: "#999",
+    textAlign: "center",
   },
 });

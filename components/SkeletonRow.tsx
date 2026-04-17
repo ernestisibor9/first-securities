@@ -8,9 +8,10 @@ import Animated, {
   withSequence 
 } from 'react-native-reanimated';
 
-const { width } = Dimensions.get('window');
+import { useOrientation } from '@/hooks/useOrientation';
 
 export const SkeletonRow = () => {
+  const { scale } = useOrientation();
   const opacity = useSharedValue(0.3);
 
   useEffect(() => {
@@ -29,11 +30,11 @@ export const SkeletonRow = () => {
   }));
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.shimmer, styles.title, animatedStyle]} />
-      <View style={styles.rightSide}>
-        <Animated.View style={[styles.shimmer, styles.smallBar, animatedStyle]} />
-        <Animated.View style={[styles.shimmer, styles.smallBar, animatedStyle]} />
+    <View style={[styles.container, { padding: 16 * scale }]}>
+      <Animated.View style={[styles.shimmer, styles.title, { height: 18 * scale, borderRadius: 4 * scale }, animatedStyle]} />
+      <View style={[styles.rightSide, { gap: 8 * scale }]}>
+        <Animated.View style={[styles.shimmer, styles.smallBar, { width: 60 * scale, height: 18 * scale, borderRadius: 4 * scale }, animatedStyle]} />
+        <Animated.View style={[styles.shimmer, styles.smallBar, { width: 60 * scale, height: 18 * scale, borderRadius: 4 * scale }, animatedStyle]} />
       </View>
     </View>
   );

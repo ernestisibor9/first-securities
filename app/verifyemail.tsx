@@ -13,6 +13,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
+import { useOrientation } from "@/hooks/useOrientation";
+import { BrandButton } from "@/components/BrandButton";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -20,8 +24,7 @@ import Animated, {
   interpolateColor,
 } from "react-native-reanimated";
 
-const { width } = Dimensions.get("window");
-const scale = width / 375;
+
 
 // --- Animated OTP Box ---
 const OtpBox = ({
@@ -46,10 +49,10 @@ const OtpBox = ({
   }, [focused]);
 
   const animatedBox = useAnimatedStyle(() => ({
-    borderColor: interpolateColor(
+      borderColor: interpolateColor(
       focusProgress.value,
       [0, 1],
-      ["#ccc", "#0033A0"]
+      ["#ccc", Colors.brand.primary]
     ),
     shadowOpacity: focusProgress.value * 0.25,
     shadowRadius: focusProgress.value * 8,
@@ -72,8 +75,8 @@ const OtpBox = ({
   );
 };
 
-// --- Main Screen ---
 export default function VerifyEmail() {
+  const { scale } = useOrientation();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -175,23 +178,22 @@ export default function VerifyEmail() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { paddingHorizontal: 20 * scale, paddingVertical: 20 * scale }]}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24 * scale} color="#0033A0" />
+            <Ionicons name="arrow-back" size={24 * scale} color={Colors.brand.primary} />
           </TouchableOpacity>
-          <Text style={styles.headerText}>Verify Email</Text>
+          <Text style={[styles.headerText, { fontSize: Typography.sizes.md * scale, marginLeft: 10 * scale }]}>Verify Email</Text>
         </View>
 
         {/* Content */}
-        <View style={styles.content}>
-          <Text style={styles.title}>Check your email</Text>
-          <Text style={styles.subtitle}>We just sent you a mail</Text>
-          <Text style={styles.subtitle}>
+        <View style={[styles.content, { marginHorizontal: 20 * scale, paddingTop: 60 * scale, paddingBottom: 60 * scale, borderRadius: 12 * scale, marginTop: 40 * scale }]}>
+          <Text style={[styles.title, { fontSize: Typography.sizes.xxl * scale, marginBottom: 5 * scale }]}>Check your email</Text>
+          <Text style={[styles.subtitle, { fontSize: Typography.sizes.sm * scale }]}>We just sent you a mail</Text>
+          <Text style={[styles.subtitle, { fontSize: Typography.sizes.sm * scale }]}>
             Enter the 6-digit code to verify your account
           </Text>
 
-          {/* Animated OTP Inputs */}
-          <View style={styles.codeContainer}>
+          <View style={[styles.codeContainer, { marginTop: 24 * scale, marginBottom: 24 * scale }]}>
             {code.map((digit, index) => (
               <OtpBox
                 key={index}
@@ -206,17 +208,13 @@ export default function VerifyEmail() {
           </View>
 
           {/* Verify Button */}
-          <TouchableOpacity
-            style={styles.verifyButton}
+          <BrandButton
+            title="VERIFY"
             onPress={handleVerify}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.verifyButtonText}>VERIFY</Text>
-            )}
-          </TouchableOpacity>
+            loading={loading}
+            disabled={loading || code.some((digit) => digit === "")}
+            style={{ marginBottom: 40 * scale }}
+          />
 
           {/* Resend */}
           <TouchableOpacity
@@ -226,6 +224,7 @@ export default function VerifyEmail() {
             <Text
               style={[
                 styles.resendText,
+                { marginTop: 15 * scale, fontSize: Typography.sizes.sm * scale },
                 (isResendDisabled || resendCount >= 3) && { color: "#aaa" },
               ]}
             >
@@ -247,8 +246,8 @@ export default function VerifyEmail() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <Text style={styles.modalText}>
+          <View style={[styles.modalBox, { padding: 25 * scale, borderRadius: 14 * scale, marginHorizontal: 20 * scale }]}>
+            <Text style={[styles.modalText, { fontSize: Typography.sizes.md * scale }]}>
               ✅ Congratulations! You have been successfully added to our Market
               News Alert subscription service. Stay tuned for regular updates!
             </Text>
@@ -264,25 +263,16 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20 * scale,
-    paddingVertical: 20 * scale,
     backgroundColor: "#fff",
   },
   headerText: {
-    fontFamily: "Inter-SemiBold",
-    fontSize: 16 * scale,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    marginLeft: 10 * scale,
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   content: {
     backgroundColor: "#fff",
-    marginHorizontal: 20 * scale,
-    paddingTop: 60 * scale,
-    paddingBottom: 60 * scale,
-    borderRadius: 12 * scale,
     alignItems: "center",
-    marginTop: 40 * scale,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
@@ -290,31 +280,21 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   title: {
-    fontFamily: "Inter-SemiBold",
-    fontSize: 22 * scale,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    marginBottom: 5 * scale,
   },
   subtitle: {
-    fontFamily: "Inter",
-    fontSize: 14 * scale,
+    fontFamily: Typography.fonts.regular,
     color: "#555",
     textAlign: "center",
-    marginBottom: 2 * scale,
   },
   codeContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 24 * scale,
-    marginBottom: 24 * scale,
   },
   codeInputWrapper: {
     borderWidth: 1.5,
     borderColor: "#ccc",
-    borderRadius: 8 * scale,
-    width: 45 * scale,
-    height: 52 * scale,
-    marginHorizontal: 5 * scale,
     backgroundColor: "#fff",
     shadowColor: "#0033A0",
     shadowOffset: { width: 0, height: 0 },
@@ -322,36 +302,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   codeInput: {
-    fontFamily: "Inter",
+    fontFamily: Typography.fonts.regular,
     width: "100%",
     height: "100%",
     textAlign: "center",
-    fontSize: 20 * scale,
   },
   verifyButton: {
-    backgroundColor: "#0033A0",
-    paddingVertical: 14 * scale,
-    paddingHorizontal: 50 * scale,
-    borderRadius: 10 * scale,
-    marginVertical: 10 * scale,
-    shadowColor: "#0033A0",
+    backgroundColor: Colors.brand.primary,
+    shadowColor: Colors.brand.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
   },
   verifyButtonText: {
-    fontFamily: "Inter-Bold",
+    fontFamily: Typography.fonts.bold,
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 16 * scale,
   },
   resendText: {
-    fontFamily: "Inter-SemiBold",
-    marginTop: 15 * scale,
-    fontSize: 14 * scale,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   modalOverlay: {
     flex: 1,
@@ -361,16 +333,12 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     backgroundColor: "#fff",
-    padding: 25 * scale,
-    borderRadius: 14 * scale,
     alignItems: "center",
-    marginHorizontal: 20 * scale,
   },
   modalText: {
-    fontFamily: "Inter-SemiBold",
-    fontSize: 16 * scale,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    color: "green",
+    color: Colors.brand.palette.green,
     textAlign: "center",
   },
 });

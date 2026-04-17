@@ -1,8 +1,9 @@
 import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
+import { useOrientation } from "@/hooks/useOrientation";
 import {
   ActivityIndicator,
   Platform,
@@ -16,34 +17,13 @@ import { WebView } from "react-native-webview";
 
 export default function SignUpScreen() {
   const webviewRef = useRef<WebView>(null); // ✅ MUST be before usage
-  const [orientation, setOrientation] = useState("PORTRAIT");
-
   const router = useRouter();
+  const { isLandscape, scale } = useOrientation();
+  const [progress, setProgress] = React.useState(0);
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
   const initialUrl =
     "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
-
-  // ✅ Orientation handling
-  useEffect(() => {
-    ScreenOrientation.unlockAsync();
-
-    const onChange = ({
-      orientationInfo,
-    }: ScreenOrientation.OrientationChangeEvent) => {
-      const o = orientationInfo.orientation;
-      setOrientation(
-        o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-          o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? "LANDSCAPE"
-          : "PORTRAIT",
-      );
-    };
-
-    const subscription =
-      ScreenOrientation.addOrientationChangeListener(onChange);
-
-    return () =>
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-  }, []);
 
   const handleGoBack = () => {
     router.back();
@@ -51,13 +31,13 @@ export default function SignUpScreen() {
 
   // ✅ Dashboard behaves EXACTLY like Login
   const redirectToDashboard = () => {
+    setIsLoaded(false);
+    setProgress(0);
     webviewRef.current?.injectJavaScript(`
       window.location.href = "https://alabiansolutions.com/client-mobile-app1/redirect.php";
       true;
     `);
   };
-
-  const isLandscape = orientation === "LANDSCAPE";
 
   return (
     <SafeAreaView
@@ -74,33 +54,54 @@ export default function SignUpScreen() {
         ]}
       >
         <TouchableOpacity onPress={handleGoBack} style={styles.homeButton}>
-          <Feather name="arrow-left" size={22} color={Colors.brand.primary} />
-          <Text style={styles.homeText}>Home</Text>
+          <Feather name="arrow-left" size={22 * scale} color={Colors.brand.primary} />
+          <Text style={[styles.homeText, { fontSize: Typography.sizes.md * scale }]}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={redirectToDashboard}
           style={styles.dashboardButton}
         >
-          <Text style={styles.dashboardText}>Dashboard</Text>
+          <Text style={[styles.dashboardText, { fontSize: Typography.sizes.md * scale }]}>Dashboard</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Progress Bar (Shows whenever progress is active) */}
+      {progress > 0 && progress < 1 && (
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBar, { width: `${progress * 100}%` }]} />
+        </View>
+      )}
 
       {/* WebView */}
       <WebView
         ref={webviewRef}
+        startInLoadingState={true}
         style={{
           flex: 1,
           width: "100%",
           height: "100%",
           borderRadius: isLandscape ? 0 : 8,
+          opacity: isLoaded ? 1 : 0, // Hide ONLY on initial load
         }}
         source={{ uri: initialUrl }}
-        startInLoadingState
+        onLoadProgress={({ nativeEvent }) => {
+          setProgress(nativeEvent.progress);
+          if (nativeEvent.progress > 0.8) setIsLoaded(true);
+        }}
+        onLoadEnd={() => setIsLoaded(true)}
         renderLoading={() => (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.brand.primary} />
-            <Text style={styles.loadingText}>Loading...</Text>
+          <View style={[styles.loadingContainer, { backgroundColor: isLandscape ? "#fff" : "#f9f9f9" }]}>
+            <View style={[styles.loaderContent, { gap: 12 * scale }]}>
+              <ActivityIndicator size="large" color={Colors.brand.primary} />
+              <Text style={[styles.loadingText, { 
+                fontSize: Typography.sizes.md * scale,
+                fontFamily: Typography.fonts.semiBold,
+                color: Colors.brand.primary 
+              }]}>
+                Securing Connection...
+              </Text>
+            </View>
           </View>
         )}
         javaScriptEnabled
@@ -108,6 +109,10 @@ export default function SignUpScreen() {
         originWhitelist={["https://*"]}
         setBuiltInZoomControls={Platform.OS === "android"}
         setDisplayZoomControls={false}
+        cacheMode="LOAD_CACHE_ELSE_NETWORK"
+        sharedCookiesEnabled={true}
+        thirdPartyCookiesEnabled={true}
+        incognito={false}
       />
     </SafeAreaView>
   );
@@ -135,9 +140,8 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   homeText: {
-    fontFamily: "Inter-SemiBold",
+    fontFamily: Typography.fonts.semiBold,
     marginLeft: 6,
-    fontSize: 16,
     fontWeight: "600",
     color: Colors.brand.primary,
   },
@@ -145,20 +149,34 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   dashboardText: {
-    fontFamily: "Inter-SemiBold",
+    fontFamily: Typography.fonts.semiBold,
     color: Colors.brand.primary,
     fontWeight: "600",
-    fontSize: 16,
   },
   loadingContainer: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 999,
+  },
+  loaderContent: {
+    alignItems: "center",
+    paddingHorizontal: 40,
   },
   loadingText: {
-    fontFamily: "Inter",
-    marginTop: 10,
-    color: "#444",
-    fontSize: 14,
+    textAlign: "center",
+  },
+  loadingSubtext: {
+    textAlign: "center",
+  },
+  progressBarContainer: {
+    height: 3,
+    width: "100%",
+    backgroundColor: "#f0f0f0",
+    zIndex: 1000,
+  },
+  progressBar: {
+    height: "100%",
+    backgroundColor: Colors.brand.primary,
   },
 });

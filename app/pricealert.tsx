@@ -7,50 +7,19 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  Dimensions,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
+import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
+import { useOrientation } from "@/hooks/useOrientation";
+import { BrandButton } from "@/components/BrandButton";
 
 const PriceAlert = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [orientation, setOrientation] = useState("PORTRAIT");
-
-  // --- Detect and respond to screen rotation ---
-  useEffect(() => {
-    // Get initial orientation
-    (async () => {
-      const currentOrientation = await ScreenOrientation.getOrientationAsync();
-      setOrientation(
-        currentOrientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-          currentOrientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? "LANDSCAPE"
-          : "PORTRAIT"
-      );
-    })();
-
-    // Listen for orientation changes
-    const subscription = ScreenOrientation.addOrientationChangeListener((event) => {
-      const newOrientation =
-        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? "LANDSCAPE"
-          : "PORTRAIT";
-      setOrientation(newOrientation);
-    });
-
-    // Cleanup on unmount
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
-  }, []);
-
-  // Scale layout based on orientation
-  const { width } = Dimensions.get("window");
-  const scale = orientation === "LANDSCAPE" ? width / 812 : width / 375;
+  const { isLandscape, scale } = useOrientation();
 
   const handleContinue = async () => {
     if (!email || !email.includes("@")) {
@@ -91,24 +60,24 @@ const PriceAlert = () => {
       {/* Header */}
       <View style={[styles.header, { marginTop: 10 * scale }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Feather name="arrow-left" size={22 * scale} color="#0033A0" />
+          <Feather name="arrow-left" size={22 * scale} color={Colors.brand.primary} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { fontSize: 16 * scale }]}>
+        <Text style={[styles.headerTitle, { fontSize: Typography.sizes.md * scale }]}>
           FirstInvest
         </Text>
       </View>
 
       {/* Content */}
       <View style={[styles.content, { paddingTop: 30 * scale }]}>
-        <Text style={[styles.title, { fontSize: 18 * scale }]}>
+        <Text style={[styles.title, { fontSize: Typography.sizes.lg * scale }]}>
           Please provide your email address
         </Text>
-        <Text style={[styles.subtitle, { fontSize: 14 * scale }]}>
+        <Text style={[styles.subtitle, { fontSize: Typography.sizes.sm * scale }]}>
           This is required to confirm your identity
         </Text>
 
         <TextInput
-          style={[styles.input, { padding: 12 * scale, fontSize: 14 * scale }]}
+          style={[styles.input, { padding: 12 * scale, fontSize: Typography.sizes.sm * scale }]}
           placeholder="Email Address"
           keyboardType="email-address"
           autoCapitalize="none"
@@ -118,25 +87,13 @@ const PriceAlert = () => {
       </View>
 
       {/* Continue Button */}
-      <TouchableOpacity
-        style={[
-          styles.button,
-          {
-            paddingVertical: 14 * scale,
-            marginBottom: orientation === "LANDSCAPE" ? 20 : 55 * scale,
-          },
-        ]}
+      <BrandButton
+        title="CONTINUE"
         onPress={handleContinue}
+        loading={loading}
         disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={[styles.buttonText, { fontSize: 16 * scale }]}>
-            CONTINUE
-          </Text>
-        )}
-      </TouchableOpacity>
+        style={{ marginBottom: isLandscape ? 20 : 55 * scale }}
+      />
     </View>
   );
 };
@@ -157,40 +114,39 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
     marginLeft: 10,
   },
   content: {
     flex: 1,
     justifyContent: "flex-start",
+    gap: 12,
   },
   title: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    marginBottom: 6,
     color: "#000",
   },
   subtitle: {
-    fontFamily: 'Inter',
+    fontFamily: Typography.fonts.regular,
     color: "#666",
-    marginBottom: 20,
   },
   input: {
-    fontFamily: 'Inter',
+    fontFamily: Typography.fonts.regular,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 6,
+    marginTop: 8,
   },
   button: {
-    backgroundColor: "#0033A0",
+    backgroundColor: Colors.brand.primary,
     borderRadius: 6,
     alignItems: "center",
-    marginTop: 20,
   },
   buttonText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: Typography.fonts.semiBold,
     color: "#fff",
     fontWeight: "600",
   },

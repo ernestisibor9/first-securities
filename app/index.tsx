@@ -1,10 +1,11 @@
 import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
-import React, { useEffect } from "react";
+import React from "react";
+import { Typography } from "@/constants/Typography";
+import { useOrientation } from "@/hooks/useOrientation";
+import { BrandButton } from "@/components/BrandButton";
 import {
-  Dimensions,
   Image,
   ImageBackground,
   StyleSheet,
@@ -12,32 +13,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { WebView } from "react-native-webview";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const { width } = Dimensions.get("window"); // screen dimensions
-const scale = width / 375; // scale factor (base = iPhone 11 width)
 
 const Index = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-
-  useEffect(() => {
-    // ✅ Allow screen auto-rotation
-    ScreenOrientation.unlockAsync();
-
-    // (Optional) Listen for orientation changes
-    const subscription = ScreenOrientation.addOrientationChangeListener(
-      (event) => {
-        console.log("Orientation changed:", event.orientationInfo.orientation);
-      },
-    );
-
-    // Clean up listener when component unmounts
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
-  }, []);
+  const { scale } = useOrientation();
 
   return (
     <ImageBackground
@@ -77,12 +60,12 @@ const Index = () => {
           entering={FadeInUp.delay(400).duration(1000)}
           style={styles.textContainer}
         >
-          <Text style={styles.heroLine}>
+          <Text style={[styles.heroLine, { fontSize: 34 * scale, lineHeight: 40 * scale }]}>
             <Text style={styles.highlightText}>Trade </Text>
             Smarter
           </Text>
-          <Text style={styles.heroLine}>Grow Your Wealth</Text>
-          <Text style={styles.subText}>
+          <Text style={[styles.heroLine, { fontSize: 34 * scale, lineHeight: 40 * scale }]}>Grow Your Wealth</Text>
+          <Text style={[styles.subText, { fontSize: 15 * scale, lineHeight: 22 * scale }]}>
             Your trusted partner for navigating the Nigerian Stock Market
           </Text>
         </Animated.View>
@@ -109,15 +92,13 @@ const Index = () => {
         {/* Primary Action */}
         <Animated.View
           entering={FadeInUp.delay(800).duration(800)}
-          style={styles.actionContainer}
+          style={[styles.actionContainer, { width: 335 * scale, marginBottom: 30 * scale }]}
         >
-          <TouchableOpacity
-            style={styles.primaryButton}
+          <BrandButton 
+            title="LOGIN"
+            type="yellow"
             onPress={() => router.push("/login")}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.primaryButtonText}>LOGIN</Text>
-          </TouchableOpacity>
+          />
         </Animated.View>
 
         {/* Footer Links */}
@@ -134,10 +115,10 @@ const Index = () => {
 
           <View style={styles.bottomLinkRow}>
             <TouchableOpacity onPress={() => router.push("/pricechart")}>
-              <Text style={styles.footerLinkText}>Price Chart</Text>
+              <Text style={[styles.footerLinkText, { fontSize: Typography.sizes.sm * scale }]}>Price Chart</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push("/pricealert")}>
-              <Text style={styles.footerLinkText}>Price Alert</Text>
+              <Text style={[styles.footerLinkText, { fontSize: Typography.sizes.sm * scale }]}>Price Alert</Text>
             </TouchableOpacity>
           </View>
 
@@ -145,10 +126,18 @@ const Index = () => {
             onPress={() => router.push("/disclaimer")}
             style={styles.disclaimerBtn}
           >
-            <Text style={styles.disclaimerText}>DISCLAIMER</Text>
+            <Text style={[styles.disclaimerText, { fontSize: Typography.sizes.sm * scale }]}>DISCLAIMER</Text>
           </TouchableOpacity>
         </Animated.View>
       </LinearGradient>
+ 
+      {/* Predictive-Prefetch: Hidden WebView to prime cache for Login portal */}
+      <View style={{ width: 0, height: 0, opacity: 0, position: 'absolute' }} pointerEvents="none">
+        <WebView 
+          source={{ uri: "https://alabiansolutions.com/client-mobile-app1/redirect.php" }} 
+          onLoadEnd={() => console.log('Login portal prefetched')}
+        />
+      </View>
     </ImageBackground>
   );
 };
@@ -181,20 +170,16 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   heroLine: {
-    fontFamily: "Inter-Bold",
-    fontSize: 34 * scale,
+    fontFamily: Typography.fonts.bold,
     color: "#FFFFFF",
-    lineHeight: 40 * scale,
   },
   highlightText: {
     color: Colors.brand.yellow,
   },
   subText: {
-    fontFamily: "Inter-SemiBold",
-    fontSize: 15 * scale,
+    fontFamily: Typography.fonts.semiBold,
     color: "#FFFFFF",
     marginTop: 12,
-    lineHeight: 22 * scale,
     maxWidth: "85%",
   },
   middleLinksContainer: {
@@ -205,8 +190,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   middleLinkText: {
-    fontFamily: "Inter-Bold",
-    fontSize: 16 * scale,
+    fontFamily: Typography.fonts.bold,
     color: "#FFFFFF",
     textDecorationLine: "underline",
     letterSpacing: 0.5,
@@ -223,9 +207,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   primaryButtonText: {
-    fontFamily: "Inter-Bold",
+    fontFamily: Typography.fonts.bold,
     color: "#11181C",
-    fontSize: 16 * scale,
   },
   footerContainer: {
     alignItems: "center",
@@ -236,33 +219,29 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   footerText: {
-    fontFamily: "Inter",
+    fontFamily: Typography.fonts.regular,
     color: "#EAEAEA",
-    fontSize: 14 * scale,
   },
   signupText: {
-    fontFamily: "Inter-Bold",
+    fontFamily: Typography.fonts.bold,
     color: "#FFFFFF",
-    fontSize: 14 * scale,
   },
   bottomLinkRow: {
     flexDirection: "row",
     marginBottom: 25,
-    gap: 120,
+    gap: 40,
     justifyContent: "center",
   },
   footerLinkText: {
-    fontFamily: "Inter-SemiBold",
+    fontFamily: Typography.fonts.semiBold,
     color: "#FFFFFF",
-    fontSize: 14 * scale,
   },
   disclaimerBtn: {
     paddingVertical: 10,
   },
   disclaimerText: {
-    fontFamily: "Inter-Bold",
+    fontFamily: Typography.fonts.bold,
     color: Colors.brand.yellow,
-    fontSize: 14 * scale,
     letterSpacing: 0.5,
   },
 });

@@ -16,9 +16,12 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LineChart } from "react-native-gifted-charts";
-import * as ScreenOrientation from "expo-screen-orientation";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
+import { useOrientation } from "@/hooks/useOrientation";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 interface Stock {
   id: string;
@@ -26,8 +29,7 @@ interface Stock {
 }
 
 export default function PriceChart() {
-  const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
+  const { isLandscape, scale, width, height } = useOrientation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -40,10 +42,8 @@ export default function PriceChart() {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [tempStock, setTempStock] = useState<string | null>(null);
 
-  // ✅ Unlock screen rotation on mount
+  // ✅ Lock screen back to portrait on unmount
   useEffect(() => {
-    ScreenOrientation.unlockAsync();
-
     return () => {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     };
@@ -198,16 +198,16 @@ export default function PriceChart() {
       {/* Header */}
       <View style={[styles.header, { marginTop: Math.max(insets.top, 20) }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Feather name="arrow-left" size={22} color="#0033A0" />
+          <Feather name="arrow-left" size={22 * scale} color={Colors.brand.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Stock Price Chart</Text>
+        <Text style={[styles.headerTitle, { fontSize: Typography.sizes.md * scale }]}>Stock Price Chart</Text>
 
         {selectedStock && (
           <TouchableOpacity onPress={toggleFavorite} style={{ marginLeft: "auto" }}>
             {favorites.includes(selectedStock) ? (
-              <Feather name="star" size={22} color="#FFD700" />
+              <Feather name="star" size={22 * scale} color="#FFD700" />
             ) : (
-              <Ionicons name="star-outline" size={22} color="#0033A0" />
+              <Ionicons name="star-outline" size={22 * scale} color={Colors.brand.primary} />
             )}
           </TouchableOpacity>
         )}
@@ -215,16 +215,16 @@ export default function PriceChart() {
 
       {/* Stock Selector Button */}
       <TouchableOpacity
-        style={[styles.pickerButton, { width: width * 0.9 }]}
+        style={[styles.pickerButton, { width: "90%" }]}
         onPress={() => {
           setTempStock(selectedStock);
           setPickerVisible(true);
         }}
       >
-        <Text style={styles.pickerButtonText} numberOfLines={1}>
+        <Text style={[styles.pickerButtonText, { fontSize: Typography.sizes.md * scale }]} numberOfLines={1}>
           {selectedStockName || "Select a stock..."}
         </Text>
-        <Feather name="chevron-down" size={18} color="#0033A0" />
+        <Feather name="chevron-down" size={18 * scale} color={Colors.brand.primary} />
       </TouchableOpacity>
 
       {/* Native Modal Picker */}
@@ -241,11 +241,11 @@ export default function PriceChart() {
         />
         <View style={styles.modalSheet}>
           {/* Modal Header */}
-          <View style={styles.modalHeader}>
+          <View style={[styles.modalHeader, { paddingHorizontal: 20 * scale, paddingVertical: 14 * scale }]}>
             <TouchableOpacity onPress={() => setPickerVisible(false)}>
-              <Text style={styles.modalCancel}>Cancel</Text>
+              <Text style={[styles.modalCancel, { fontSize: Typography.sizes.md * scale }]}>Cancel</Text>
             </TouchableOpacity>
-            <Text style={styles.modalTitle}>Select Stock</Text>
+            <Text style={[styles.modalTitle, { fontSize: Typography.sizes.md * scale }]}>Select Stock</Text>
             <TouchableOpacity
               onPress={() => {
                 if (tempStock) {
@@ -256,7 +256,7 @@ export default function PriceChart() {
                 setPickerVisible(false);
               }}
             >
-              <Text style={styles.modalDone}>Done</Text>
+              <Text style={[styles.modalDone, { fontSize: Typography.sizes.md * scale }]}>Done</Text>
             </TouchableOpacity>
           </View>
           {/* Picker Wheel */}
@@ -276,10 +276,10 @@ export default function PriceChart() {
       </Modal>
 
       {/* Chart */}
-      <View style={[styles.chartCard, { width: width * 0.95 }]}>
-        <Text style={styles.chartTitle}>Stock Chart</Text>
+      <View style={[styles.chartCard, { width: "95%", padding: 10 * scale, borderRadius: 8 * scale }]}>
+        <Text style={[styles.chartTitle, { fontSize: Typography.sizes.md * scale }]}>Stock Chart</Text>
         {loadingChart ? (
-          <ActivityIndicator size="large" color="#0033A0" style={{ padding: 50 }} />
+          <ActivityIndicator size="large" color={Colors.brand.primary} style={{ padding: 50 * scale }} />
         ) : chartPoints.length > 0 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator>
             <LineChart
@@ -294,8 +294,8 @@ export default function PriceChart() {
               dataPointsWidth={6}
               dataPointsColor="crimson"
               yAxisLabelPrefix=""
-              xAxisLabelTextStyle={{ fontSize: 10, color: "#333" }}
-              yAxisTextStyle={{ fontSize: 10, color: "#333" }}
+              xAxisLabelTextStyle={{ fontSize: 10 * scale, color: "#333" }}
+              yAxisTextStyle={{ fontSize: 10 * scale, color: "#333" }}
               xAxisColor="#ddd"
               yAxisColor="#ddd"
               showVerticalLines
@@ -316,7 +316,7 @@ export default function PriceChart() {
 
       {/* Stock Info */}
       {selectedStockName ? (
-        <Text style={styles.stockInfo}>
+        <Text style={[styles.stockInfo, { fontSize: Typography.sizes.sm * scale, marginTop: 10 * scale }]}>
           {selectedStockName} — Price (₦) — Last 6 Months
         </Text>
       ) : null}
@@ -335,10 +335,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
     marginLeft: 10,
   },
   pickerButton: {
@@ -354,9 +353,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   pickerButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 15,
-    color: "#0033A0",
+    fontFamily: Typography.fonts.semiBold,
+    color: Colors.brand.primary,
     fontWeight: "600",
     flex: 1,
     marginRight: 8,
@@ -381,20 +379,17 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   modalTitle: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 16,
+    fontFamily: Typography.fonts.bold,
     fontWeight: "700",
-    color: "#0033A0",
+    color: Colors.brand.primary,
   },
   modalCancel: {
-    fontFamily: 'Inter',
-    fontSize: 15,
+    fontFamily: Typography.fonts.regular,
     color: "#888",
   },
   modalDone: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 15,
-    color: "#0033A0",
+    fontFamily: Typography.fonts.bold,
+    color: Colors.brand.primary,
     fontWeight: "700",
   },
   chartCard: {
@@ -408,18 +403,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   chartTitle: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 16,
+    fontFamily: Typography.fonts.bold,
     fontWeight: "bold",
     marginBottom: 5,
     textAlign: "center",
   },
   stockInfo: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 14,
+    fontFamily: Typography.fonts.semiBold,
     fontWeight: "600",
-    color: "#0033A0",
+    color: Colors.brand.primary,
     textAlign: "center",
-    marginTop: 10,
   },
 });

@@ -8,7 +8,10 @@ import Animated, {
   withSequence 
 } from 'react-native-reanimated';
 
+import { useOrientation } from '@/hooks/useOrientation';
+
 export const SkeletonCard = () => {
+  const { scale } = useOrientation();
   const opacity = useSharedValue(0.3);
 
   useEffect(() => {
@@ -27,12 +30,12 @@ export const SkeletonCard = () => {
   }));
 
   return (
-    <View style={styles.card}>
-      <Animated.View style={[styles.shimmer, styles.title, animatedStyle]} />
-      <Animated.View style={[styles.shimmer, styles.descLine1, animatedStyle]} />
-      <Animated.View style={[styles.shimmer, styles.descLine2, animatedStyle]} />
+    <View style={[styles.card, { padding: 20 * scale, borderRadius: 12 * scale, marginBottom: 16 * scale, marginHorizontal: 16 * scale }]}>
+      <Animated.View style={[styles.shimmer, styles.title, { height: 18 * scale, marginBottom: 12 * scale, borderRadius: 4 * scale }, animatedStyle]} />
+      <Animated.View style={[styles.shimmer, styles.descLine1, { height: 14 * scale, marginBottom: 8 * scale, borderRadius: 4 * scale }, animatedStyle]} />
+      <Animated.View style={[styles.shimmer, styles.descLine2, { height: 14 * scale, marginBottom: 16 * scale, borderRadius: 4 * scale }, animatedStyle]} />
       <View style={styles.footer}>
-        <Animated.View style={[styles.shimmer, styles.smallBar, animatedStyle]} />
+        <Animated.View style={[styles.shimmer, styles.smallBar, { width: 60 * scale, height: 12 * scale, borderRadius: 4 * scale }, animatedStyle]} />
       </View>
     </View>
   );
