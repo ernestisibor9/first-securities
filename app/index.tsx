@@ -83,7 +83,7 @@ const Index = () => {
           </Text>
           <Text style={styles.heroLine}>Grow Your Wealth</Text>
           <Text style={styles.subText}>
-            Your trusted partner for navigating the Nigerian Stock Market.
+            Your trusted partner for navigating the Nigerian Stock Market
           </Text>
         </Animated.View>
 
