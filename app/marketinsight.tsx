@@ -1,3 +1,4 @@
+import * as ScreenOrientation from "expo-screen-orientation";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
@@ -46,6 +47,14 @@ const MarketInsight = () => {
 
   useEffect(() => {
     fetchData();
+    
+    // Unlock for this screen
+    ScreenOrientation.unlockAsync();
+    
+    // Lock back when leaving
+    return () => {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
   }, []);
 
   const onRefresh = () => {

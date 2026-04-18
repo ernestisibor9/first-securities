@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import 'react-native-reanimated';
+
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -22,6 +25,11 @@ export default function RootLayout() {
     'Inter-SemiBold': Inter_600SemiBold,
     'Inter-Bold': Inter_700Bold,
   });
+
+  useEffect(() => {
+    // Lock the global orientation to portrait
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+  }, []);
 
   if (!loaded) {
     // Async font loading only occurs in development.

@@ -1,3 +1,4 @@
+import * as ScreenOrientation from "expo-screen-orientation";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import { Feather } from "@expo/vector-icons";
@@ -22,6 +23,14 @@ export default function LoginScreen() {
   const [progress, setProgress] = React.useState(0);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const url = "https://alabiansolutions.com/client-mobile-app1/redirect.php";
+ 
+  // ✅ Unlock for this screen
+  React.useEffect(() => {
+    ScreenOrientation.unlockAsync();
+    return () => {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
+  }, []);
 
   // ✅ Go back to previous app screen
   const handleGoBack = () => {

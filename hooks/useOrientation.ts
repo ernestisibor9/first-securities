@@ -19,8 +19,8 @@ export function useOrientation() {
       setOrientation(isLandscape ? "LANDSCAPE" : "PORTRAIT");
     });
 
-    // Ensure we are unlocked
-    ScreenOrientation.unlockAsync();
+    // Only listen, don't force unlock here
+
 
     return () => {
       ScreenOrientation.removeOrientationChangeListener(subscription);

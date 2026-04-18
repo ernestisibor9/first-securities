@@ -1,3 +1,4 @@
+import * as ScreenOrientation from "expo-screen-orientation";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -55,6 +56,14 @@ const DailyPriceList = () => {
 
   useEffect(() => {
     onRefresh();
+
+    // Unlock for this screen
+    ScreenOrientation.unlockAsync();
+
+    // Lock back when leaving
+    return () => {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
   }, []);
 
   const formatDate = (dateString: string) => {

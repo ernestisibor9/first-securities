@@ -1,3 +1,4 @@
+import * as ScreenOrientation from "expo-screen-orientation";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import { Feather } from "@expo/vector-icons";
@@ -24,6 +25,14 @@ export default function SignUpScreen() {
 
   const initialUrl =
     "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
+ 
+  // ✅ Unlock for this screen
+  React.useEffect(() => {
+    ScreenOrientation.unlockAsync();
+    return () => {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
+  }, []);
 
   const handleGoBack = () => {
     router.back();

@@ -17,3 +17,11 @@
   - `height: 100`
   - `resizeMode: "contain"`
 - **Note:** You mentioned 320x100; the actual image is slightly wider at 330px, so it's currently being slightly scaled down to fit the 320px width limit in your code.
+
+# Recent Tasks
+## Programmatic Orientation Control
+- [x] Set `app.json` orientation to `default`.
+- [x] Lock root layout to `PORTRAIT_UP`.
+- [x] Implement selective unlock in `marketinsight`, `pricechart`, `dailypricelist`, `login`, and `signup`.
+- [x] Clean up `useOrientation` hook to remove automatic global unlocking.
+

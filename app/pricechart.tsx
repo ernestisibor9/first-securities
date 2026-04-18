@@ -42,8 +42,9 @@ export default function PriceChart() {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [tempStock, setTempStock] = useState<string | null>(null);
 
-  // ✅ Lock screen back to portrait on unmount
+  // ✅ Allow rotation and lock screen back to portrait on unmount
   useEffect(() => {
+    ScreenOrientation.unlockAsync();
     return () => {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     };

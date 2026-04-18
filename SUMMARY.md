@@ -23,6 +23,17 @@
 | `marketinsight`, `dailypricelist`, `pricechart`, `pricealert`, `verifyemail` | `fade_from_bottom` |
 | `index`, `disclaimer` | `fade` |
 
+## Orientation Logic
+- **Global Config**: `app.json` set to `default` to allow OS rotation.
+- **Root Lock**: `app/_layout.tsx` forces `PORTRAIT_UP` by default.
+- **Selective Unlock**: The following screens explicitly allow rotation via `ScreenOrientation.unlockAsync()`:
+  - `app/marketinsight.tsx`
+  - `app/pricechart.tsx`
+  - `app/dailypricelist.tsx`
+  - `app/login.tsx`
+  - `app/signup.tsx`
+- **Dynamic UI**: screens use `hooks/useOrientation.ts` to adjust padding and scaling factor (`scale`) based on aspect ratio.
+
 ## Components Built
 | Component | Purpose |
 |---|---|
