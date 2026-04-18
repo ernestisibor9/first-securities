@@ -98,6 +98,9 @@
         "projectId": "065e47fd-f342-40da-9fb6-e05e3b9ff705"
       }
     },
-    "owner": "uncks"
+    "owner": "uncks",
+    "updates": {
+      "url": "https://u.expo.dev/065e47fd-f342-40da-9fb6-e05e3b9ff705"
+    }
   }
 }
