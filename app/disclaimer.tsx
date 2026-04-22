@@ -28,7 +28,7 @@ const Disclaimer = () => {
         <Text style={styles.paragraph}>
           By accessing and using the FirstInvest mobile and online trading
           application provided by First Securities Brokers Limited, you acknowledge
-          and agree to the following terms and conditions:
+          and agree to the following risks associated with electronic trading:
         </Text>
 
         <Text style={styles.sectionTitle}>System & Connectivity Risks</Text>
