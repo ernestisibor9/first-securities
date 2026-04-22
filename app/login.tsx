@@ -136,9 +136,8 @@ export default function LoginScreen() {
 
         {/* Footer / Regulatory text */}
         <Text style={[styles.footerText, { fontSize: Typography.sizes.xs * scale }]}>
-          FirstInvest is registered as a broker dealer{"\n"}
-          in Nigeria and a member of the NGX Exchange.{"\n"}
-          Commission, Nigeria.
+          First Securities is registered as a broker dealer and regulated by{"\n"}
+          the Securities and Exchange Commission, Nigeria.
         </Text>
       </View>
     </SafeAreaView>

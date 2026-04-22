@@ -27,7 +27,7 @@ const Disclaimer = () => {
 
         <Text style={styles.paragraph}>
           By accessing and using the FirstInvest mobile and online trading
-          application provided by FirstInvest Brokers Limited, you acknowledge
+          application provided by First Securities Brokers Limited, you acknowledge
           and agree to the following terms and conditions:
         </Text>
 
@@ -44,11 +44,11 @@ const Disclaimer = () => {
         <Text style={styles.bullet}>• There is no guarantee that orders will be executed immediately or at the requested price.</Text>
 
         <Text style={styles.sectionTitle}>Security Risks</Text>
-        <Text style={styles.bullet}>• While FirstInvest Brokers Limited employs robust security measures, trading via FirstInvest carries inherent risks of unauthorized access, hacking, phishing, or data breaches.</Text>
+        <Text style={styles.bullet}>• While First Securities Brokers Limited employs robust security measures, trading via FirstInvest carries inherent risks of unauthorized access, hacking, phishing, or data breaches.</Text>
         <Text style={styles.bullet}>• You are responsible for maintaining the confidentiality of your login credentials and ensuring the security of your device. Any transactions executed using your credentials will be deemed authorized by you.</Text>
 
         <Text style={styles.sectionTitle}>Limitation of Liability</Text>
-        <Text style={styles.bullet}>• FirstInvest Brokers Limited is not liable for losses arising from technical failures, connectivity issues, or misuse of the FirstInvest application.</Text>
+        <Text style={styles.bullet}>• First Securities Brokers Limited is not liable for losses arising from technical failures, connectivity issues, or misuse of the First Securities application.</Text>
         <Text style={styles.bullet}>• Clients must ensure compliance with all trading and reporting obligations.</Text>
 
         <Text style={styles.sectionTitle}>Regulatory & Compliance Risks</Text>
@@ -57,7 +57,7 @@ const Disclaimer = () => {
 
         <Text style={styles.sectionTitle}>Client Responsibility</Text>
         <Text style={styles.bullet}>• You are solely responsible for verifying trade confirmations, monitoring account activity, and maintaining adequate risk controls.</Text>
-        <Text style={styles.bullet}>• FirstInvest Brokers Limited is not liable for losses arising from technical failures, connectivity issues, or misuse of the FirstInvest application.</Text>
+        <Text style={styles.bullet}>• First Securities Brokers Limited is not liable for losses arising from technical failures, connectivity issues, or misuse of the First Securities application.</Text>
       </ScrollView>
     </SafeAreaView>
   );
