@@ -55,4 +55,16 @@ jobs:
           CI: 1
           COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
-          npx eas-cli update --channel preview --platform all --message "Auto-update: $COMMIT_MSG" --non-interactive
+          if [[ "$COMMIT_MSG" == *"[skip-update]"* ]]; then
+            echo "Skipping update per [skip-update] tag in commit message"
+            exit 0
+          fi
+
+          FIRST_LINE="${COMMIT_MSG%%$'\n'*}"
+          if [[ "$FIRST_LINE" =~ ^\[release\]\ (.+)$ ]]; then
+            MESSAGE="Auto-update: ${BASH_REMATCH[1]}"
+          else
+            MESSAGE="Auto-update: Improvements and bug fixes"
+          fi
+
+          npx eas-cli update --channel preview --platform all --message "$MESSAGE" --non-interactive
