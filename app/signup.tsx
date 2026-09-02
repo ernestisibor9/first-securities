@@ -19,7 +19,7 @@ export default function SignUpScreen() {
 
   const router = useRouter();
   const initialUrl =
-    "https://alabiansolutions.com/client-mobile-app/sign-up/index.html";
+    "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
 
   // ✅ Orientation handling
   useEffect(() => {
@@ -49,11 +49,11 @@ export default function SignUpScreen() {
   // ✅ Dashboard behaves EXACTLY like Login
   const redirectToDashboard = () => {
     webviewRef.current?.injectJavaScript(`
-      window.location.href = "https://myportfolio.first-securities.com/Securities";
+      window.location.href = initialUrl;
       true;
     `);
   };
-
+ 
   const isLandscape = orientation === "LANDSCAPE";
 
   return (

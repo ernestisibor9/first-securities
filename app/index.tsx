@@ -1,211 +1,263 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react'
 import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   Image,
   TouchableOpacity,
   StatusBar,
-  Dimensions,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
-import "react-native-get-random-values";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import disclaimer from "./disclaimer";
-
-const { width } = Dimensions.get("window"); // screen dimensions
-const scale = width / 375; // scale factor (base = iPhone 11 width)
+  ImageBackground
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useRouter } from 'expo-router'
+import * as ScreenOrientation from 'expo-screen-orientation'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const Index = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
-    // ✅ Allow screen auto-rotation
-    ScreenOrientation.unlockAsync();
+    ScreenOrientation.unlockAsync()
 
-    // (Optional) Listen for orientation changes
     const subscription = ScreenOrientation.addOrientationChangeListener(
-      (event) => {
-        console.log("Orientation changed:", event.orientationInfo.orientation);
+      event => {
+        console.log('Orientation changed:', event.orientationInfo.orientation)
       }
-    );
+    )
 
-    // Clean up listener when component unmounts
     return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
-  }, []);
-
+      ScreenOrientation.removeOrientationChangeListener(subscription)
+    }
+  }, [])
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
       <StatusBar
-        barStyle="light-content"
         translucent
-        backgroundColor="rgba(0, 43, 91, 0.8)"
+        backgroundColor='transparent'
+        barStyle='light-content'
       />
 
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
+      <ImageBackground
+        source={require('../assets/images/customer.png')}
+        style={styles.bg}
       >
-        {/* Logo */}
-        <View style={{ marginTop: -30, marginBottom: 10 }}>
-          <Image
-            source={require("../assets/images/fslogo2.png")}
-            style={{ width: 320, height: 100, resizeMode: "contain" }}
-          />
-        </View>
-
-        {/* Bull Image */}
-        <Image
-          source={require("../assets/images/customer.png")}
-          style={styles.mainImage}
-        />
-
-        {/* Main Text */}
-        <Text style={styles.heading}>Invest Smarter. Grow Your Wealth.</Text>
-        <Text style={styles.subHeading}>
-          Your trusted partner for navigating the stock market.
-        </Text>
-
-        {/* Buttons */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/marketinsight")}
+        <LinearGradient
+          colors={['rgba(255,255,255,0.4)', 'rgba(0,53,160,0.45)', '#79B076']}
+          locations={[0, 0.2, 1]}
+          style={styles.gradient}
         >
-          <Text style={styles.buttonText}>MARKET INSIGHT</Text>
-        </TouchableOpacity>
+          {/* Logo */}
+          <View style={styles.headerLogo}>
+            <Image
+              source={require('../assets/images/logo2.png')}
+              style={styles.logo}
+            />
+          </View>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/dailypricelist")}
-        >
-          <Text style={styles.buttonText}>DAILY PRICE LIST</Text>
-        </TouchableOpacity>
+          {/* Bottom Content */}
+          <View style={styles.content}>
+            <Text style={styles.heading}>
+              <Text style={{ color: '#edb73a' }}>Trade </Text>
+              Smarter{'\n'}Grow Your Wealth
+            </Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/login")}
-        >
-          <Text style={styles.buttonText}>LOGIN</Text>
-        </TouchableOpacity>
+            <Text style={styles.subHeading}>
+              Your trusted partner for navigating the{'\n'}
+              Nigerian Stock Market.
+            </Text>
 
-        {/* Sign up link */}
-        <View style={styles.signupContainer}>
-          <Text style={styles.signupText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => router.push("/signup")}>
-            <Text style={styles.signupLink}>Sign up</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={styles.textBtn}
+              onPress={() => router.push('/marketinsight')}
+            >
+              <Text style={styles.underlineText}>MARKET INSIGHT</Text>
+              <View style={styles.underlineBar} />
+            </TouchableOpacity>
 
-        {/* Bottom links */}
-        <View style={styles.bottomLinks}>
-          <TouchableOpacity onPress={() => router.push("/pricechart")}>
-            <Text style={styles.bottomLinkText}>Price Chart</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/pricealert")}>
-            <Text style={styles.bottomLinkText}>Price Alert</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Footer / Regulatory text */}
+            <TouchableOpacity
+              style={styles.textBtn}
+              onPress={() => router.push('/dailypricelist')}
+            >
+              <Text style={styles.underlineText}>DAILY PRICE LIST</Text>
+              <View style={styles.underlineBar} />
+            </TouchableOpacity>
 
-          <Text style={styles.footerText}>
-          <TouchableOpacity onPress={() => router.push("/disclaimer")}><Text style={styles.bottomLinkTextDis}>Disclaimer</Text></TouchableOpacity>
-        </Text>
-      </ScrollView>
+            <TouchableOpacity
+              style={styles.loginBtn}
+              onPress={() => router.push('/login')}
+            >
+              <Text style={styles.loginText}>LOGIN</Text>
+            </TouchableOpacity>
+
+            {/* Signup */}
+            <View style={styles.signupContainer}>
+              <Text style={styles.signupText}>Don’t have an account? </Text>
+              <TouchableOpacity onPress={() => router.push('/signup')}>
+                <Text style={styles.signupLink}>Sign up</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Links */}
+            <View style={styles.bottomLinks}>
+              <TouchableOpacity onPress={() => router.push('/pricechart')}>
+                <Text style={styles.link}>Price Chart</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => router.push('/pricealert')}>
+                <Text style={styles.link}>Price Alert</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Disclaimer */}
+            <TouchableOpacity onPress={() => router.push('/disclaimer')}>
+              <Text style={styles.disclaimer}>DISCLAIMER</Text>
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+      </ImageBackground>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Index;
+export default Index
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: 'transparent'
   },
-  container: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 30,
-    backgroundColor: "#fff",
+
+  bg: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover'
   },
-  mainImage: {
-    width: "90%",
-    height: undefined,
-    aspectRatio: 16 / 9,
-    borderRadius: 10,
-    marginBottom: 20,
-    resizeMode: "contain",
+
+  gradient: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'space-between'
   },
+
+  headerLogo: {
+    alignItems: 'flex-end'
+  },
+
+  logo: {
+    width: 170,
+    height: 90,
+    resizeMode: 'contain'
+  },
+
+  content: {
+    marginBottom: 10
+  },
+
   heading: {
-    fontSize: 16 * scale,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 10,
-    paddingHorizontal: 20,
+    fontSize: 33,
+    color: '#fff',
+    lineHeight: 40,
+    fontFamily: 'Inter28Bold', // ✅ Inter Bold
+    marginBottom: 8
   },
+
   subHeading: {
-    fontSize: 14 * scale,
-    textAlign: "center",
-    color: "#555",
-    marginBottom: 30,
-    paddingHorizontal: 20,
-  },
-  button: {
-    backgroundColor: "#002B5B",
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginVertical: 8,
-    width: "80%",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 15 * scale,
-  },
-  signupContainer: {
-    flexDirection: "row",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  signupText: {
-    color: "#444",
-    fontSize: 13 * scale,
-  },
-  signupLink: {
-    color: "#002B5B",
-    fontWeight: "600",
-    fontSize: 13 * scale,
-  },
-  bottomLinks: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "80%",
-    marginTop: 10,
-  },
-  bottomLinkText: {
-    color: "#002B5B",
-    fontWeight: "600",
-    fontSize: 13 * scale,
-  },
-  footerText: {
-    color: "#555",
-    fontSize: 9 * scale,
-    textAlign: "center",
-    marginTop: 15,
-    paddingHorizontal: 20,
+    fontSize: 13,
     lineHeight: 18,
+    color: '#fff',
+    marginBottom: 50,
+    fontFamily: 'Inter24'
   },
-  bottomLinkTextDis: {
-    color: "red",
-    fontWeight: "600",
-    fontSize: 13 * scale,
+
+  outlineBtn: {
+    borderWidth: 1,
+    borderColor: '#fff',
+    paddingVertical: 10,
+    borderRadius: 6,
+    alignItems: 'center',
+    marginBottom: 10
   },
-});
+
+  outlineText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 1
+  },
+
+  loginBtn: {
+    backgroundColor: '#edb73a',
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 20
+  },
+
+  loginText: {
+    color: '#000',
+    fontFamily: 'Inter28Bold',
+  },
+
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 12
+  },
+
+  signupText: {
+    color: '#ddd',
+    fontSize: 13,
+    fontFamily: 'Inter18',
+  },
+
+  signupLink: {
+    color: '#fff',
+    fontFamily: 'Inter28Bold',
+    fontSize: 13
+  },
+
+  bottomLinks: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+    marginTop: 10
+  },
+
+  link: {
+    color: '#fff',
+    fontSize: 13,
+    fontFamily: 'Inter28Bold',
+  },
+
+  textBtn: {
+    alignItems: 'center',
+    marginBottom: 42
+  },
+
+  underlineText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '700', // makes text bold
+    letterSpacing: 1,
+    fontFamily: 'Inter18Bold' // ✅
+  },
+
+  underlineBar: {
+    marginTop: 3,
+    height: 1.5, // 👈 thinner (this is the key change)
+    width: '41%',
+    backgroundColor: '#fff',
+    borderRadius: 2
+  },
+
+  disclaimer: {
+    textAlign: 'center',
+    marginTop: 10,
+    color: '#edb73a',
+    fontSize: 13,
+    fontFamily: 'Inter28Bold',
+  }
+})

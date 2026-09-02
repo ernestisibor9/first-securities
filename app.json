@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "First-Securities",
+    "name": "FirstInvest",
     "slug": "first-securities",
-    "version": "1.1.0",
+    "version": "2.2.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "firstsecurities",
@@ -28,6 +28,8 @@
     },
     "android": {
       "package": "com.ernzo.firstsecurities",
+      "usesCleartextTraffic": true,
+       "versionCode": 23,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -78,20 +80,18 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-web-browser",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "8db528d3-594e-4d95-83e4-aadedac5e1c3"
-      }
-    },
     "runtimeVersion": "1.0.0",
-    "updates": {
-      "url": "https://u.expo.dev/8db528d3-594e-4d95-83e4-aadedac5e1c3"
+    "extra": {
+      "eas": {
+        "projectId": "89f3a203-a7f5-4e7d-830d-0805bf648970"
+      }
     }
   }
 }
