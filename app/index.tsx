@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import { useRouter } from 'expo-router'
+import { useRootNavigationState, useRouter } from 'expo-router'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import React, { useEffect, useRef } from 'react'
 import {
@@ -59,11 +59,10 @@ const FadeUp = ({
 
 const Index = () => {
   const router = useRouter()
+  const rootNavigationState = useRootNavigationState()
 
   useEffect(() => {
     ScreenOrientation.unlockAsync()
-    // Pre-render the portal route so it opens instantly on tap
-    router.prefetch('/publicoffers')
 
     const subscription = ScreenOrientation.addOrientationChangeListener(
       event => {
@@ -74,7 +73,19 @@ const Index = () => {
     return () => {
       ScreenOrientation.removeOrientationChangeListener(subscription)
     }
-  }, [router])
+  }, [])
+
+  // Best-effort portal prefetch, only after the root navigator is ready.
+  // Unconditional prefetch crashed slow devices on launch
+  // ("navigate before mounting the Root Layout component").
+  useEffect(() => {
+    if (!rootNavigationState?.key) return
+    try {
+      router.prefetch('/publicoffers')
+    } catch (e) {
+      console.log('Portal prefetch skipped', e)
+    }
+  }, [router, rootNavigationState])
 
   const openIpoPortal = () => {
     router.push('/publicoffers')
