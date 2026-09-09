@@ -4,14 +4,14 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Linking,
-  ActivityIndicator,
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
+import * as WebBrowser from "expo-web-browser";
+import { SkeletonBox } from "@/components/Skeleton";
 
 const { width } = Dimensions.get("window");
 const scale = width / 375; // base = iPhone 11 width
@@ -38,6 +38,14 @@ const MarketInsight = () => {
     };
   }, []);
 
+  const openArticle = async (url: string) => {
+    try {
+      await WebBrowser.openBrowserAsync(url);
+    } catch (e) {
+      console.log("Failed to open article", e);
+    }
+  };
+
   useEffect(() => {
     fetch("https://regencyng.net/fs-api/proxy.php?type=market")
       .then((res) => res.json())
@@ -52,9 +60,37 @@ const MarketInsight = () => {
 
   if (loading) {
     return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#002B5B" />
-        <Text style={styles.loadingText}>Loading Market Insights...</Text>
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <View style={styles.headerContainer}>
+          <View style={{ width: 24 * scale }} />
+          <Text style={styles.header}>Market Insight</Text>
+          <View style={{ width: 24 * scale }} />
+        </View>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {[0, 1, 2, 3].map((key) => (
+            <View key={key} style={styles.card}>
+              <SkeletonBox
+                width="60%"
+                height={18 * scale}
+                radius={4}
+                style={{ marginBottom: 8 * scale }}
+              />
+              <SkeletonBox
+                width="100%"
+                height={13 * scale}
+                radius={4}
+                style={{ marginBottom: 6 * scale }}
+              />
+              <SkeletonBox
+                width="90%"
+                height={13 * scale}
+                radius={4}
+                style={{ marginBottom: 8 * scale }}
+              />
+              <SkeletonBox width="40%" height={12 * scale} radius={4} />
+            </View>
+          ))}
+        </ScrollView>
       </View>
     );
   }
@@ -85,7 +121,9 @@ const MarketInsight = () => {
               <Text style={styles.desc}>{displayContent}</Text>
               {item.url ? (
                 <TouchableOpacity
-                  onPress={() => Linking.openURL(String(item.url))}
+                  onPress={() => openArticle(String(item.url))}
+                  accessibilityRole="link"
+                  accessibilityLabel="Open article"
                 >
                   <Text style={styles.link}>{String(item.url)}</Text>
                 </TouchableOpacity>

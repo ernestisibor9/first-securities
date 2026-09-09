@@ -1,31 +1,28 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { IPO_PORTAL_URL } from '@/constants/Urls'
+import { Feather } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
+import * as ScreenOrientation from 'expo-screen-orientation'
+import React, { useEffect, useRef, useState } from 'react'
 import {
-  StyleSheet,
-  View,
   ActivityIndicator,
+  Platform,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  Platform
+  View
 } from 'react-native'
-import { WebView } from 'react-native-webview'
-import { Feather } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import * as ScreenOrientation from 'expo-screen-orientation'
-import { useRouter } from 'expo-router'
+import { WebView } from 'react-native-webview'
 
-export default function LoginScreen () {
-  const webviewRef = useRef(null)
+export default function PublicOffersScreen () {
+  const webviewRef = useRef<WebView>(null)
   const [orientation, setOrientation] = useState('PORTRAIT')
   const router = useRouter()
-  const url = 'https://alabiansolutions.com/client-mobile-app1/redirect.php'
 
-  //  const url = "https://alabiansolutions.com/client-mobile-app/redirect.php";
-
-  // ✅ Enable auto-rotation and track orientation
   useEffect(() => {
     ScreenOrientation.unlockAsync()
 
-    const onChange = ({ orientationInfo }) => {
+    const onChange = ({ orientationInfo }: any) => {
       const o = orientationInfo.orientation
       setOrientation(
         o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
@@ -42,7 +39,6 @@ export default function LoginScreen () {
     }
   }, [])
 
-  // ✅ Go back to previous app screen
   const handleGoBack = () => {
     router.back()
   }
@@ -56,25 +52,21 @@ export default function LoginScreen () {
         { backgroundColor: isLandscape ? '#fff' : '#f9f9f9' }
       ]}
     >
-      {/* ✅ Header visible only in portrait */}
       {!isLandscape && (
         <View style={styles.header}>
-          {/* ⬅️ Back/Home */}
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
             <Feather name='arrow-left' size={22} color='#002B5B' />
             <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
 
-          {/* 🧭 Dashboard */}
           <TouchableOpacity
             onPress={() => webviewRef.current && webviewRef.current.reload()}
           >
-            <Text style={styles.headerTitle}>Dashboard</Text>
+            <Text style={styles.headerTitle}>Public Offers</Text>
           </TouchableOpacity>
         </View>
       )}
 
-      {/* 🌍 WebView with footer */}
       <View style={{ flex: 1 }}>
         <WebView
           ref={webviewRef}
@@ -84,7 +76,7 @@ export default function LoginScreen () {
             height: '100%',
             borderRadius: isLandscape ? 0 : 8
           }}
-          source={{ uri: url }}
+          source={{ uri: IPO_PORTAL_URL }}
           startInLoadingState
           renderLoading={() => (
             <View style={styles.loaderContainer}>
@@ -107,7 +99,6 @@ export default function LoginScreen () {
           setDisplayZoomControls={false}
         />
 
-        {/* Footer / Regulatory text */}
         <Text style={styles.footerText}>
           First Securities is registered as a broker dealer{'\n'}
           and regulated by the Securities and Exchange{'\n'}

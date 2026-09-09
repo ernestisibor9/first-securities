@@ -8,6 +8,7 @@
     "scheme": "firstsecurities",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "owner": "firstinvest",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ernzo.firstsecurities",
@@ -29,7 +30,7 @@
     "android": {
       "package": "com.ernzo.firstsecurities",
       "usesCleartextTraffic": true,
-       "versionCode": 23,
+      "versionCode": 28,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -88,6 +89,9 @@
       "typedRoutes": true
     },
     "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/89f3a203-a7f5-4e7d-830d-0805bf648970"
+    },
     "extra": {
       "eas": {
         "projectId": "89f3a203-a7f5-4e7d-830d-0805bf648970"

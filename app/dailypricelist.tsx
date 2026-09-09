@@ -4,16 +4,18 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
   ScrollView,
   Dimensions,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SkeletonBox } from "@/components/Skeleton";
 
 const DailyPriceList = () => {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(true);
   const [priceData, setPriceData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,7 +80,7 @@ const DailyPriceList = () => {
     : 0;
 
   return (
-    <View style={[styles.container, { paddingTop: 40 * scale }]}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Header */}
       <View
         style={[
@@ -100,12 +102,19 @@ const DailyPriceList = () => {
 
       {/* Content */}
       {loading ? (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#002B5B" />
-          <Text style={[styles.loadingText, { marginTop: 10 * scale }]}>
-            Loading daily price list...
-          </Text>
-        </View>
+        <ScrollView style={{ flex: 1 }}>
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((key) => (
+            <View key={key} style={styles.stockRow}>
+              <SkeletonBox
+                width="55%"
+                height={15 * scale}
+                radius={4}
+                style={{ marginBottom: 8 }}
+              />
+              <SkeletonBox width="75%" height={13 * scale} radius={4} />
+            </View>
+          ))}
+        </ScrollView>
       ) : priceData ? (
         <>
           <Text
@@ -149,7 +158,9 @@ const DailyPriceList = () => {
           </ScrollView>
 
           {/* Pagination */}
-          <View style={styles.pagination}>
+          <View
+            style={[styles.pagination, { paddingBottom: insets.bottom + 16 }]}
+          >
             <TouchableOpacity
               style={[
                 styles.pageButton,
@@ -250,10 +261,11 @@ const styles = StyleSheet.create({
   },
   pageButton: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
     backgroundColor: "#002B5B",
     borderRadius: 5,
     marginHorizontal: 5,
+    minHeight: 48,
   },
   pageText: {
     color: "#fff",

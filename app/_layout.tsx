@@ -41,6 +41,7 @@ export default function RootLayout() {
         <Stack.Screen name="dailypricelist" />
         <Stack.Screen name="login" />
         <Stack.Screen name="signup" />
+        <Stack.Screen name="publicoffers" />
         <Stack.Screen name="verifyemail" />
         <Stack.Screen name="pricealert" />
         <Stack.Screen name="pricechart" />

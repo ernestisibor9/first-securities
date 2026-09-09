@@ -103,6 +103,11 @@ export default function SignUpScreen() {
         javaScriptEnabled
         domStorageEnabled
         originWhitelist={["https://*"]}
+        cacheEnabled
+        cacheMode="LOAD_DEFAULT"
+        incognito={false}
+        sharedCookiesEnabled
+        thirdPartyCookiesEnabled
         setBuiltInZoomControls={Platform.OS === "android"}
         setDisplayZoomControls={false}
       />
