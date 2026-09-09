@@ -5,7 +5,7 @@ module.exports = function (config) {
     // Floor only: target/compile SDK are owned by expo-build-properties.
     config.modResults.manifest['uses-sdk'] = [{
       $: {
-        'android:minSdkVersion': '26'
+        'android:minSdkVersion': '24'
       }
     }];
     return config;
