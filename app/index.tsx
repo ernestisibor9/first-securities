@@ -166,7 +166,7 @@ const Index = () => {
                 <Text style={styles.ipoTitle}>DANGOTE IPO</Text>
               </View>
               <View style={styles.offerPill}>
-                <Text style={styles.offerPillText}>OFFER OPEN</Text>
+                <Text style={styles.offerPillText}>● OFFER OPEN</Text>
               </View>
             </View>
             </FadeUp>
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
 
   offerPill: {
     backgroundColor: OFFER_GREEN,
-    borderRadius: 6,
+    borderRadius: 2,
     paddingVertical: 4,
     paddingHorizontal: 8
   },
