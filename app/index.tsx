@@ -92,7 +92,7 @@ const Index = () => {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={styles.safeArea} edges={['left', 'right']}>
       <StatusBar
         translucent
         backgroundColor='transparent'
