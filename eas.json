@@ -12,7 +12,7 @@
     "preview": {
       "distribution": "internal",
       "channel": "preview",
-      "credentialsSource": "local",
+      "simulator": true,
       "autoIncrement": true,
       "android": {
         "buildType": "apk"
