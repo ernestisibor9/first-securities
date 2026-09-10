@@ -12,7 +12,6 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.firstsecurities.app",
-      "buildNumber": "15",
       "config": {
         "usesNonExemptEncryption": false
       },

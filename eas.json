@@ -21,7 +21,7 @@
     "production": {
       "autoIncrement": true,
       "channel": "production",
-      "credentialsSource": "remote"
+      "credentialsSource": "local"
     }
   },
   "submit": {
