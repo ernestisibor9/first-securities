@@ -2,7 +2,7 @@
   "expo": {
     "name": "FirstInvest",
     "slug": "first-securities",
-    "version": "2.2.1",
+    "version": "2.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "firstsecurities",
@@ -10,21 +10,17 @@
     "newArchEnabled": true,
     "owner": "firstinvest",
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.ernzo.firstsecurities",
+      "supportsTablet": false,
+      "bundleIdentifier": "com.firstsecurities.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false,
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
-          "NSExceptionDomains": {
-            "localhost": {
-              "NSExceptionAllowsInsecureHTTPLoads": false
-            },
-            "127.0.0.1": {
-              "NSExceptionAllowsInsecureHTTPLoads": false
-            }
-          }
-        }
+          "NSAllowsLocalNetworking": true
+        },
+        "NSLocalNetworkUsageDescription": "This app needs local network access to connect to development server"
       }
     },
     "android": {
