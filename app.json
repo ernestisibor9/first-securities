@@ -2,7 +2,7 @@
   "expo": {
     "name": "FirstInvest",
     "slug": "first-securities",
-    "version": "2.1.1",
+    "version": "2.2.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "firstsecurities",
