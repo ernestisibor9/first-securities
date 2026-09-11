@@ -30,7 +30,7 @@ export default function PriceChart() {
 
   // ✅ Unlock screen rotation on mount
   useEffect(() => {
-    ScreenOrientation.unlockAsync();
+    ScreenOrientation.unlockAsync().catch(() => {});
 
     return () => {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
@@ -63,7 +63,12 @@ export default function PriceChart() {
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=stocks");
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=stocks", {
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
         const data = await safeJson(res);
 
@@ -95,9 +100,13 @@ export default function PriceChart() {
     const fetchChartData = async () => {
       setLoadingChart(true);
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const res = await fetch(
-          `https://regencyng.net/fs-api/proxy.php?stock=${selectedStock}&type=stock_chart`
+          `https://regencyng.net/fs-api/proxy.php?stock=${selectedStock}&type=stock_chart`,
+          { signal: controller.signal }
         );
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
         const data = await safeJson(res);
 
@@ -177,7 +186,7 @@ export default function PriceChart() {
   const maxPrice = prices.length > 0 ? Math.max(...prices) : 0;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
@@ -219,7 +228,7 @@ export default function PriceChart() {
         {loadingChart ? (
           <ActivityIndicator size="large" color="#002B5B" style={{ padding: 50 }} />
         ) : chartPoints.length > 0 ? (
-          <ScrollView horizontal showsHorizontalScrollIndicator>
+          <ScrollView horizontal showsHorizontalScrollIndicator keyboardShouldPersistTaps="handled">
             <LineChart
               data={chartPoints}
               height={isLandscape ? height * 0.8 : height * 0.45}

@@ -14,16 +14,18 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { useRouter } from "expo-router";
 
 export default function SignUpScreen() {
-  const webviewRef = useRef(null); // ✅ MUST be before usage
+  const webviewRef = useRef(null);
   const [orientation, setOrientation] = useState("PORTRAIT");
-
+  const [webError, setWebError] = useState(false);
+  const [webLoading, setWebLoading] = useState(true);
   const router = useRouter();
   const initialUrl =
     "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
+  const WEB_TIMEOUT = 15000;
 
   // ✅ Orientation handling
   useEffect(() => {
-    ScreenOrientation.unlockAsync();
+    ScreenOrientation.unlockAsync().catch(() => {});
 
     const onChange = ({ orientationInfo }) => {
       const o = orientationInfo.orientation;
@@ -56,6 +58,18 @@ export default function SignUpScreen() {
  
   const isLandscape = orientation === "LANDSCAPE";
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (webLoading) setWebError(true);
+    }, WEB_TIMEOUT);
+    return () => clearTimeout(timer);
+  }, [webLoading]);
+
+  const retryWeb = () => {
+    setWebError(false);
+    webviewRef.current?.reload();
+  };
+
   return (
     <SafeAreaView
       style={[
@@ -84,33 +98,49 @@ export default function SignUpScreen() {
       </View>
 
       {/* WebView */}
-      <WebView
-        ref={webviewRef}
-        style={{
-          flex: 1,
-          width: "100%",
-          height: "100%",
-          borderRadius: isLandscape ? 0 : 8,
-        }}
-        source={{ uri: initialUrl }}
-        startInLoadingState
-        renderLoading={() => (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#002B5B" />
-            <Text style={styles.loadingText}>Loading...</Text>
-          </View>
-        )}
-        javaScriptEnabled
-        domStorageEnabled
-        originWhitelist={["https://*"]}
-        cacheEnabled
-        cacheMode="LOAD_DEFAULT"
-        incognito={false}
-        sharedCookiesEnabled
-        thirdPartyCookiesEnabled
-        setBuiltInZoomControls={Platform.OS === "android"}
-        setDisplayZoomControls={false}
-      />
+      {webError ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorTitle}>Unable to load page</Text>
+          <Text style={styles.errorMessage}>
+            Please check your internet connection and try again.
+          </Text>
+          <TouchableOpacity onPress={retryWeb} style={styles.retryButton}>
+            <Text style={styles.retryText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <WebView
+          ref={webviewRef}
+          style={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            borderRadius: isLandscape ? 0 : 8,
+          }}
+          source={{ uri: initialUrl }}
+          startInLoadingState
+          renderLoading={() => (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#002B5B" />
+              <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+          )}
+          javaScriptEnabled
+          domStorageEnabled
+          originWhitelist={["https://*"]}
+          cacheEnabled
+          cacheMode="LOAD_DEFAULT"
+          incognito={false}
+          sharedCookiesEnabled
+          thirdPartyCookiesEnabled
+          setBuiltInZoomControls={Platform.OS === "android"}
+          setDisplayZoomControls={false}
+          onError={() => setWebError(true)}
+          onHttpError={() => setWebError(true)}
+          onLoadEnd={() => setWebLoading(false)}
+          onLoadStart={() => setWebLoading(true)}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -155,6 +185,42 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+    backgroundColor: "#fff",
+  },
+
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#c00",
+    marginBottom: 12,
+  },
+
+  errorMessage: {
+    fontSize: 14,
+    color: "#444",
+    textAlign: "center",
+    marginBottom: 24,
+  },
+
+  retryButton: {
+    backgroundColor: "#002B5B",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+
+  retryText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
   loadingText: {
     marginTop: 10,
     color: "#444",

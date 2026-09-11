@@ -16,14 +16,16 @@ import { useRouter } from 'expo-router'
 export default function LoginScreen () {
   const webviewRef = useRef(null)
   const [orientation, setOrientation] = useState('PORTRAIT')
+  const [webError, setWebError] = useState(false)
   const router = useRouter()
   const url = 'https://alabiansolutions.com/client-mobile-app1/redirect.php'
+  const WEB_TIMEOUT = 15000
 
   //  const url = "https://alabiansolutions.com/client-mobile-app/redirect.php";
 
   // ✅ Enable auto-rotation and track orientation
   useEffect(() => {
-    ScreenOrientation.unlockAsync()
+    ScreenOrientation.unlockAsync().catch(() => {})
 
     const onChange = ({ orientationInfo }) => {
       const o = orientationInfo.orientation
@@ -48,6 +50,19 @@ export default function LoginScreen () {
   }
 
   const isLandscape = orientation === 'LANDSCAPE'
+  const [webLoading, setWebLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (webLoading) setWebError(true)
+    }, WEB_TIMEOUT)
+    return () => clearTimeout(timer)
+  }, [webLoading])
+
+  const retryWeb = () => {
+    setWebError(false)
+    webviewRef.current?.reload()
+  }
 
   return (
     <SafeAreaView
@@ -76,36 +91,52 @@ export default function LoginScreen () {
 
       {/* 🌍 WebView with footer */}
       <View style={{ flex: 1 }}>
-        <WebView
-          ref={webviewRef}
-          style={{
-            flex: 1,
-            width: '100%',
-            height: '100%',
-            borderRadius: isLandscape ? 0 : 8
-          }}
-          source={{ uri: url }}
-          startInLoadingState
-          renderLoading={() => (
-            <View style={styles.loaderContainer}>
-              <ActivityIndicator size='large' color='#002B5B' />
-              <Text style={styles.loadingText}>Loading...</Text>
-            </View>
-          )}
-          javaScriptEnabled
-          domStorageEnabled
-          allowsInlineMediaPlayback
-          mediaPlaybackRequiresUserAction={false}
-          originWhitelist={['https://*']}
-          cacheEnabled
-          cacheMode='LOAD_DEFAULT'
-          incognito={false}
-          sharedCookiesEnabled
-          thirdPartyCookiesEnabled
-          mixedContentMode='always'
-          setBuiltInZoomControls={Platform.OS === 'android'}
-          setDisplayZoomControls={false}
-        />
+        {webError ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorTitle}>Unable to load page</Text>
+            <Text style={styles.errorMessage}>
+              Please check your internet connection and try again.
+            </Text>
+            <TouchableOpacity onPress={retryWeb} style={styles.retryButton}>
+              <Text style={styles.retryText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <WebView
+            ref={webviewRef}
+            style={{
+              flex: 1,
+              width: '100%',
+              height: '100%',
+              borderRadius: isLandscape ? 0 : 8
+            }}
+            source={{ uri: url }}
+            startInLoadingState
+            renderLoading={() => (
+              <View style={styles.loaderContainer}>
+                <ActivityIndicator size='large' color='#002B5B' />
+                <Text style={styles.loadingText}>Loading...</Text>
+              </View>
+            )}
+            javaScriptEnabled
+            domStorageEnabled
+            allowsInlineMediaPlayback
+            mediaPlaybackRequiresUserAction={false}
+            originWhitelist={['https://*']}
+            cacheEnabled
+            cacheMode='LOAD_DEFAULT'
+            incognito={false}
+            sharedCookiesEnabled
+            thirdPartyCookiesEnabled
+            mixedContentMode='always'
+            setBuiltInZoomControls={Platform.OS === 'android'}
+            setDisplayZoomControls={false}
+            onError={() => setWebError(true)}
+            onHttpError={() => setWebError(true)}
+            onLoadEnd={() => setWebLoading(false)}
+            onLoadStart={() => setWebLoading(true)}
+          />
+        )}
 
         {/* Footer / Regulatory text */}
         <Text style={styles.footerText}>
@@ -157,6 +188,41 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+    backgroundColor: '#fff'
+  },
+
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#c00',
+    marginBottom: 12
+  },
+
+  errorMessage: {
+    fontSize: 14,
+    color: '#444',
+    textAlign: 'center',
+    marginBottom: 24
+  },
+
+  retryButton: {
+    backgroundColor: '#002B5B',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8
+  },
+
+  retryText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600'
   },
 
   loadingText: {

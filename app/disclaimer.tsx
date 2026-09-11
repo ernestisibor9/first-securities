@@ -9,9 +9,8 @@ const Disclaimer = () => {
 
   // Allow auto-rotation
   useEffect(() => {
-    ScreenOrientation.unlockAsync();
+    ScreenOrientation.unlockAsync().catch(() => {});
 
-    // Optional: lock back to portrait when leaving screen
     return () => {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     };
@@ -29,7 +28,8 @@ const Disclaimer = () => {
       {/* Scrollable Disclaimer */}
       <ScrollView 
         style={styles.container}
-        contentContainerStyle={{ paddingBottom: 120 }}   // 👈 FIX: prevents hidden text
+        contentContainerStyle={{ paddingBottom: 120 }}
+        keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.title}>Important Notice to Clients</Text>
 

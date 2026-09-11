@@ -60,27 +60,36 @@ const PriceAlert = () => {
 
     try {
       setLoading(true);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
       const response = await fetch(
         "https://regencyng.net/fs-api/proxy.php?type=daily_alert",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeoutId);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push({
-          pathname: "/verifyemail",
-          params: { email },
-        });
-      } else {
-        Alert.alert("Error", data?.message || "Failed to send OTP.");
+      if (!response.ok) {
+        await response.json().catch(() => ({}));
+        Alert.alert("Error", "Failed to send OTP.");
+        return;
       }
-    } catch (error) {
-      Alert.alert("Network Error", "Please check your internet connection and try again.");
+
+      await response.json();
+      router.push({
+        pathname: "/verifyemail",
+        params: { email },
+      });
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        Alert.alert("Timeout", "Request timed out. Please try again.");
+      } else {
+        Alert.alert("Network Error", "Please check your internet connection and try again.");
+      }
     } finally {
       setLoading(false);
     }

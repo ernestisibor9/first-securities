@@ -62,7 +62,7 @@ const Index = () => {
   const rootNavigationState = useRootNavigationState()
 
   useEffect(() => {
-    ScreenOrientation.unlockAsync()
+    ScreenOrientation.unlockAsync().catch(() => {})
 
     const subscription = ScreenOrientation.addOrientationChangeListener(
       event => {

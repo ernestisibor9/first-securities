@@ -20,6 +20,8 @@ const DailyPriceList = () => {
   const [priceData, setPriceData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [orientation, setOrientation] = useState("PORTRAIT");
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   const itemsPerPage = 20;
 
@@ -56,14 +58,36 @@ const DailyPriceList = () => {
 
   // --- Fetch data ---
   useEffect(() => {
-    fetch("https://regencyng.net/fs-api/proxy.php?type=daily_price")
-      .then((res) => res.json())
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    fetch("https://regencyng.net/fs-api/proxy.php?type=daily_price", {
+      signal: controller.signal,
+    })
+      .then((res) => {
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
         setPriceData(data);
         setLoading(false);
+        setFetchError(null);
       })
-      .catch(() => setLoading(false));
-  }, []);
+      .catch((err: any) => {
+        if (err.name === "AbortError") {
+          setFetchError("Request timed out. Tap retry.");
+        } else {
+          setFetchError("Failed to load data. Tap retry.");
+        }
+        setLoading(false);
+      });
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [retryKey]);
 
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -102,7 +126,7 @@ const DailyPriceList = () => {
 
       {/* Content */}
       {loading ? (
-        <ScrollView style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
           {[0, 1, 2, 3, 4, 5, 6, 7].map((key) => (
             <View key={key} style={styles.stockRow}>
               <SkeletonBox
@@ -129,7 +153,7 @@ const DailyPriceList = () => {
             Daily Price List - {formatDate(priceData.date)}
           </Text>
 
-          <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
             {currentItems.map((item, idx) => (
               <View key={idx} style={styles.stockRow}>
                 <Text style={[styles.stockName, { fontSize: 15 * scale }]}>
@@ -197,9 +221,19 @@ const DailyPriceList = () => {
           </View>
         </>
       ) : (
-        <Text style={{ textAlign: "center", marginTop: 20 * scale }}>
-          Failed to load data
-        </Text>
+        <View style={{ alignItems: "center", marginTop: 20 * scale }}>
+          <Text style={{ color: "#c00", marginBottom: 12 }}>{fetchError}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              setFetchError(null);
+              setLoading(true);
+              setRetryKey((k) => k + 1);
+            }}
+            style={styles.pageButton}
+          >
+            <Text style={[styles.pageText, { fontSize: 13 * scale }]}>Retry</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );

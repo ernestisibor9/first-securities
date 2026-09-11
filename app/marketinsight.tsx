@@ -20,12 +20,12 @@ const MarketInsight = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [insights, setInsights] = useState<any[]>([]);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
-    // ✅ Allow automatic screen rotation
-    ScreenOrientation.unlockAsync();
+    ScreenOrientation.unlockAsync().catch(() => {});
 
-    // Optional: Listen for orientation change events
     const subscription = ScreenOrientation.addOrientationChangeListener(
       (event) => {
         console.log("Orientation changed:", event.orientationInfo.orientation);
@@ -47,16 +47,36 @@ const MarketInsight = () => {
   };
 
   useEffect(() => {
-    fetch("https://regencyng.net/fs-api/proxy.php?type=market")
-      .then((res) => res.json())
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    fetch("https://regencyng.net/fs-api/proxy.php?type=market", {
+      signal: controller.signal,
+    })
+      .then((res) => {
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
         setInsights(data);
         setLoading(false);
+        setFetchError(null);
       })
-      .catch(() => {
+      .catch((err: any) => {
+        if (err.name === "AbortError") {
+          setFetchError("Request timed out. Tap to retry.");
+        } else {
+          setFetchError("Failed to load insights. Tap to retry.");
+        }
         setLoading(false);
       });
-  }, []);
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [retryKey]);
 
   if (loading) {
     return (
@@ -66,7 +86,7 @@ const MarketInsight = () => {
           <Text style={styles.header}>Market Insight</Text>
           <View style={{ width: 24 * scale }} />
         </View>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           {[0, 1, 2, 3].map((key) => (
             <View key={key} style={styles.card}>
               <SkeletonBox
@@ -95,6 +115,26 @@ const MarketInsight = () => {
     );
   }
 
+  if (fetchError) {
+    return (
+      <View style={{ flex: 1, backgroundColor: "#fff", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <Text style={{ fontSize: 16, fontWeight: "600", color: "#c00", marginBottom: 12 }}>
+          {fetchError}
+        </Text>
+        <TouchableOpacity
+          onPress={() => {
+            setFetchError(null);
+            setLoading(true);
+            setRetryKey((k) => k + 1);
+          }}
+          style={{ backgroundColor: "#002B5B", paddingVertical: 12, paddingHorizontal: 24, borderRadius: 8 }}
+        >
+          <Text style={{ color: "#fff", fontSize: 14, fontWeight: "600" }}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       {/* Header */}
@@ -107,7 +147,7 @@ const MarketInsight = () => {
       </View>
 
       {/* Content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         {insights.map((item, idx) => {
           const shortContent = String(item.content || "");
           const displayContent =

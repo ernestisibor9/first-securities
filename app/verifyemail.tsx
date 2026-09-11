@@ -61,14 +61,24 @@ export default function VerifyEmail() {
     try {
       setLoading(true);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
       const response = await fetch(
         "https://regencyng.net/fs-api/proxy.php?type=daily_alert_confirmation",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, otp }),
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        await response.json().catch(() => ({}));
+        alert("⚠️ Server error. Please try again.");
+        return;
+      }
 
       const data = await response.json();
       if (data.status === "ok") {
@@ -82,8 +92,12 @@ export default function VerifyEmail() {
       } else {
         alert("⚠️ Unexpected response. Please try again.");
       }
-    } catch (error) {
-      alert("Something went wrong. Please try again.");
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        alert("⚠️ Request timed out. Please try again.");
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -99,14 +113,24 @@ export default function VerifyEmail() {
       setIsResendDisabled(true);
       setTimer(60);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
       const response = await fetch(
         "https://regencyng.net/fs-api/proxy.php?type=daily_alert",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        alert("⚠️ Failed to resend OTP. Try again later.");
+        setIsResendDisabled(false);
+        return;
+      }
 
       const data = await response.json();
       if (data?.otp) {
@@ -116,15 +140,19 @@ export default function VerifyEmail() {
         alert(data?.message || "⚠️ Failed to resend OTP. Try again later.");
         setIsResendDisabled(false);
       }
-    } catch (error) {
-      alert("Failed to resend OTP. Try again later.");
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        alert("⚠️ Request timed out. Please try again.");
+      } else {
+        alert("Failed to resend OTP. Try again later.");
+      }
       setIsResendDisabled(false);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
