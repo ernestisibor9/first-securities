@@ -14,7 +14,6 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LineChart } from "react-native-gifted-charts";
-import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function PriceChart() {
   const { width, height } = useWindowDimensions();
@@ -27,15 +26,6 @@ export default function PriceChart() {
   const [chartData, setChartData] = useState<{ date: Date; price: number }[]>([]);
   const [loadingChart, setLoadingChart] = useState(true);
   const [favorites, setFavorites] = useState<string[]>([]);
-
-  // ✅ Unlock screen rotation on mount
-  useEffect(() => {
-    ScreenOrientation.unlockAsync().catch(() => {});
-
-    return () => {
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-    };
-  }, []);
 
   // ✅ Load favorites
   useEffect(() => {

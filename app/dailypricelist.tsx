@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SkeletonBox } from "@/components/Skeleton";
 
@@ -19,42 +18,13 @@ const DailyPriceList = () => {
   const [loading, setLoading] = useState(true);
   const [priceData, setPriceData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [orientation, setOrientation] = useState("PORTRAIT");
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
 
   const itemsPerPage = 20;
 
-  // --- Orientation setup ---
-  useEffect(() => {
-    // Get initial orientation
-    (async () => {
-      const current = await ScreenOrientation.getOrientationAsync();
-      setOrientation(
-        current === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-          current === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? "LANDSCAPE"
-          : "PORTRAIT"
-      );
-    })();
-
-    // Listen for changes
-    const sub = ScreenOrientation.addOrientationChangeListener((event) => {
-      const newOrientation =
-        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? "LANDSCAPE"
-          : "PORTRAIT";
-      setOrientation(newOrientation);
-    });
-
-    return () => ScreenOrientation.removeOrientationChangeListener(sub);
-  }, []);
-
-  // Adjust scaling dynamically
   const { width } = Dimensions.get("window");
-  const scale =
-    orientation === "LANDSCAPE" ? width / 812 : width / 375; // base widths
+  const scale = width / 375;
 
   // --- Fetch data ---
   useEffect(() => {
@@ -111,7 +81,7 @@ const DailyPriceList = () => {
           styles.header,
           {
             marginTop: 20 * scale,
-            paddingHorizontal: orientation === "LANDSCAPE" ? 24 : 16 * scale,
+            paddingHorizontal: 16 * scale,
           },
         ]}
       >
@@ -146,7 +116,7 @@ const DailyPriceList = () => {
               styles.dateText,
               {
                 fontSize: 20 * scale,
-                marginLeft: orientation === "LANDSCAPE" ? 24 : 16 * scale,
+                marginLeft: 16 * scale,
               },
             ]}
           >

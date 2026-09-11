@@ -9,7 +9,6 @@ import {
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
 import * as WebBrowser from "expo-web-browser";
 import { SkeletonBox } from "@/components/Skeleton";
 
@@ -22,21 +21,6 @@ const MarketInsight = () => {
   const [insights, setInsights] = useState<any[]>([]);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
-
-  useEffect(() => {
-    ScreenOrientation.unlockAsync().catch(() => {});
-
-    const subscription = ScreenOrientation.addOrientationChangeListener(
-      (event) => {
-        console.log("Orientation changed:", event.orientationInfo.orientation);
-      }
-    );
-
-    // Cleanup listener when component unmounts
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
-  }, []);
 
   const openArticle = async (url: string) => {
     try {

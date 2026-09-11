@@ -1,6 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRootNavigationState, useRouter } from 'expo-router'
-import * as ScreenOrientation from 'expo-screen-orientation'
 import React, { useEffect, useRef } from 'react'
 import {
   Animated,
@@ -61,20 +60,6 @@ const FadeUp = ({
 const Index = () => {
   const router = useRouter()
   const rootNavigationState = useRootNavigationState()
-
-  useEffect(() => {
-    ScreenOrientation.unlockAsync().catch(() => {})
-
-    const subscription = ScreenOrientation.addOrientationChangeListener(
-      event => {
-        console.log('Orientation changed:', event.orientationInfo.orientation)
-      }
-    )
-
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription)
-    }
-  }, [])
 
   // Best-effort portal prefetch, only after the root navigator is ready.
   // Unconditional prefetch crashed slow devices on launch

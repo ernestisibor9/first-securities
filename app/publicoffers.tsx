@@ -1,7 +1,6 @@
 import { IPO_PORTAL_URL } from '@/constants/Urls'
 import { Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import * as ScreenOrientation from 'expo-screen-orientation'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
@@ -16,37 +15,10 @@ import { WebView } from 'react-native-webview'
 
 export default function PublicOffersScreen () {
   const webviewRef = useRef<WebView>(null)
-  const [orientation, setOrientation] = useState('PORTRAIT')
   const [webError, setWebError] = useState(false)
   const [webLoading, setWebLoading] = useState(true)
   const router = useRouter()
   const WEB_TIMEOUT = 15000
-
-  useEffect(() => {
-    ScreenOrientation.unlockAsync().catch(() => {})
-
-    const onChange = ({ orientationInfo }: any) => {
-      const o = orientationInfo.orientation
-      setOrientation(
-        o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-          o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? 'LANDSCAPE'
-          : 'PORTRAIT'
-      )
-    }
-
-    const subscription =
-      ScreenOrientation.addOrientationChangeListener(onChange)
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription)
-    }
-  }, [])
-
-  const handleGoBack = () => {
-    router.back()
-  }
-
-  const isLandscape = orientation === 'LANDSCAPE'
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -60,27 +32,29 @@ export default function PublicOffersScreen () {
     webviewRef.current?.reload()
   }
 
+  const handleGoBack = () => {
+    router.back()
+  }
+
   return (
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: isLandscape ? '#fff' : '#f9f9f9' }
+        { backgroundColor: '#f9f9f9' }
       ]}
     >
-      {!isLandscape && (
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Feather name='arrow-left' size={22} color='#002B5B' />
-            <Text style={styles.backText}>Home</Text>
-          </TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+          <Feather name='arrow-left' size={22} color='#002B5B' />
+          <Text style={styles.backText}>Home</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => webviewRef.current && webviewRef.current.reload()}
-          >
-            <Text style={styles.headerTitle}>Public Offers</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+        <TouchableOpacity
+          onPress={() => webviewRef.current && webviewRef.current.reload()}
+        >
+          <Text style={styles.headerTitle}>Public Offers</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={{ flex: 1 }}>
         {webError ? (
@@ -100,7 +74,7 @@ export default function PublicOffersScreen () {
               flex: 1,
               width: '100%',
               height: '100%',
-              borderRadius: isLandscape ? 0 : 8
+              borderRadius: 8
             }}
             source={{ uri: IPO_PORTAL_URL }}
             startInLoadingState

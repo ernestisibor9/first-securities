@@ -1,20 +1,10 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
 
 const Disclaimer = () => {
   const router = useRouter();
-
-  // Allow auto-rotation
-  useEffect(() => {
-    ScreenOrientation.unlockAsync().catch(() => {});
-
-    return () => {
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-    };
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>

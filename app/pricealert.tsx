@@ -11,46 +11,14 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
 
 const PriceAlert = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [orientation, setOrientation] = useState("PORTRAIT");
 
-  // --- Detect and respond to screen rotation ---
-  useEffect(() => {
-    // Get initial orientation
-    (async () => {
-      const currentOrientation = await ScreenOrientation.getOrientationAsync();
-      setOrientation(
-        currentOrientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-          currentOrientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? "LANDSCAPE"
-          : "PORTRAIT"
-      );
-    })();
-
-    // Listen for orientation changes
-    const subscription = ScreenOrientation.addOrientationChangeListener((event) => {
-      const newOrientation =
-        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-        event.orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-          ? "LANDSCAPE"
-          : "PORTRAIT";
-      setOrientation(newOrientation);
-    });
-
-    // Cleanup on unmount
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
-    };
-  }, []);
-
-  // Scale layout based on orientation
   const { width } = Dimensions.get("window");
-  const scale = orientation === "LANDSCAPE" ? width / 812 : width / 375;
+  const scale = width / 375;
 
   const handleContinue = async () => {
     if (!email || !email.includes("@")) {
@@ -132,7 +100,7 @@ const PriceAlert = () => {
           styles.button,
           {
             paddingVertical: 14 * scale,
-            marginBottom: orientation === "LANDSCAPE" ? 20 : 55 * scale,
+            marginBottom: 55 * scale,
           },
         ]}
         onPress={handleContinue}
