@@ -7,6 +7,7 @@ import {
   Easing,
   Image,
   ImageBackground,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -117,6 +118,10 @@ const Index = () => {
           </View>
 
           {/* Bottom Content */}
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+          >
           <View style={styles.content}>
             <FadeUp delay={0}>
               <Text style={styles.heading}>
@@ -226,7 +231,8 @@ const Index = () => {
               <Text style={styles.disclaimer}>DISCLAIMER</Text>
             </TouchableOpacity>
             </FadeUp>
-          </View>
+            </View>
+          </ScrollView>
         </LinearGradient>
       </ImageBackground>
     </SafeAreaView>
@@ -269,7 +275,13 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    marginBottom: 10
+    marginBottom: 10,
+    paddingVertical: 10
+  },
+
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 20
   },
 
   heading: {
