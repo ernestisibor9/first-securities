@@ -69,10 +69,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   backBtn: {
-    width: 70,
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 6,
   },
   backText: {
+    marginLeft: 6,
     fontSize: 18,
     fontWeight: "600",
     color: "#002B5B",

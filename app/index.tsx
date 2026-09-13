@@ -6,7 +6,6 @@ import {
   Easing,
   Image,
   ImageBackground,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -16,7 +15,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 
-// Subtle mount stagger, UI-thread only (opacity + translateY support native driver)
 const FadeUp = ({
   delay = 0,
   children
@@ -61,9 +59,6 @@ const Index = () => {
   const router = useRouter()
   const rootNavigationState = useRootNavigationState()
 
-  // Best-effort portal prefetch, only after the root navigator is ready.
-  // Unconditional prefetch crashed slow devices on launch
-  // ("navigate before mounting the Root Layout component").
   useEffect(() => {
     if (!rootNavigationState?.key) return
     try {
@@ -103,10 +98,6 @@ const Index = () => {
           </View>
 
           {/* Bottom Content */}
-          <ScrollView
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-          >
           <View style={styles.content}>
             <FadeUp delay={0}>
               <Text style={styles.heading}>
@@ -194,7 +185,7 @@ const Index = () => {
             {/* Signup */}
             <FadeUp delay={500}>
             <View style={styles.signupContainer}>
-              <Text style={styles.signupText}>Don’t have an account? </Text>
+              <Text style={styles.signupText}>Don't have an account? </Text>
               <TouchableOpacity onPress={() => router.push('/signup')}>
                 <Text style={styles.signupLink}>Sign up</Text>
               </TouchableOpacity>
@@ -216,8 +207,7 @@ const Index = () => {
               <Text style={styles.disclaimer}>DISCLAIMER</Text>
             </TouchableOpacity>
             </FadeUp>
-            </View>
-          </ScrollView>
+          </View>
         </LinearGradient>
       </ImageBackground>
     </SafeAreaView>
@@ -260,13 +250,7 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    marginBottom: 10,
-    paddingVertical: 10
-  },
-
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20
+    marginBottom: 10
   },
 
   heading: {
