@@ -56,7 +56,7 @@ export default function PublicOffersScreen () {
         </TouchableOpacity>
       </View>
 
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: '#f9f9f9' }}>
         {webError ? (
           <View style={styles.errorContainer}>
             <Text style={styles.errorTitle}>Unable to load page</Text>
@@ -74,7 +74,8 @@ export default function PublicOffersScreen () {
               flex: 1,
               width: '100%',
               height: '100%',
-              borderRadius: 8
+              borderRadius: 8,
+              backgroundColor: '#f9f9f9'
             }}
             source={{ uri: IPO_PORTAL_URL }}
             startInLoadingState

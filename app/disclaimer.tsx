@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { useRouter } from "expo-router";
+import { Feather } from "@expo/vector-icons";
 
 const Disclaimer = () => {
   const router = useRouter();
@@ -11,7 +12,8 @@ const Disclaimer = () => {
       {/* Back Button */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>← Back</Text>
+          <Feather name="arrow-left" size={22} color="#002B5B" />
+          <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
       </View>
 

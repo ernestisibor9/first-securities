@@ -68,6 +68,7 @@ export default function SignUpScreen() {
       </View>
 
       {/* WebView */}
+      <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       {webError ? (
         <View style={styles.errorContainer}>
           <Text style={styles.errorTitle}>Unable to load page</Text>
@@ -86,6 +87,7 @@ export default function SignUpScreen() {
             width: "100%",
             height: "100%",
             borderRadius: 8,
+            backgroundColor: "#f9f9f9"
           }}
           source={{ uri: initialUrl }}
           startInLoadingState
@@ -111,6 +113,7 @@ export default function SignUpScreen() {
           onLoadStart={() => setWebLoading(true)}
         />
       )}
+      </View>
     </SafeAreaView>
   );
 }
