@@ -97,7 +97,7 @@
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/89f3a203-a7f5-4e7d-830d-0805bf648970",
-      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "checkAutomatically": "ALWAYS",
       "fallbackToCacheTimeout": 0
     },
     "extra": {
