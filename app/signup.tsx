@@ -19,7 +19,7 @@ export default function SignUpScreen() {
   const router = useRouter();
   const initialUrl =
     "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
-  const WEB_TIMEOUT = 15000;
+  const WEB_TIMEOUT = 50000;
 
   const handleGoBack = () => {
     router.back();
