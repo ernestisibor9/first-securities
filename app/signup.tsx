@@ -107,8 +107,14 @@ export default function SignUpScreen() {
           thirdPartyCookiesEnabled
           setBuiltInZoomControls={Platform.OS === "android"}
           setDisplayZoomControls={false}
-          onError={() => setWebError(true)}
-          onHttpError={() => setWebError(true)}
+          onError={(event) => {
+            console.log('[WebView onError]', event.nativeEvent)
+            setWebError(true)
+          }}
+          onHttpError={(event) => {
+            console.log('[WebView onHttpError]', event.nativeEvent.statusCode)
+            setWebError(true)
+          }}
           onLoadEnd={() => setWebLoading(false)}
           onLoadStart={() => setWebLoading(true)}
         />
@@ -157,6 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f9f9f9"
   },
 
   errorContainer: {
