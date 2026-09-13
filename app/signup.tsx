@@ -110,7 +110,7 @@ export default function SignUpScreen() {
           setBuiltInZoomControls={Platform.OS === "android"}
           setDisplayZoomControls={false}
           onError={(event) => {
-            const detail = event.nativeEvent.errorType || event.nativeEvent.domain || 'Unknown error'
+            const detail = event.nativeEvent.description || event.nativeEvent.errorType || event.nativeEvent.domain || 'Unknown error'
             console.log('[WebView onError]', event.nativeEvent)
             setErrorDetail(detail)
             setWebError(true)
