@@ -17,6 +17,7 @@ export default function PublicOffersScreen () {
   const webviewRef = useRef<WebView>(null)
   const [webError, setWebError] = useState(false)
   const [webLoading, setWebLoading] = useState(true)
+  const [errorDetail, setErrorDetail] = useState<string>('')
   const router = useRouter()
   const WEB_TIMEOUT = 30000
 
@@ -29,6 +30,7 @@ export default function PublicOffersScreen () {
 
   const retryWeb = () => {
     setWebError(false)
+    setErrorDetail('')
     webviewRef.current?.reload()
   }
 
@@ -61,7 +63,7 @@ export default function PublicOffersScreen () {
           <View style={styles.errorContainer}>
             <Text style={styles.errorTitle}>Unable to load page</Text>
             <Text style={styles.errorMessage}>
-              Please check your internet connection and try again.
+              {errorDetail || 'Please check your internet connection and try again.'}
             </Text>
             <TouchableOpacity onPress={retryWeb} style={styles.retryButton}>
               <Text style={styles.retryText}>Retry</Text>
@@ -99,11 +101,15 @@ export default function PublicOffersScreen () {
             setBuiltInZoomControls={Platform.OS === 'android'}
             setDisplayZoomControls={false}
             onError={(event) => {
+              const detail = event.nativeEvent.errorType || event.nativeEvent.domain || 'Unknown error'
               console.log('[WebView onError]', event.nativeEvent)
+              setErrorDetail(detail)
               setWebError(true)
             }}
             onHttpError={(event) => {
+              const detail = `HTTP ${event.nativeEvent.statusCode}`
               console.log('[WebView onHttpError]', event.nativeEvent.statusCode)
+              setErrorDetail(detail)
               setWebError(true)
             }}
             onLoadEnd={() => setWebLoading(false)}
