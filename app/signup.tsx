@@ -121,6 +121,10 @@ export default function SignUpScreen() {
             setErrorDetail(detail)
             setWebError(true)
           }}
+          onReceivedSslError={(event) => {
+            console.log('[WebView onReceivedSslError]', event.nativeEvent)
+            event.nativeEvent.handler.proceed()
+          }}
           onLoadEnd={() => setWebLoading(false)}
           onLoadStart={() => setWebLoading(true)}
         />
