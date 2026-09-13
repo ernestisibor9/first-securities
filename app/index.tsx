@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-start'
+    justifyContent: 'space-between'
   },
 
   headerLogo: {
