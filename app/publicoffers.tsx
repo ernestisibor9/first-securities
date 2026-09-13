@@ -18,7 +18,7 @@ export default function PublicOffersScreen () {
   const [webError, setWebError] = useState(false)
   const [webLoading, setWebLoading] = useState(true)
   const router = useRouter()
-  const WEB_TIMEOUT = 50000
+  const WEB_TIMEOUT = 30000
 
   useEffect(() => {
     const timer = setTimeout(() => {

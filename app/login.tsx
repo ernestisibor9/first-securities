@@ -18,7 +18,7 @@ export default function LoginScreen () {
   const [webLoading, setWebLoading] = useState(true)
   const router = useRouter()
   const url = 'https://alabiansolutions.com/client-mobile-app1/redirect.php'
-  const WEB_TIMEOUT = 50000
+  const WEB_TIMEOUT = 30000
 
   //  const url = "https://alabiansolutions.com/client-mobile-app/redirect.php";
 
