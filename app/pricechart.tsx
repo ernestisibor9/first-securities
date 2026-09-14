@@ -51,10 +51,11 @@ export default function PriceChart() {
 
   // ✅ Fetch stocks
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     const fetchStocks = async () => {
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const res = await fetch("https://regencyng.net/fs-api/proxy.php?type=stocks", {
           signal: controller.signal,
         });
@@ -77,21 +78,29 @@ export default function PriceChart() {
         } else {
         }
       } catch (err: any) {
-        Alert.alert("Error", "Unable to fetch stock list. Try again later.");
+        if (err.name !== 'AbortError') {
+          Alert.alert("Error", "Unable to fetch stock list. Try again later.");
+        }
       }
     };
     fetchStocks();
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   // ✅ Fetch chart data
   useEffect(() => {
     if (!selectedStock) return;
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     const fetchChartData = async () => {
       setLoadingChart(true);
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const res = await fetch(
           `https://regencyng.net/fs-api/proxy.php?stock=${selectedStock}&type=stock_chart`,
           { signal: controller.signal }
@@ -135,7 +144,9 @@ export default function PriceChart() {
         const stockObj = stocks.find((s) => s.id === selectedStock);
         if (stockObj) setSelectedStockName(stockObj.name);
       } catch (err: any) {
-        Alert.alert("Error", "Unable to fetch chart data.");
+        if (err.name !== 'AbortError') {
+          Alert.alert("Error", "Unable to fetch chart data.");
+        }
         setChartData([]);
       } finally {
         setLoadingChart(false);
@@ -143,6 +154,11 @@ export default function PriceChart() {
     };
 
     fetchChartData();
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [selectedStock]);
 
   // ✅ Toggle favorite

@@ -8,9 +8,10 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Keyboard,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 
 const PriceAlert = () => {
   const router = useRouter();
@@ -19,6 +20,14 @@ const PriceAlert = () => {
 
   const { width } = Dimensions.get("window");
   const scale = width / 375;
+
+  useFocusEffect(
+    useEffect(() => {
+      return () => {
+        Keyboard.dismiss();
+      };
+    }, [])
+  );
 
   const handleContinue = async () => {
     if (!email || !email.includes("@")) {

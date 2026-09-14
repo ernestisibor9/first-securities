@@ -9,10 +9,11 @@ import {
   Modal,
   ActivityIndicator,
   Dimensions,
+  Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter, useLocalSearchParams } from "expo-router";
+  import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const scale = width / 375; // base on iPhone 11 width
@@ -39,6 +40,14 @@ export default function VerifyEmail() {
     }
     return () => clearInterval(interval);
   }, [isResendDisabled, timer]);
+
+  useFocusEffect(
+    useEffect(() => {
+      return () => {
+        Keyboard.dismiss();
+      };
+    }, [])
+  );
 
   const handleChange = (text, index) => {
     const newCode = [...code];
