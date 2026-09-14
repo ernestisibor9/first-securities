@@ -59,21 +59,12 @@ const Index = () => {
   const router = useRouter()
   const rootNavigationState = useRootNavigationState()
 
-  useEffect(() => {
-    if (!rootNavigationState?.key) return
-    try {
-      router.prefetch('/publicoffers')
-    } catch (e) {
-      console.log('Portal prefetch skipped', e)
-    }
-  }, [router, rootNavigationState])
-
   const openIpoPortal = () => {
     router.push('/publicoffers')
   }
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['left', 'right']}>
+    <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
       <StatusBar
         translucent
         backgroundColor='transparent'
