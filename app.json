@@ -2,7 +2,7 @@
   "expo": {
     "name": "FirstInvest",
     "slug": "first-securities",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "firstsecurities",
@@ -26,7 +26,7 @@
     "android": {
       "package": "com.ernzo.firstsecurities",
       "usesCleartextTraffic": true,
-      "versionCode": 28,
+      "versionCode": 29,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
