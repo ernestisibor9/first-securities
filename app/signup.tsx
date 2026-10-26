@@ -23,9 +23,6 @@ export default function SignUpScreen() {
   const initialUrl =
     "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
 
-  const LOGIN_URL =
-    "https://alabiansolutions.com/client-mobile-app1/redirect.php";
-
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('dark-content')
@@ -53,14 +50,6 @@ export default function SignUpScreen() {
     router.back();
   };
 
-  // ✅ Dashboard behaves EXACTLY like Login
-  const redirectToDashboard = () => {
-    webviewRef.current?.injectJavaScript(`
-      window.location.href = '${LOGIN_URL}';
-      true;
-    `);
-  };
-
   useEffect(() => {
     const timer = setTimeout(() => {
       if (webLoading) setWebError(true);
@@ -86,13 +75,6 @@ export default function SignUpScreen() {
         <TouchableOpacity onPress={handleGoBack} style={styles.homeButton}>
           <Feather name="arrow-left" size={22} color="#002B5B" />
           <Text style={styles.homeText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={redirectToDashboard}
-          style={styles.dashboardButton}
-        >
-          <Text style={styles.dashboardText}>Dashboard</Text>
         </TouchableOpacity>
       </View>
 
@@ -183,14 +165,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#002B5B",
-  },
-  dashboardButton: {
-    padding: 6,
-  },
-  dashboardText: {
-    color: "#002B5B",
-    fontWeight: "600",
-    fontSize: 16,
   },
   loadingContainer: {
     flex: 1,
