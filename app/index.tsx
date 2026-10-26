@@ -156,7 +156,7 @@ const Index = () => {
             {/* Signup */}
             <FadeUp delay={500}>
             <View style={styles.signupContainer}>
-              <Text style={styles.signupText}>Don\u2019t have an account? </Text>
+              <Text style={styles.signupText}>Don’t have an account? </Text>
               <TouchableOpacity onPress={() => router.push('/signup')}>
                 <Text style={styles.signupLink}>Sign up</Text>
               </TouchableOpacity>
@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
   logo: {
     width: 170,
     height: 90,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
+    marginTop: 3
   },
 
   content: {
