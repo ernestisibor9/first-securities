@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "owner": "firstinvest",
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "bundleIdentifier": "com.firstsecurities.app",
       "config": {
         "usesNonExemptEncryption": false
