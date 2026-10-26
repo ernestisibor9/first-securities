@@ -73,7 +73,7 @@ const DailyPriceList = () => {
     };
   }, [retryKey]);
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
@@ -138,7 +138,7 @@ const DailyPriceList = () => {
           </Text>
 
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-            {currentItems.map((item, idx) => (
+            {currentItems.map((item: any, idx: number) => (
               <View key={idx} style={styles.stockRow}>
                 <Text style={[styles.stockName, { fontSize: 15 * scale }]}>
                   {item.name}

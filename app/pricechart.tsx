@@ -47,7 +47,7 @@ export default function PriceChart() {
       try {
         const stored = await AsyncStorage.getItem("favorites");
         if (stored) setFavorites(JSON.parse(stored));
-      } catch (err) {
+      } catch {
       }
     };
     loadFavorites();
@@ -147,7 +147,7 @@ export default function PriceChart() {
 
           // ✅ Find highest price
           if (recentData.length > 0) {
-            const highest = recentData.reduce((prev, curr) =>
+            recentData.reduce((prev, curr) =>
               curr.price > prev.price ? curr : prev
             );
           }
@@ -173,7 +173,7 @@ export default function PriceChart() {
       clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [selectedStock]);
+  }, [selectedStock, stocks]);
 
   // ✅ Toggle favorite
   const toggleFavorite = async () => {
@@ -186,7 +186,7 @@ export default function PriceChart() {
       }
       setFavorites(updated);
       await AsyncStorage.setItem("favorites", JSON.stringify(updated));
-    } catch (err: any) {
+    } catch {
       Alert.alert("Error", "Unable to update favorites.");
     }
   };

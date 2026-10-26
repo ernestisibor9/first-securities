@@ -13,7 +13,7 @@ const Onboarding = () => {
       router.replace("/");
     }, 8000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   const goToHome = () => {
     router.replace("/");
