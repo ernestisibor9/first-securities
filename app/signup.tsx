@@ -23,6 +23,9 @@ export default function SignUpScreen() {
   const initialUrl =
     "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
 
+  const LOGIN_URL =
+    "https://alabiansolutions.com/client-mobile-app1/redirect.php";
+
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('dark-content')
@@ -53,7 +56,7 @@ export default function SignUpScreen() {
   // ✅ Dashboard behaves EXACTLY like Login
   const redirectToDashboard = () => {
     webviewRef.current?.injectJavaScript(`
-      window.location.href = initialUrl;
+      window.location.href = '${LOGIN_URL}';
       true;
     `);
   };
