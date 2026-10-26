@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     width: 170,
     height: 90,
     resizeMode: 'contain',
-    marginTop: 3
+    marginTop: 15
   },
 
   content: {
