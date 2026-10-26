@@ -27,13 +27,13 @@ export default function VerifyEmail() {
   const [resendCount, setResendCount] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
 
-  const inputs = useRef([]);
+  const inputs = useRef<(TextInput | undefined)[]>([]);
   const router = useRouter();
   const { email } = useLocalSearchParams();
 
   // Countdown effect
   useEffect(() => {
-    let interval;
+    let interval: number;
     if (isResendDisabled && timer > 0) {
       interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     } else if (timer === 0) {
@@ -56,13 +56,13 @@ export default function VerifyEmail() {
     }, [])
   );
 
-  const handleChange = (text, index) => {
+  const handleChange = (text: string, index: number) => {
     const newCode = [...code];
     newCode[index] = text;
     setCode(newCode);
 
     if (text && index < 5) {
-      inputs.current[index + 1].focus();
+      inputs.current[index + 1]?.focus();
     }
   };
 
@@ -190,7 +190,9 @@ export default function VerifyEmail() {
             {code.map((digit, index) => (
               <TextInput
                 key={index}
-                ref={(ref) => (inputs.current[index] = ref)}
+                ref={(ref) => {
+                  inputs.current[index] = ref ?? undefined
+                }}
                 style={styles.codeInput}
                 maxLength={1}
                 keyboardType="numeric"

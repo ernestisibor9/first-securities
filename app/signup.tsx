@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useFocusEffect } from "expo-router";
 
 export default function SignUpScreen() {
-  const webviewRef = useRef(null);
+  const webviewRef = useRef<WebView | null>(null);
   const [webError, setWebError] = useState(false);
   const [webLoading, setWebLoading] = useState(true);
   const [errorDetail, setErrorDetail] = useState<string>('');
@@ -124,8 +124,8 @@ export default function SignUpScreen() {
           thirdPartyCookiesEnabled
           setBuiltInZoomControls={Platform.OS === "android"}
           setDisplayZoomControls={false}
-          onError={(event) => {
-            const detail = event.nativeEvent.description || event.nativeEvent.errorType || event.nativeEvent.domain || 'Unknown error'
+          onError={(event: any) => {
+            const detail = event.nativeEvent.description || (event.nativeEvent as any).errorType || event.nativeEvent.domain || 'Unknown error'
             console.log('[WebView onError]', event.nativeEvent)
             setErrorDetail(detail)
             setWebError(true)
@@ -135,10 +135,6 @@ export default function SignUpScreen() {
             console.log('[WebView onHttpError]', event.nativeEvent.statusCode)
             setErrorDetail(detail)
             setWebError(true)
-          }}
-          onReceivedSslError={(event) => {
-            console.log('[WebView onReceivedSslError]', event.nativeEvent)
-            event.nativeEvent.handler.proceed()
           }}
           onLoadEnd={() => setWebLoading(false)}
           onLoadStart={() => setWebLoading(true)}

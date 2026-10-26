@@ -260,7 +260,6 @@ export default function PriceChart() {
               dataPointsHeight={6}
               dataPointsWidth={6}
               dataPointsColor="crimson"
-              yAxisLabel=""
               xAxisLabelTextStyle={{ fontSize: 10 }}
               yAxisTextStyle={{ fontSize: 10 }}
               xAxisColor="#ddd"

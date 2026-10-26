@@ -17,7 +17,7 @@ const DailyPriceList = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(true);
-  const [priceData, setPriceData] = useState(null);
+  const [priceData, setPriceData] = useState<{ stock: any[]; date: string } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
@@ -74,15 +74,12 @@ const DailyPriceList = () => {
   }, [retryKey]);
 
   const formatDate = (dateString: string) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+    const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = priceData?.stock.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const currentItems = priceData?.stock?.slice(startIndex, startIndex + itemsPerPage) || [];
   const totalPages = priceData
     ? Math.ceil(priceData.stock.length / itemsPerPage)
     : 0;
