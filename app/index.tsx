@@ -1,11 +1,14 @@
+import * as SystemUI from 'expo-system-ui'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useRootNavigationState, useRouter } from 'expo-router'
+import { useFocusEffect } from '@react-navigation/native'
+import { useRouter } from 'expo-router'
 import React, { useEffect, useRef } from 'react'
 import {
   Animated,
   Easing,
   Image,
   ImageBackground,
+  Platform,
   StatusBar,
   StyleSheet,
   Text,
@@ -13,7 +16,7 @@ import {
   View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
+
 
 const FadeUp = ({
   delay = 0,
@@ -57,20 +60,32 @@ const FadeUp = ({
 
 const Index = () => {
   const router = useRouter()
-  const rootNavigationState = useRootNavigationState()
 
-  const openIpoPortal = () => {
-    router.push('/publicoffers')
-  }
+  useFocusEffect(
+    React.useCallback(() => {
+      const NAVY = '#0A1E3C'
+
+      StatusBar.setBarStyle('light-content')
+      StatusBar.setTranslucent(true)
+      StatusBar.setBackgroundColor('transparent', true)
+
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync(NAVY)
+      }
+
+      return () => {
+        StatusBar.setBarStyle('default')
+        StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
+      }
+    }, [])
+  )
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
-      <StatusBar
-        translucent
-        backgroundColor='transparent'
-        barStyle='light-content'
-      />
-
       <ImageBackground
         source={require('../assets/images/customer.png')}
         style={styles.bg}
@@ -126,41 +141,6 @@ const Index = () => {
             </View>
             </FadeUp>
 
-            {/* Proposal A: Dangote IPO banner (visual, no link) */}
-            <FadeUp delay={200}>
-            <View style={styles.ipoBanner} accessibilityRole='header'>
-              <View style={styles.ipoLeft}>
-                <MaterialCommunityIcons
-                  name='medal-outline'
-                  size={20}
-                  color='#edb73a'
-                />
-                <Text style={styles.ipoTitle}>DANGOTE IPO</Text>
-              </View>
-              <View style={styles.offerPill}>
-                <Text style={styles.offerPillText}>● OFFER OPEN</Text>
-              </View>
-            </View>
-            </FadeUp>
-
-            {/* Proposal A: Public Offers Portal -> IPO site */}
-            <FadeUp delay={300}>
-            <TouchableOpacity
-              style={styles.portalBtn}
-              onPress={openIpoPortal}
-              accessibilityRole='link'
-              accessibilityLabel='Open Public Offers Portal'
-            >
-              <MaterialCommunityIcons
-                name='view-grid-outline'
-                size={18}
-                color='#fff'
-              />
-              <Text style={styles.portalText}>PUBLIC OFFERS PORTAL</Text>
-              <Ionicons name='arrow-forward' size={18} color='#fff' />
-            </TouchableOpacity>
-            </FadeUp>
-
             {/* Proposal A: Outline Trade Login */}
             <FadeUp delay={400}>
             <TouchableOpacity
@@ -176,7 +156,7 @@ const Index = () => {
             {/* Signup */}
             <FadeUp delay={500}>
             <View style={styles.signupContainer}>
-              <Text style={styles.signupText}>Don't have an account? </Text>
+              <Text style={styles.signupText}>Don\u2019t have an account? </Text>
               <TouchableOpacity onPress={() => router.push('/signup')}>
                 <Text style={styles.signupLink}>Sign up</Text>
               </TouchableOpacity>
@@ -206,10 +186,6 @@ const Index = () => {
 }
 
 export default Index
-
-const NAVY = '#0A1E3C'
-const GOLD = '#edb73a'
-const OFFER_GREEN = '#16A34A'
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -267,79 +243,17 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
 
-  ipoBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: NAVY,
-    borderWidth: 1,
-    borderColor: GOLD,
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    marginBottom: 10,
-    minHeight: 48
-  },
-
-  ipoLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
-  },
-
-  ipoTitle: {
-    color: GOLD,
-    fontSize: 13,
-    fontFamily: 'Inter28Bold',
-    letterSpacing: 1
-  },
-
-  offerPill: {
-    backgroundColor: OFFER_GREEN,
-    borderRadius: 2,
-    paddingVertical: 4,
-    paddingHorizontal: 8
-  },
-
-  offerPillText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.5
-  },
-
-  portalBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    backgroundColor: NAVY,
-    paddingVertical: 14,
-    borderRadius: 10,
-    marginBottom: 10,
-    minHeight: 48
-  },
-
-  portalText: {
-    color: '#fff',
-    fontSize: 13,
-    fontFamily: 'Inter28Bold',
-    letterSpacing: 1
-  },
-
   tradeLoginBtn: {
-    borderWidth: 1,
-    borderColor: '#fff',
-    backgroundColor: 'transparent',
+    backgroundColor: '#edb73a',
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: 8,
     alignItems: 'center',
     marginBottom: 16,
     minHeight: 48
   },
 
   tradeLoginText: {
-    color: '#fff',
+    color: '#000',
     fontSize: 13,
     fontFamily: 'Inter28Bold',
     letterSpacing: 1

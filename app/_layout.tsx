@@ -6,7 +6,6 @@ import {
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import {
   Alert,
   AppState,
@@ -162,15 +161,12 @@ export default function RootLayout() {
           <Stack.Screen name="dailypricelist" />
           <Stack.Screen name="login" />
           <Stack.Screen name="signup" />
-          <Stack.Screen name="publicoffers" />
           <Stack.Screen name="verifyemail" />
           <Stack.Screen name="pricealert" />
           <Stack.Screen name="pricechart" />
           <Stack.Screen name="disclaimer" />
           <Stack.Screen name="+not-found" />
         </Stack>
-
-        <StatusBar style="auto" />
       </ThemeProvider>
     </ErrorBoundary>
   );

@@ -42,7 +42,7 @@ export default function VerifyEmail() {
   }, [isResendDisabled, timer]);
 
   useFocusEffect(
-    useEffect(() => {
+    React.useCallback(() => {
       return () => {
         Keyboard.dismiss();
       };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -22,7 +22,7 @@ const PriceAlert = () => {
   const scale = width / 375;
 
   useFocusEffect(
-    useEffect(() => {
+    React.useCallback(() => {
       return () => {
         Keyboard.dismiss();
       };
