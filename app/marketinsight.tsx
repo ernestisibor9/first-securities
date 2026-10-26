@@ -5,10 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  StatusBar,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { SkeletonBox } from "@/components/Skeleton";
 
@@ -21,6 +22,19 @@ const MarketInsight = () => {
   const [insights, setInsights] = useState<any[]>([]);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content')
+      StatusBar.setTranslucent(false)
+      StatusBar.setBackgroundColor('#fff', false)
+
+      return () => {
+        StatusBar.setBarStyle('default')
+        StatusBar.setTranslucent(false)
+      }
+    }, [])
+  )
 
   const openArticle = async (url: string) => {
     try {

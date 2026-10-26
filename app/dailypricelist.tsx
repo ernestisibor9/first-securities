@@ -6,9 +6,10 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  StatusBar,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SkeletonBox } from "@/components/Skeleton";
 
@@ -20,6 +21,19 @@ const DailyPriceList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content')
+      StatusBar.setTranslucent(false)
+      StatusBar.setBackgroundColor('#fff', false)
+
+      return () => {
+        StatusBar.setBarStyle('default')
+        StatusBar.setTranslucent(false)
+      }
+    }, [])
+  )
 
   const itemsPerPage = 20;
 

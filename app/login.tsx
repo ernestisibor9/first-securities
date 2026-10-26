@@ -1,12 +1,13 @@
 import { Feather } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { useRouter, useFocusEffect } from 'expo-router'
 import React, { useEffect } from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  StatusBar
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as WebBrowser from 'expo-web-browser'
@@ -15,6 +16,19 @@ const LOGIN_URL = 'https://alabiansolutions.com/client-mobile-app1/redirect.php'
 
 export default function LoginScreen () {
   const router = useRouter()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content')
+      StatusBar.setTranslucent(false)
+      StatusBar.setBackgroundColor('#fff', false)
+
+      return () => {
+        StatusBar.setBarStyle('default')
+        StatusBar.setTranslucent(false)
+      }
+    }, [])
+  )
 
   useEffect(() => {
     let cancelled = false

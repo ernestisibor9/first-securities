@@ -8,10 +8,11 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   Alert,
+  StatusBar,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LineChart } from "react-native-gifted-charts";
 
@@ -19,6 +20,19 @@ export default function PriceChart() {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const router = useRouter();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content')
+      StatusBar.setTranslucent(false)
+      StatusBar.setBackgroundColor('#fff', false)
+
+      return () => {
+        StatusBar.setBarStyle('default')
+        StatusBar.setTranslucent(false)
+      }
+    }, [])
+  )
 
   const [stocks, setStocks] = useState<any[]>([]);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);

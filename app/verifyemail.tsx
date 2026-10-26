@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Keyboard,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -43,9 +44,15 @@ export default function VerifyEmail() {
 
   useFocusEffect(
     React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content')
+      StatusBar.setTranslucent(false)
+      StatusBar.setBackgroundColor('#fff', false)
+
       return () => {
+        StatusBar.setBarStyle('default')
+        StatusBar.setTranslucent(false)
         Keyboard.dismiss();
-      };
+      }
     }, [])
   );
 

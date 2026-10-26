@@ -6,11 +6,12 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  StatusBar,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 
 export default function SignUpScreen() {
   const webviewRef = useRef(null);
@@ -20,6 +21,20 @@ export default function SignUpScreen() {
   const router = useRouter();
   const initialUrl =
     "https://alabiansolutions.com/client-mobile-app1/fs-signup.php";
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content')
+      StatusBar.setTranslucent(false)
+      StatusBar.setBackgroundColor('#fff', false)
+
+      return () => {
+        StatusBar.setBarStyle('default')
+        StatusBar.setTranslucent(false)
+      }
+    }, [])
+  )
+
   const WEB_TIMEOUT = 30000;
 
   const handleGoBack = () => {
