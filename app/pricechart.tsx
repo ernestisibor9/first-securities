@@ -9,9 +9,11 @@ import {
   useWindowDimensions,
   Alert,
   StatusBar,
+  Platform,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import * as SystemUI from 'expo-system-ui'
 import { useRouter, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LineChart } from "react-native-gifted-charts";
@@ -27,9 +29,17 @@ export default function PriceChart() {
       StatusBar.setTranslucent(false)
       StatusBar.setBackgroundColor('#fff', false)
 
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync('#fff')
+      }
+
       return () => {
         StatusBar.setBarStyle('default')
         StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
       }
     }, [])
   )

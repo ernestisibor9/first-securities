@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons'
+import * as SystemUI from 'expo-system-ui'
 import { useRouter, useFocusEffect } from 'expo-router'
 import React, { useEffect } from 'react'
 import {
@@ -7,7 +8,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as WebBrowser from 'expo-web-browser'
@@ -23,9 +25,17 @@ export default function LoginScreen () {
       StatusBar.setTranslucent(false)
       StatusBar.setBackgroundColor('#fff', false)
 
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync('#fff')
+      }
+
       return () => {
         StatusBar.setBarStyle('default')
         StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
       }
     }, [])
   )

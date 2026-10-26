@@ -11,10 +11,12 @@ import {
   Dimensions,
   Keyboard,
   StatusBar,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-  import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
+  import * as SystemUI from 'expo-system-ui'
+import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const scale = width / 375; // base on iPhone 11 width
@@ -48,9 +50,18 @@ export default function VerifyEmail() {
       StatusBar.setTranslucent(false)
       StatusBar.setBackgroundColor('#fff', false)
 
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync('#fff')
+      }
+
       return () => {
         StatusBar.setBarStyle('default')
         StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
+
         Keyboard.dismiss();
       }
     }, [])

@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   Dimensions,
   StatusBar,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
+import * as SystemUI from 'expo-system-ui'
 import { useRouter, useFocusEffect } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { SkeletonBox } from "@/components/Skeleton";
@@ -29,9 +31,17 @@ const MarketInsight = () => {
       StatusBar.setTranslucent(false)
       StatusBar.setBackgroundColor('#fff', false)
 
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync('#fff')
+      }
+
       return () => {
         StatusBar.setBarStyle('default')
         StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
       }
     }, [])
   )

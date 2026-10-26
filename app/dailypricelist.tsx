@@ -7,8 +7,10 @@ import {
   ScrollView,
   Dimensions,
   StatusBar,
+  Platform,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import * as SystemUI from 'expo-system-ui'
 import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SkeletonBox } from "@/components/Skeleton";
@@ -28,9 +30,17 @@ const DailyPriceList = () => {
       StatusBar.setTranslucent(false)
       StatusBar.setBackgroundColor('#fff', false)
 
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync('#fff')
+      }
+
       return () => {
         StatusBar.setBarStyle('default')
         StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
       }
     }, [])
   )

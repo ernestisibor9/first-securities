@@ -11,6 +11,7 @@ import {
 import { WebView } from "react-native-webview";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as SystemUI from 'expo-system-ui'
 import { useRouter, useFocusEffect } from "expo-router";
 
 export default function SignUpScreen() {
@@ -28,9 +29,17 @@ export default function SignUpScreen() {
       StatusBar.setTranslucent(false)
       StatusBar.setBackgroundColor('#fff', false)
 
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync('#fff')
+      }
+
       return () => {
         StatusBar.setBarStyle('default')
         StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
       }
     }, [])
   )

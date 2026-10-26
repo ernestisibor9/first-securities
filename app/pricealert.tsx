@@ -10,8 +10,10 @@ import {
   Dimensions,
   Keyboard,
   StatusBar,
+  Platform,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import * as SystemUI from 'expo-system-ui'
 import { useRouter, useFocusEffect } from "expo-router";
 
 const PriceAlert = () => {
@@ -28,9 +30,18 @@ const PriceAlert = () => {
       StatusBar.setTranslucent(false)
       StatusBar.setBackgroundColor('#fff', false)
 
+      if (Platform.OS === 'android') {
+        SystemUI.setBackgroundColorAsync('#fff')
+      }
+
       return () => {
         StatusBar.setBarStyle('default')
         StatusBar.setTranslucent(false)
+
+        if (Platform.OS === 'android') {
+          SystemUI.setBackgroundColorAsync(null)
+        }
+
         Keyboard.dismiss();
       }
     }, [])
