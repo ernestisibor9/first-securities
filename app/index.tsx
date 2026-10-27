@@ -15,7 +15,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 
 const FadeUp = ({
@@ -60,6 +60,7 @@ const FadeUp = ({
 
 const Index = () => {
   const router = useRouter()
+  const insets = useSafeAreaInsets()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -85,11 +86,10 @@ const Index = () => {
   )
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
-      <ImageBackground
-        source={require('../assets/images/customer.png')}
-        style={styles.bg}
-      >
+    <ImageBackground
+      source={require('../assets/images/customer.png')}
+      style={styles.bg}
+    >
         <LinearGradient
           colors={['rgba(255,255,255,0.4)', 'rgba(0,53,160,0.45)', '#79B076']}
           locations={[0, 0.2, 1]}
@@ -104,7 +104,7 @@ const Index = () => {
           </View>
 
           {/* Bottom Content */}
-          <View style={styles.content}>
+          <View style={[styles.content, { paddingBottom: insets.bottom }]}>
             <FadeUp delay={0}>
               <Text style={styles.heading}>
                 <Text style={{ color: '#edb73a' }}>Trade </Text>
@@ -181,24 +181,14 @@ const Index = () => {
           </View>
         </LinearGradient>
       </ImageBackground>
-    </SafeAreaView>
-  )
-}
+    )
+  }
 
 export default Index
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: 'transparent'
-  },
-
   bg: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'cover'
@@ -207,6 +197,7 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     padding: 20,
+    paddingBottom: 20,
     justifyContent: 'space-between'
   },
 
