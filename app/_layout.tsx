@@ -48,10 +48,13 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Inter18: require('../assets/fonts/Inter_18pt-Regular.ttf'),
     Inter18Bold: require('../assets/fonts/Inter_18pt-Bold.ttf'),
+    Inter18SemiBold: require('../assets/fonts/Inter_18pt-SemiBold.ttf'),
     Inter24: require('../assets/fonts/Inter_24pt-Regular.ttf'),
     Inter24Bold: require('../assets/fonts/Inter_24pt-Bold.ttf'),
+    Inter24SemiBold: require('../assets/fonts/Inter_24pt-SemiBold.ttf'),
     Inter28: require('../assets/fonts/Inter_28pt-Regular.ttf'),
     Inter28Bold: require('../assets/fonts/Inter_28pt-Bold.ttf'),
+    Inter28SemiBold: require('../assets/fonts/Inter_28pt-SemiBold.ttf'),
     Play: require('../assets/fonts/play/PlaywriteIE-Regular.ttf'),
     PlayThin: require('../assets/fonts/play/PlaywriteIE-Thin.ttf'),
   });
@@ -100,11 +103,13 @@ export default function RootLayout() {
 
   if (shouldShow && manifest) {
     return (
-      <UpdateModal
-        visible={shouldShow}
-        manifest={manifest}
-        onDismiss={handleDismiss}
-      />
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <UpdateModal
+          visible={shouldShow}
+          manifest={manifest}
+          onDismiss={handleDismiss}
+        />
+      </ThemeProvider>
     );
   }
 

@@ -45,12 +45,13 @@ async function fetchManifestWithTimeout(): Promise<VersionManifest> {
     );
     if (!response.ok) throw new Error(`manifest ${response.status}`);
     const data = (await response.json()) as Partial<VersionManifest>;
+    const fallback = fallbackManifest();
     return {
-      minRequiredVersion: data.minRequiredVersion ?? fallbackManifest().minRequiredVersion,
+      minRequiredVersion: data.minRequiredVersion || fallback.minRequiredVersion,
       forceUpdate: Boolean(data.forceUpdate),
-      message: data.message ?? fallbackManifest().message,
-      iosStoreUrl: data.iosStoreUrl ?? fallbackManifest().iosStoreUrl,
-      androidStoreUrl: data.androidStoreUrl ?? fallbackManifest().androidStoreUrl,
+      message: data.message || fallback.message,
+      iosStoreUrl: data.iosStoreUrl || fallback.iosStoreUrl,
+      androidStoreUrl: data.androidStoreUrl || fallback.androidStoreUrl,
     };
   } catch {
     return fallbackManifest();

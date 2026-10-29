@@ -17,10 +17,23 @@ export function ThemedText({
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
+  const getFontFamily = () => {
+    switch (type) {
+      case 'defaultSemiBold':
+        return 'Inter18SemiBold';
+      case 'title':
+        return 'Inter28Bold';
+      case 'subtitle':
+        return 'Inter24Bold';
+      default:
+        return 'Inter18';
+    }
+  };
+
   return (
     <Text
       style={[
-        { color },
+        { color, fontFamily: getFontFamily() },
         type === 'default' ? styles.default : undefined,
         type === 'title' ? styles.title : undefined,
         type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
