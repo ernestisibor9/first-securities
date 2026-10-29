@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { AppState } from 'react-native';
+import Constants from 'expo-constants';
 import { useEffect, useState } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { checkForUpdate, dismissUpdate } from '@/services/versionService';
@@ -92,7 +93,7 @@ export default function RootLayout() {
 
   const handleDismiss = async () => {
     if (!manifest) return;
-    await dismissUpdate(manifest.minRequiredVersion);
+    await dismissUpdate(Constants.expoConfig?.version ?? '');
     setShouldShow(false);
     setManifest(null);
   };
