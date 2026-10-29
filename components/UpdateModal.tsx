@@ -9,8 +9,6 @@ import {
   Keyboard,
 } from 'react-native';
 import * as Linking from 'expo-linking';
-import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
 
 export interface UpdateModalProps {
   visible: boolean;
@@ -24,19 +22,18 @@ export interface UpdateModalProps {
   onDismiss: () => void;
 }
 
+const PRIMARY = '#0D6338';
+const ON_PRIMARY = '#FFFFFF';
+const SURFACE = '#FFFFFF';
+const TEXT = '#111827';
+const TEXT_MUTED = '#6B7280';
+const BORDER = '#E2EAE5';
+
 export function UpdateModal({
   visible,
   manifest,
   onDismiss,
 }: UpdateModalProps) {
-  const surfaceColor = useThemeColor(
-    { light: '#FFFFFF', dark: '#0E1712' },
-    'background',
-  );
-  const textColor = useThemeColor({ light: '#0F1713', dark: '#F1F7F3' }, 'text');
-  const borderColor = useThemeColor({ light: '#E2EAE5', dark: '#1C2E24' }, 'tabIconDefault');
-  const primaryColor = useThemeColor({ light: '#0D6338', dark: '#10B981' }, 'tint');
-
   const storeUrl = Platform.OS === 'ios' ? manifest.iosStoreUrl : manifest.androidStoreUrl;
 
   const handleUpdate = () => {
@@ -64,51 +61,45 @@ export function UpdateModal({
       )}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.sheetContainer}>
-          <View style={[styles.sheet, { backgroundColor: surfaceColor }]}>
+          <View style={[styles.sheet, { backgroundColor: SURFACE }]}>
             <View style={styles.header}>
               <View style={[styles.iconCircle, { backgroundColor: '#E8F5E9' }]}>
-                <ThemedText type="defaultSemiBold" style={styles.iconText} lightColor="#0D6338" darkColor="#10B981">
-                  ↓
-                </ThemedText>
+                <Text style={[styles.iconText, { color: PRIMARY }]}>↓</Text>
               </View>
               <View style={styles.headerTextContainer}>
-                <ThemedText type="title" style={styles.title} lightColor="#0D6338" darkColor="#10B981">
-                  Update Available
-                </ThemedText>
-                <ThemedText type="subtitle" style={styles.version} lightColor="#3E4D44" darkColor="#94A89D">
+                <Text style={[styles.title, { color: TEXT }]}>Update Available</Text>
+                <Text style={[styles.version, { color: TEXT_MUTED }]}>
                   New version {manifest.minRequiredVersion}
-                </ThemedText>
+                </Text>
               </View>
               {!manifest.forceUpdate && (
                 <TouchableWithoutFeedback onPress={onDismiss}>
                   <View style={styles.closeBtn}>
-                    <ThemedText type="defaultSemiBold" style={styles.closeText} lightColor="#3E4D44" darkColor="#94A89D">
-                      ✕
-                    </ThemedText>
+                    <Text style={[styles.closeText, { color: TEXT_MUTED }]}>✕</Text>
                   </View>
                 </TouchableWithoutFeedback>
               )}
             </View>
 
-            <ThemedText style={[styles.body, { color: textColor }]}>{manifest.message}</ThemedText>
+            <Text style={[styles.body, { color: TEXT }]}>{manifest.message}</Text>
 
             <View style={styles.actions}>
               {manifest.forceUpdate ? (
                 <TouchableWithoutFeedback onPress={handleUpdate}>
-                  <View style={[styles.primaryBtn, { backgroundColor: primaryColor }]}>
-                    <Text style={[styles.btnText, { color: '#FFFFFF' }]}>Update now</Text>
+                  <View style={[styles.primaryBtn, { backgroundColor: PRIMARY }]}>
+                    <Text style={[styles.btnText, { color: ON_PRIMARY }]}>Update now</Text>
                   </View>
                 </TouchableWithoutFeedback>
               ) : (
                 <>
                   <TouchableWithoutFeedback onPress={handleSkip}>
-                    <View style={[styles.secondaryBtn, { borderColor }]}>
-                      <Text style={[styles.btnText, { color: primaryColor }]}>Skip</Text>
+                    <View style={[styles.secondaryBtn, { borderColor: BORDER }]}>
+                      <Text style={[styles.btnText, { color: TEXT }]}>Skip</Text>
                     </View>
                   </TouchableWithoutFeedback>
                   <TouchableWithoutFeedback onPress={handleUpdate}>
-                    <View style={[styles.primaryBtn, { backgroundColor: primaryColor }]}>
-                      <Text style={[styles.btnText, { color: '#FFFFFF' }]}>Update now</Text>
+                    <View style={[styles.primaryBtn, { backgroundColor: PRIMARY }]}>
+                      <Text style={[styles.btnText, { color: ON_PRIMARY }]}>Update now</Text>
                     </View>
                   </TouchableWithoutFeedback>
                 </>
