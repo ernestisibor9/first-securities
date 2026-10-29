@@ -6,6 +6,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import * as Linking from 'expo-linking';
 import { ThemedText } from '@/components/ThemedText';
@@ -63,54 +64,39 @@ export function UpdateModal({
       )}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={[styles.sheetContainer, { zIndex: 10 }]}>
-          <View style={[styles.sheet, { backgroundColor: SURFACE }]}>
-            <View style={styles.header}>
-              <View style={[styles.iconCircle, { backgroundColor: '#E8F5E9' }]}>
-                <ThemedText style={[styles.iconText, { color: PRIMARY }]} lightColor={PRIMARY} darkColor={PRIMARY} type="default">
-                  ↓
-                </ThemedText>
-              </View>
-              <View style={styles.headerTextContainer}>
-                <ThemedText style={[styles.title, { color: TEXT }]} lightColor={TEXT} darkColor={DARK_TEXT} type="title">
-                  Update Available
-                </ThemedText>
-                <ThemedText style={[styles.version, { color: TEXT_MUTED }]} lightColor={TEXT_MUTED} darkColor={DARK_TEXT_MUTED} type="subtitle">
-                  New version {manifest.minRequiredVersion}
-                </ThemedText>
-              </View>
-              {!manifest.forceUpdate && (
-                <TouchableWithoutFeedback onPress={onDismiss}>
-                  <View style={styles.closeBtn}>
-                    <ThemedText style={[styles.closeText, { color: TEXT_MUTED }]} lightColor={TEXT_MUTED} darkColor={DARK_TEXT_MUTED} type="defaultSemiBold">
-                      ✕
-                    </ThemedText>
-                  </View>
-                </TouchableWithoutFeedback>
-              )}
-            </View>
-
-            <ThemedText style={[styles.body, { color: TEXT }]} lightColor={TEXT} darkColor={DARK_TEXT} type="default">
-              {manifest.message}
-            </ThemedText>
-
-            <View style={styles.actions}>
-              {manifest.forceUpdate ? (
-                <TouchableWithoutFeedback onPress={handleUpdate}>
-                  <View style={[styles.primaryBtn, { backgroundColor: PRIMARY }]}>
-                    <ThemedText style={[styles.btnText, { color: ON_PRIMARY }]} lightColor={ON_PRIMARY} darkColor={ON_PRIMARY} type="title">
-                      Update now
-                    </ThemedText>
-                  </View>
-                </TouchableWithoutFeedback>
-              ) : (
-                <>
-                  <TouchableWithoutFeedback onPress={handleSkip}>
-                    <View style={[styles.secondaryBtn, { borderColor: BORDER }]}>
-                      <ThemedText style={[styles.btnText, { color: TEXT }]} lightColor={TEXT} darkColor={DARK_TEXT} type="default">
-                        Skip
+          <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+            <View style={[styles.sheet, { backgroundColor: SURFACE }]}>
+              <View style={styles.header}>
+                <View style={[styles.iconCircle, { backgroundColor: '#E8F5E9' }]}>
+                  <ThemedText style={[styles.iconText, { color: PRIMARY }]} lightColor={PRIMARY} darkColor={PRIMARY} type="default">
+                    ↓
+                  </ThemedText>
+                </View>
+                <View style={styles.headerTextContainer}>
+                  <ThemedText style={[styles.title, { color: TEXT }]} lightColor={TEXT} darkColor={DARK_TEXT} type="title">
+                    Update Available
+                  </ThemedText>
+                  <ThemedText style={[styles.version, { color: TEXT_MUTED }]} lightColor={TEXT_MUTED} darkColor={DARK_TEXT_MUTED} type="subtitle">
+                    New version {manifest.minRequiredVersion}
+                  </ThemedText>
+                </View>
+                {!manifest.forceUpdate && (
+                  <TouchableWithoutFeedback onPress={onDismiss}>
+                    <View style={styles.closeBtn}>
+                      <ThemedText style={[styles.closeText, { color: TEXT_MUTED }]} lightColor={TEXT_MUTED} darkColor={DARK_TEXT_MUTED} type="defaultSemiBold">
+                        ✕
                       </ThemedText>
                     </View>
                   </TouchableWithoutFeedback>
+                )}
+              </View>
+
+              <ThemedText style={[styles.body, { color: TEXT }]} lightColor={TEXT} darkColor={DARK_TEXT} type="default">
+                {manifest.message}
+              </ThemedText>
+
+              <View style={styles.actions}>
+                {manifest.forceUpdate ? (
                   <TouchableWithoutFeedback onPress={handleUpdate}>
                     <View style={[styles.primaryBtn, { backgroundColor: PRIMARY }]}>
                       <ThemedText style={[styles.btnText, { color: ON_PRIMARY }]} lightColor={ON_PRIMARY} darkColor={ON_PRIMARY} type="title">
@@ -118,10 +104,27 @@ export function UpdateModal({
                       </ThemedText>
                     </View>
                   </TouchableWithoutFeedback>
-                </>
-              )}
+                ) : (
+                  <>
+                    <TouchableWithoutFeedback onPress={handleSkip}>
+                      <View style={[styles.secondaryBtn, { borderColor: BORDER, backgroundColor: '#F3F4F6' }]}>
+                        <ThemedText style={[styles.btnText, { color: TEXT }]} lightColor={TEXT} darkColor={DARK_TEXT} type="default">
+                          Skip
+                        </ThemedText>
+                      </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={handleUpdate}>
+                      <View style={[styles.primaryBtn, { backgroundColor: PRIMARY }]}>
+                        <ThemedText style={[styles.btnText, { color: ON_PRIMARY }]} lightColor={ON_PRIMARY} darkColor={ON_PRIMARY} type="title">
+                          Update now
+                        </ThemedText>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </>
+                )}
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -140,11 +143,15 @@ const styles = {
     padding: 24,
     width: '100%',
     maxWidth: 340,
+    maxHeight: '90%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.15,
     shadowRadius: 20,
     elevation: 8,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   header: {
     flexDirection: 'row',
