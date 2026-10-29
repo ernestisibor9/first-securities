@@ -64,7 +64,7 @@ export function UpdateModal({
       )}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={[styles.sheetContainer, { zIndex: 10 }]}>
-          <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             <View style={[styles.sheet, { backgroundColor: SURFACE }]}>
               <View style={styles.header}>
                 <View style={[styles.iconCircle, { backgroundColor: '#E8F5E9' }]}>
@@ -152,6 +152,7 @@ const styles = {
   },
   scrollContent: {
     flexGrow: 1,
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
